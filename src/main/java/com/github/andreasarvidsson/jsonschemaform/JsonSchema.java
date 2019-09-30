@@ -1,0 +1,51 @@
+package com.github.andreasarvidsson.jsonschemaform;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/**
+ *
+ * @author andreas.arvidsson@redpill-linpro.com
+ */
+//@Target({ElementType.FIELD})
+@Target({ElementType.METHOD, ElementType.FIELD, ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface JsonSchema {
+    
+    //General
+    String title() default "";
+    String description() default "";
+    //default: Object
+    //examples: Object[]
+    
+    //Object
+//    long minProperties() default -1;
+//    long maxProperties() default -1;
+    boolean required() default false;    
+    //propertyNames / pattern: String
+    //dependencies: Map<String, String[]>
+        
+    //Array
+    long minItems() default -1;
+    long maxItems() default -1;
+//    boolean uniqueItems() default false;
+    
+    //String
+    long minLength() default -1;
+    long maxLength() default -1;
+    String pattern() default "";
+//    String format() default "";
+    
+    //Number / integer
+    long minimum() default Long.MIN_VALUE;
+    long maximum() default Long.MAX_VALUE;
+    boolean exclusiveMaximum() default false;
+    boolean exclusiveMinimum() default false;
+    long multipleOf() default 0;
+    
+    CrossFieldConstraint crossFieldConstraint() default CrossFieldConstraint.NONE;
+    int crossFieldConstraintGroup() default -1;
+
+}
