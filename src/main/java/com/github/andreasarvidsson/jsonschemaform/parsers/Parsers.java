@@ -3,11 +3,11 @@ package com.github.andreasarvidsson.jsonschemaform.parsers;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.andreasarvidsson.jsonschemaform.ClassDefinitions;
 import com.github.andreasarvidsson.jsonschemaform.JsonSchemaField;
-import com.github.andreasarvidsson.jsonschemaform.ReflectionUtil;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,11 +21,8 @@ public class Parsers {
 
     private final Map<Class, Parser> simpleParsers = new IdentityHashMap();
     private final Map<Class, Parser> customParsers;
-    private final ParserClass parserClass;
-    private final ParserMap parserMap;
-    private final ParserArray parserArray;
-    private final ParserSet parserSet;
-    private final ParserCollection parserCollection;
+    private final Parser parserClass, parserMap, parserArray, parserSet,
+            parserEnum, parserCollection;
     private final ClassDefinitions classDefinitions;
 
     public Parsers(
@@ -39,18 +36,16 @@ public class Parsers {
         this.parserArray = new ParserArray(this);
         this.parserSet = new ParserSet(this);
         this.parserCollection = new ParserCollection(this);
+        this.parserEnum = new ParserEnum();
         addSimples(autoRangeNumbers);
     }
 
     public ObjectNode parseClass(final Class type) {
-        if (simpleParsers.containsKey(type)) {
-            return simpleParsers.get(type).parseClass(type);
+        final Parser simpleParser = getSimpleParser(type);
+        if (simpleParser != null) {
+            return simpleParser.parseClass(type);
         }
-        final Parser collectionparser = getCollectionParser(type);
-        if (collectionparser != null) {
-            return collectionparser.parseClass(type);
-        }
-        //Dont use references / definiitions for simple or collection types. 
+        //Dont use references / definiitions for simple types.
         if (!classDefinitions.has(type)) {
             final ObjectNode classNode = createClassNode(type);
             classDefinitions.add(type, classNode);
@@ -78,12 +73,9 @@ public class Parsers {
     }
 
     private Parser getParser(final Class type) {
-        if (simpleParsers.containsKey(type)) {
-            return simpleParsers.get(type);
-        }
-        final Parser collectionparser = getCollectionParser(type);
-        if (collectionparser != null) {
-            return collectionparser;
+        final Parser simpleParser = getSimpleParser(type);
+        if (simpleParser != null) {
+            return simpleParser;
         }
         if (customParsers.containsKey(type)) {
             return customParsers.get(type);
@@ -91,17 +83,24 @@ public class Parsers {
         return parserClass;
     }
 
-    private Parser getCollectionParser(final Class type) {
-        if (ReflectionUtil.isArray(type)) {
+    private Parser getSimpleParser(final Class type) {
+        if (simpleParsers.containsKey(type)) {
+            return simpleParsers.get(type);
+        }
+        if (type.isArray()) {
             return parserArray;
         }
-        if (ReflectionUtil.isMap(type)) {
+        if (type.isEnum()) {
+            return parserEnum;
+        }
+        if (Map.class.isAssignableFrom(type)) {
             return parserMap;
         }
-        if (ReflectionUtil.isSet(type)) {
+        if (Set.class.isAssignableFrom(type)) {
             return parserSet;
         }
-        if (ReflectionUtil.isCollection(type)) {
+        //Collection that is not map or set. IE should be a list.
+        if (Collection.class.isAssignableFrom(type)) {
             return parserCollection;
         }
         return null;

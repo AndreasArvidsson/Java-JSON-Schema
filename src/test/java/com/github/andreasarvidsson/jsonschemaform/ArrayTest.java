@@ -44,7 +44,7 @@ public class ArrayTest {
     }
 
     @Test
-    public void testArrayListBoolRoot() {
+    public void testArrayBoolRoot() {
         AssertJson.assertEquals(new JsonBuilder()
                 .setType(JsonType.ARRAY)
                 .setItems(new JsonBuilder()

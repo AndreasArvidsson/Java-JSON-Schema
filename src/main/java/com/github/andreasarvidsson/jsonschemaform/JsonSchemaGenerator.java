@@ -57,9 +57,11 @@ public class JsonSchemaGenerator {
         classDefinitions.update(schemaNode);
 
         //Remove null type for root node.
-        classNode.put("type",
-                classNode.get("type").textValue().replace(", null", "")
-        );
+        if (classNode.has("type")) {
+            classNode.put("type",
+                    classNode.get("type").textValue().replace(", null", "")
+            );
+        }
 
         //Add root class;
         schemaNode.setAll(classNode);

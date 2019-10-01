@@ -2,7 +2,6 @@ package com.github.andreasarvidsson.jsonschemaform;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

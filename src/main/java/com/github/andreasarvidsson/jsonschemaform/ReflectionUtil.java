@@ -11,10 +11,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  *
@@ -80,22 +77,6 @@ public abstract class ReflectionUtil {
         }
         //No generic type. Defaults to Object.
         return Object.class;
-    }
-
-    public static boolean isArray(final Class type) {
-        return type.isArray();
-    }
-
-    public static boolean isCollection(final Class type) {
-        return Collection.class.isAssignableFrom(type);
-    }
-
-    public static boolean isSet(final Class type) {
-        return Set.class.isAssignableFrom(type);
-    }
-
-    public static boolean isMap(final Class type) {
-        return Map.class.isAssignableFrom(type);
     }
 
 }

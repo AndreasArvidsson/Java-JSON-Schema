@@ -14,7 +14,7 @@ public class JsonBuilder {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private final ObjectNode res, properties, patternProperties;
-    private final ArrayNode required;
+    private final ArrayNode required, enums, oneOf;
     private JsonNode items = null;
     private Boolean additionalProperties = null;
 
@@ -23,6 +23,8 @@ public class JsonBuilder {
         properties = MAPPER.createObjectNode();
         patternProperties = MAPPER.createObjectNode();
         required = MAPPER.createArrayNode();
+        enums = MAPPER.createArrayNode();
+        oneOf = MAPPER.createArrayNode();
     }
 
     public JsonBuilder setType(final JsonType type) {
@@ -52,6 +54,16 @@ public class JsonBuilder {
 
     public JsonBuilder addRequired(final String value) {
         required.add(value);
+        return this;
+    }
+
+    public JsonBuilder addEnum(final Object value) {
+        enums.addPOJO(value);
+        return this;
+    }
+
+    public JsonBuilder addOneOf(final JsonNode value) {
+        oneOf.add(value);
         return this;
     }
 
@@ -87,6 +99,12 @@ public class JsonBuilder {
         }
         if (patternProperties.size() > 0) {
             res.set("patternProperties", patternProperties);
+        }
+        if (enums.size() > 0) {
+            res.set("enum", enums);
+        }
+        if (oneOf.size() > 0) {
+            res.set("oneOf", oneOf);
         }
         if (items != null) {
             res.set("items", items);
