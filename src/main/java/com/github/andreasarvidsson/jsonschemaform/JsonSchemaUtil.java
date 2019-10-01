@@ -13,36 +13,34 @@ import java.util.Set;
  */
 public abstract class JsonSchemaUtil {
 
-    public static void addFields(final ObjectNode res, final AnnotatedElement elem, final Set<JsonSchemaField> schemaFields) {
+    public static void addFields(final Class type, final ObjectNode res, final AnnotatedElement elem, final Set<JsonSchemaField> schemaFields) {
         final JsonSchema[] anotations = elem.getAnnotationsByType(JsonSchema.class);
         for (final JsonSchema anot : anotations) {
             if (anot.crossFieldConstraint() == CrossFieldConstraint.NONE) {
-
                 //General
-                set(schemaFields, res, JsonSchemaField.TITLE, anot.title());
-                set(schemaFields, res, JsonSchemaField.DESCRIPTION, anot.description());
+                set(type, schemaFields, res, JsonSchemaField.TITLE, anot.title());
+                set(type, schemaFields, res, JsonSchemaField.DESCRIPTION, anot.description());
 
                 //Object
-//            set(res, JsonSchemaField.MIN_PROPERTIES, anot.minProperties());
-//            set(res, JsonSchemaField.MAX_PROPERTIES, anot.maxProperties());
-                //set(res, JsonSchemaField.REQUIRED, anot.required());
+                set(type, schemaFields, res, JsonSchemaField.MIN_PROPERTIES, anot.minProperties());
+                set(type, schemaFields, res, JsonSchemaField.MAX_PROPERTIES, anot.maxProperties());
+
                 //Array
-                set(schemaFields, res, JsonSchemaField.MIN_ITEMS, anot.minItems());
-                set(schemaFields, res, JsonSchemaField.MAX_ITEMS, anot.maxItems());
-//                set(schemaFields, res, JsonSchemaField.UNIQUE_ITEMS, anot.uniqueItems());
+                set(type, schemaFields, res, JsonSchemaField.MIN_ITEMS, anot.minItems());
+                set(type, schemaFields, res, JsonSchemaField.MAX_ITEMS, anot.maxItems());
 
                 //String
-                set(schemaFields, res, JsonSchemaField.MIN_LENGTH, anot.minLength());
-                set(schemaFields, res, JsonSchemaField.MAX_LENGTH, anot.maxLength());
-                set(schemaFields, res, JsonSchemaField.PATTERN, anot.pattern());
+                set(type, schemaFields, res, JsonSchemaField.MIN_LENGTH, anot.minLength());
+                set(type, schemaFields, res, JsonSchemaField.MAX_LENGTH, anot.maxLength());
+                set(type, schemaFields, res, JsonSchemaField.PATTERN, anot.pattern());
 //                set(schemaFields, res, JsonSchemaField.FORMAT, anot.format());
 
                 //Number / integer
-                set(schemaFields, res, JsonSchemaField.MINIMUM, anot.minimum());
-                set(schemaFields, res, JsonSchemaField.MAXIMUM, anot.maximum());
-                set(schemaFields, res, JsonSchemaField.EXCLUSIVE_MINIMUM, anot.exclusiveMinimum());
-                set(schemaFields, res, JsonSchemaField.EXCLUSIVE_MAXIMUM, anot.exclusiveMaximum());
-                set(schemaFields, res, JsonSchemaField.MULTIPLE_OF, anot.multipleOf());
+                set(type, schemaFields, res, JsonSchemaField.MINIMUM, anot.minimum());
+                set(type, schemaFields, res, JsonSchemaField.MAXIMUM, anot.maximum());
+                set(type, schemaFields, res, JsonSchemaField.EXCLUSIVE_MINIMUM, anot.exclusiveMinimum());
+                set(type, schemaFields, res, JsonSchemaField.EXCLUSIVE_MAXIMUM, anot.exclusiveMaximum());
+                set(type, schemaFields, res, JsonSchemaField.MULTIPLE_OF, anot.multipleOf());
             }
         }
     }
@@ -58,22 +56,23 @@ public abstract class JsonSchemaUtil {
     private static boolean isAnotRequired(final Field field) {
         final JsonSchema[] anotations = field.getAnnotationsByType(JsonSchema.class);
         for (final JsonSchema anot : anotations) {
-            if (anot.crossFieldConstraint() != CrossFieldConstraint.NONE && anot.required()) {
+            if (anot.crossFieldConstraint() == CrossFieldConstraint.NONE && anot.required()) {
                 return true;
             }
         }
         return false;
     }
 
-    private static void set(final Collection<JsonSchemaField> schemaFields, final ObjectNode result, final JsonSchemaField field, final Object value) {
-        //If stil default value. Just stop/return.
+    private static void set(
+            final Class type, final Collection<JsonSchemaField> schemaFields,
+            final ObjectNode result, final JsonSchemaField field, final Object value) {
+        //If still default value. Just stop/return.
         if (Objects.equals(getDefaultValue(field), value)) {
             return;
         }
         //New value. Check if valid for this node.
         if (!schemaFields.contains(field)) {
-            //throw new RuntimeException(String.format("Field '%s' is not applicable for type '%s'", field.toString(), jsonType.toString()));
-            throw new RuntimeException(String.format("Field '%s' is not applicable", field.toString()));
+            throw new RuntimeException(String.format("Json schema field '%s' is not applicable for '%s'", field.toString(), type.getTypeName()));
         }
         result.putPOJO(field.toString(), value);
     }

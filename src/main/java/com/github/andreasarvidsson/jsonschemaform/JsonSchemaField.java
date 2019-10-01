@@ -9,13 +9,12 @@ public enum JsonSchemaField {
     TITLE,
     DESCRIPTION,
     REQUIRED,
-    //    MIN_PROPERTIES,
-    //    MAX_PROPERTIES,
+    MIN_PROPERTIES,
+    MAX_PROPERTIES,
     //propertyNames / pattern: String
     //dependencies: Map<String, String[]>
     MIN_ITEMS,
     MAX_ITEMS,
-    //    UNIQUE_ITEMS,
     PATTERN,
     //    FORMAT,
     MIN_LENGTH,

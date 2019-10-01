@@ -1,6 +1,7 @@
 package com.github.andreasarvidsson.jsonschemaform.parsers;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.lang.reflect.Field;
 
 /**
  *
@@ -8,6 +9,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  */
 public interface Parser {
 
-    public ObjectNode parse(final Class type);
+    public ObjectNode parseClass(final Class type);
+
+    public void parseField(final Field field, final ObjectNode target);
 
 }

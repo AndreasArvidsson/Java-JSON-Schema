@@ -4,17 +4,14 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 
 /**
  *
@@ -67,6 +64,19 @@ public abstract class ReflectionUtil {
     public static boolean hasAnyGetterAndAnySetter(final Class type) {
         return hasMethod(type, JsonAnyGetter.class)
                 && hasMethod(type, JsonAnySetter.class);
+    }
+
+    public static Class getGenericValueType(final Field field) {
+        final Type genericType = field.getGenericType();
+        //Generic type
+        if (genericType instanceof ParameterizedType) {
+            final ParameterizedType paramType = (ParameterizedType) genericType;
+            final Type[] paramTypes = paramType.getActualTypeArguments();
+            //Use last index instead of [0] for map where value is at [1]
+            return (Class) paramTypes[paramTypes.length - 1];
+        }
+        //No generic type. Defaults to Object.
+        return Object.class;
     }
 
 }

@@ -2,6 +2,7 @@ package com.github.andreasarvidsson.jsonschemaform.parsers;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.andreasarvidsson.jsonschemaform.ClassDefinitions;
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -16,7 +17,6 @@ import java.util.Map;
 public class Parsers {
 
     private final Map<Class, Parser> simpleParsers = new IdentityHashMap();
-
     private final Map<Class, Parser> customParsers;
     private final ParserClass classParser;
     private final ClassDefinitions classDefinitions;
@@ -28,16 +28,13 @@ public class Parsers {
         this.customParsers = customParsers;
         this.classDefinitions = classDefinitions;
         this.classParser = new ParserClass(this);
+
         addSimples(autoRangeNumbers);
     }
 
-    public ObjectNode parseRoot(final Class type) {
-        return classParser.parseRoot(type);
-    }
-
-    public ObjectNode parse(final Class type) {
+    public ObjectNode parseClass(final Class type) {
         if (simpleParsers.containsKey(type)) {
-            return simpleParsers.get(type).parse(type);
+            return simpleParsers.get(type).parseClass(type);
         }
         if (!classDefinitions.has(type)) {
             final ObjectNode classNode = createClassNode(type);
@@ -46,11 +43,28 @@ public class Parsers {
         return classDefinitions.getRef(type);
     }
 
+    public void parseField(final Field field, final ObjectNode target) {
+        final Class type = field.getType();
+        if (simpleParsers.containsKey(type)) {
+            simpleParsers.get(type).parseField(field, target);
+            return;
+        }
+        if (customParsers.containsKey(type)) {
+            customParsers.get(type).parseField(field, target);
+            return;
+        }
+        classParser.parseField(field, target);
+    }
+
+    public String getDefType(final Class type) {
+        return classDefinitions.getType(type);
+    }
+
     private ObjectNode createClassNode(final Class type) {
         if (customParsers.containsKey(type)) {
-            return customParsers.get(type).parse(type);
+            return customParsers.get(type).parseClass(type);
         }
-        return classParser.parse(type);
+        return classParser.parseClass(type);
     }
 
     private void addSimples(final boolean autoRangeNumbers) {
@@ -84,6 +98,7 @@ public class Parsers {
                 String.class,
                 CharSequence.class
         ));
+        simpleParsers.put(Object.class, new ParserObject());
     }
 
     private void addSimples(final Parser parser, final List<Class> types) {

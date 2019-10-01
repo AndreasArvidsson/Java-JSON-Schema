@@ -21,8 +21,8 @@ public @interface JsonSchema {
     //examples: Object[]
     
     //Object
-//    long minProperties() default -1;
-//    long maxProperties() default -1;
+    long minProperties() default -1;
+    long maxProperties() default -1;
     boolean required() default false;    
     //propertyNames / pattern: String
     //dependencies: Map<String, String[]>
@@ -41,8 +41,8 @@ public @interface JsonSchema {
     //Number / integer
     long minimum() default Long.MIN_VALUE;
     long maximum() default Long.MAX_VALUE;
-    boolean exclusiveMaximum() default false;
-    boolean exclusiveMinimum() default false;
+    long exclusiveMaximum() default Long.MIN_VALUE;
+    long exclusiveMinimum() default Long.MAX_VALUE;
     long multipleOf() default 0;
     
     CrossFieldConstraint crossFieldConstraint() default CrossFieldConstraint.NONE;

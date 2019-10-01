@@ -35,6 +35,10 @@ public class ClassDefinitions {
         return refNode;
     }
 
+    public String getType(final Class type) {
+        return classes.get(type).classNode.get("type").asText();
+    }
+
     public void update(final ObjectNode schemaNode) {
         final ObjectNode definitions = MAPPER.createObjectNode();
         for (final ClassWrapper wrapper : classes.values()) {

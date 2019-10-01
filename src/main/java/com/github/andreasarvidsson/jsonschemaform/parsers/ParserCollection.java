@@ -3,6 +3,7 @@ package com.github.andreasarvidsson.jsonschemaform.parsers;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.andreasarvidsson.jsonschemaform.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschemaform.JsonType;
+import com.github.andreasarvidsson.jsonschemaform.ReflectionUtil;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 
@@ -10,11 +11,11 @@ import java.util.Arrays;
  *
  * @author Andreas Arvidsson
  */
-public class ParserArray extends ParserBase {
+public class ParserCollection extends ParserBase {
 
     private final Parsers parsers;
 
-    public ParserArray(final Parsers parsers) {
+    public ParserCollection(final Parsers parsers) {
         super(JsonType.ARRAY, Arrays.asList(
                 JsonSchemaField.TITLE,
                 JsonSchemaField.DESCRIPTION,
@@ -24,9 +25,9 @@ public class ParserArray extends ParserBase {
         this.parsers = parsers;
     }
 
-    public ObjectNode parseArray(final Field field) {
+    public ObjectNode parseCollection(final Field field) {
         final ObjectNode result = super.parseClass(field.getType());
-        final Class valueType = field.getType().getComponentType();
+        final Class valueType = ReflectionUtil.getGenericValueType(field);
         result.set("items", parsers.parseClass(valueType));
         return result;
     }

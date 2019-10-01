@@ -1,8 +1,6 @@
 package com.github.andreasarvidsson.jsonschemaform;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -11,87 +9,49 @@ import org.junit.jupiter.api.Test;
  */
 public class BoolTest {
 
-    private final ObjectMapper mapper = new ObjectMapper();
-    private final JsonSchemaGenerator gen = new JsonSchemaGenerator();
-    private final String classTitle = "My bool class";
-    private final String classDesc = "This is a bool class";
-    private final String fieldTitle = "My bool field";
-    private final String fieldDesc = "This is a bool field";
+    private final JsonSchemaGenerator gen = new JsonSchemaGenerator().hideSchemaField();
+    private final String title = "title";
+    private final String desc = "desc";
 
     @Test
-    public void testBool() {
+    public void testBoolPrim() {
         AssertJson.assertEquals(
-                getExpected("boolean"),
-                gen.create(BoolClass1.class)
+                new JsonBuilder().setType(JsonType.BOOLEAN).build(),
+                gen.create(boolean.class)
         );
     }
 
     @Test
-    public void testBoo2() {
+    public void testBoolClass() {
         AssertJson.assertEquals(
-                getExpected("boolean, null"),
-                gen.create(BoolClass2.class)
+                new JsonBuilder().setType(JsonType.BOOLEAN).build(),
+                gen.create(Boolean.class)
         );
     }
 
-    private JsonNode getExpected(final String type) {
-        final JsonBuilder b = new JsonBuilder();
-        b.addField("title", classTitle);
-        b.addField("description", classDesc);
-        
-        final ObjectNode value = mapper.createObjectNode();
-        
-        value.put("title", fieldTitle);
-        value.put("description", fieldDesc);
-        value.put("type", type);
-        b.addProperty("value", value);
-        return b.build();
+    @Test
+    public void testBoolAnotations() {
+        final JsonNode expected = new JsonBuilder()
+                .setType(JsonType.OBJECT)
+                .setAdditionalProps(false)
+                .addProperty("value", new JsonBuilder()
+                        .setTypeNull(JsonType.BOOLEAN)
+                        .addField(JsonSchemaField.TITLE, title)
+                        .addField(JsonSchemaField.DESCRIPTION, desc)
+                        .build()
+                )
+                .build();
+        AssertJson.assertEquals(
+                expected,
+                gen.create(BoolClass.class)
+        );
     }
 
-    @JsonSchema(
-            title = classTitle,
-            description = classDesc
-    )
-    class BoolClass1 {
+    class BoolClass {
 
         @JsonSchema(
-                title = fieldTitle,
-                description = fieldDesc
-        )
-        boolean value;
-        
-        
-                @JsonSchema(
-                title = "woho",
-                description = fieldDesc
-        )
-        Boolean value2;
-                
-                       
-                @JsonSchema(
-                title = "woho",
-                description = fieldDesc
-        )
-        Boolean value3;
-                
-                       
-                @JsonSchema(
-                title = "woho",
-                description = fieldDesc
-        )
-        boolean value4;
-        
-    }
-
-    @JsonSchema(
-            title = classTitle,
-            description = classDesc
-    )
-    class BoolClass2 {
-
-        @JsonSchema(
-                title = fieldTitle,
-                description = fieldDesc
+                title = title,
+                description = desc
         )
         Boolean value;
     }

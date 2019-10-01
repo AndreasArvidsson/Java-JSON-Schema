@@ -51,10 +51,15 @@ public class JsonSchemaGenerator {
         }
 
         //Parse root class
-        final ObjectNode classNode = parsers.parseRoot(type);
+        final ObjectNode classNode = parsers.parseClass(type);
 
         //Update node with definitions;
         classDefinitions.update(schemaNode);
+
+        //Remove null type for root node.
+        classNode.put("type",
+                classNode.get("type").textValue().replace(", null", "")
+        );
 
         //Add root class;
         schemaNode.setAll(classNode);

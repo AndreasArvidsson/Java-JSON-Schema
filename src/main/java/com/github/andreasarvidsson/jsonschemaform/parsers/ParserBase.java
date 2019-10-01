@@ -21,50 +21,37 @@ public abstract class ParserBase implements Parser {
     private final JsonType jsonType;
     protected final Set<JsonSchemaField> schemaFields;
 
+    public ParserBase(final Collection<JsonSchemaField> schemaFields) {
+        this(null, schemaFields);
+    }
+
     public ParserBase(final JsonType jsonType, final Collection<JsonSchemaField> schemaFields) {
         this.jsonType = jsonType;
         this.schemaFields = new HashSet(schemaFields);
     }
 
-    public void addType(final Field field, final ObjectNode node) {
-        if (JsonSchemaUtil.isRequired(field)) {
-            addType(node);
-        }
-        else {
-            addTypeNull(node);
-        }
-    }
-
-    public void addType(final Class type, final ObjectNode node) {
-        if (JsonSchemaUtil.isRequired(type)) {
-            addType(node);
-        }
-        else {
-            addTypeNull(node);
-        }
+    @Override
+    public ObjectNode parseClass(final Class type) {
+        final ObjectNode result = MAPPER.createObjectNode();
+        addType(type, result);
+        JsonSchemaUtil.addFields(type, result, type, schemaFields);
+        return result;
     }
 
     @Override
-    public ObjectNode parse(final Class type) {
-        final ObjectNode res = MAPPER.createObjectNode();
-        addType(type, res);
-        JsonSchemaUtil.addFields(res, type, schemaFields);
-        return res;
+    public void parseField(final Field field, final ObjectNode target) {
+        JsonSchemaUtil.addFields(field.getType(), target, field, schemaFields);
     }
 
-    public ObjectNode parseRoot(final Class type) {
-        final ObjectNode res = MAPPER.createObjectNode();
-        addType(res);
-        JsonSchemaUtil.addFields(res, type, schemaFields);
-        return res;
-    }
-
-    private void addType(final ObjectNode node) {
-        node.put("type", jsonType.toString());
-    }
-
-    private void addTypeNull(final ObjectNode node) {
-        node.put("type", String.format("%s, null", jsonType.toString()));
+    private void addType(final Class type, final ObjectNode node) {
+        if (jsonType != null) {
+            if (JsonSchemaUtil.isRequired(type)) {
+                node.put("type", jsonType.toString());
+            }
+            else {
+                node.put("type", String.format("%s, null", jsonType.toString()));
+            }
+        }
     }
 
 }
