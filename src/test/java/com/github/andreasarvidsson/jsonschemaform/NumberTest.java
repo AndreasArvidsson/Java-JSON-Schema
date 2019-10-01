@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 public class NumberTest {
 
     private final JsonSchemaGenerator gen = new JsonSchemaGenerator().hideSchemaField();
-    private final JsonNode expected = new JsonBuilder().addField("type", JsonType.NUMBER.toString()).build();
+    private final JsonNode expected = new JsonBuilder().setType(JsonType.NUMBER).build();
     private final String title = "title";
     private final String desc = "desc";
     private final int min = 2;
@@ -51,7 +51,7 @@ public class NumberTest {
                 .setAdditionalProps(false)
                 .addProperty("value",
                         new JsonBuilder()
-                        .setTypeNull(JsonType.INTEGER)
+                        .setTypeNull(JsonType.NUMBER)
                         .addField(JsonSchemaField.TITLE, title)
                         .addField(JsonSchemaField.DESCRIPTION, desc)
                         .addField(JsonSchemaField.MINIMUM, min)

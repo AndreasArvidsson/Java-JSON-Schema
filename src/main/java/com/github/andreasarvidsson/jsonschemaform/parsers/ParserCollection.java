@@ -25,7 +25,8 @@ public class ParserCollection extends ParserBase {
         this.parsers = parsers;
     }
 
-    public ObjectNode parseCollection(final Field field) {
+    @Override
+    public ObjectNode parseClassField(final Field field) {
         final ObjectNode result = super.parseClass(field.getType());
         final Class valueType = ReflectionUtil.getGenericValueType(field);
         result.set("items", parsers.parseClass(valueType));

@@ -3,6 +3,7 @@ package com.github.andreasarvidsson.jsonschemaform.parsers;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.andreasarvidsson.jsonschemaform.ClassDefinitions;
 import com.github.andreasarvidsson.jsonschemaform.JsonSchemaField;
+import com.github.andreasarvidsson.jsonschemaform.ReflectionUtil;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -20,7 +21,11 @@ public class Parsers {
 
     private final Map<Class, Parser> simpleParsers = new IdentityHashMap();
     private final Map<Class, Parser> customParsers;
-    private final ParserClass classParser;
+    private final ParserClass parserClass;
+    private final ParserMap parserMap;
+    private final ParserArray parserArray;
+    private final ParserSet parserSet;
+    private final ParserCollection parserCollection;
     private final ClassDefinitions classDefinitions;
 
     public Parsers(
@@ -29,8 +34,11 @@ public class Parsers {
             final ClassDefinitions classDefinitions) {
         this.customParsers = customParsers;
         this.classDefinitions = classDefinitions;
-        this.classParser = new ParserClass(this);
-
+        this.parserClass = new ParserClass(this);
+        this.parserMap = new ParserMap(this);
+        this.parserArray = new ParserArray(this);
+        this.parserSet = new ParserSet(this);
+        this.parserCollection = new ParserCollection(this);
         addSimples(autoRangeNumbers);
     }
 
@@ -38,6 +46,11 @@ public class Parsers {
         if (simpleParsers.containsKey(type)) {
             return simpleParsers.get(type).parseClass(type);
         }
+        final Parser collectionparser = getCollectionParser(type);
+        if (collectionparser != null) {
+            return collectionparser.parseClass(type);
+        }
+        //Dont use references / definiitions for simple or collection types. 
         if (!classDefinitions.has(type)) {
             final ObjectNode classNode = createClassNode(type);
             classDefinitions.add(type, classNode);
@@ -45,15 +58,12 @@ public class Parsers {
         return classDefinitions.getRef(type);
     }
 
-    public Set<JsonSchemaField> getAllowedSchemaFields(final Field field) {
-        final Class type = field.getType();
-        if (simpleParsers.containsKey(type)) {
-            return simpleParsers.get(type).getAllowedSchemaFields();
-        }
-        if (customParsers.containsKey(type)) {
-            return customParsers.get(type).getAllowedSchemaFields();
-        }
-        return classParser.getAllowedSchemaFields(field);
+    public ObjectNode parseClassField(final Field field) {
+        return getParser(field.getType()).parseClassField(field);
+    }
+
+    public Set<JsonSchemaField> getAllowedSchemaFields(final Class type) {
+        return getParser(type).getAllowedSchemaFields();
     }
 
     public String getDefType(final Class type) {
@@ -64,7 +74,37 @@ public class Parsers {
         if (customParsers.containsKey(type)) {
             return customParsers.get(type).parseClass(type);
         }
-        return classParser.parseClass(type);
+        return parserClass.parseClass(type);
+    }
+
+    private Parser getParser(final Class type) {
+        if (simpleParsers.containsKey(type)) {
+            return simpleParsers.get(type);
+        }
+        final Parser collectionparser = getCollectionParser(type);
+        if (collectionparser != null) {
+            return collectionparser;
+        }
+        if (customParsers.containsKey(type)) {
+            return customParsers.get(type);
+        }
+        return parserClass;
+    }
+
+    private Parser getCollectionParser(final Class type) {
+        if (ReflectionUtil.isArray(type)) {
+            return parserArray;
+        }
+        if (ReflectionUtil.isMap(type)) {
+            return parserMap;
+        }
+        if (ReflectionUtil.isSet(type)) {
+            return parserSet;
+        }
+        if (ReflectionUtil.isCollection(type)) {
+            return parserCollection;
+        }
+        return null;
     }
 
     private void addSimples(final boolean autoRangeNumbers) {

@@ -8,8 +8,6 @@ import com.github.andreasarvidsson.jsonschemaform.JsonType;
 import com.github.andreasarvidsson.jsonschemaform.ReflectionUtil;
 import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -19,20 +17,12 @@ import java.util.Set;
 public class ParserClass extends ParserBase {
 
     private final Parsers parsers;
-    private final ParserMap parserMap;
-    private final ParserArray parserArray;
-    private final ParserSet parserSet;
-    private final ParserCollection parserCollection;
 
     public ParserClass(final Parsers parsers) {
         super(JsonType.OBJECT, Arrays.asList(
                 JsonSchemaField.TITLE,
                 JsonSchemaField.DESCRIPTION
         ));
-        this.parserMap = new ParserMap(parsers);
-        this.parserArray = new ParserArray(parsers);
-        this.parserSet = new ParserSet(parsers);
-        this.parserCollection = new ParserCollection(parsers);
         this.parsers = parsers;
     }
 
@@ -50,41 +40,6 @@ public class ParserClass extends ParserBase {
         return result;
     }
 
-    public Set<JsonSchemaField> getAllowedSchemaFields(final Field field) {
-        final Class type = field.getType();
-        if (isArray(type)) {
-            return parserArray.getAllowedSchemaFields();
-        }
-        if (isMap(type)) {
-            return parserMap.getAllowedSchemaFields();
-        }
-        if (isSet(type)) {
-            return parserSet.getAllowedSchemaFields();
-        }
-        if (isCollection(type)) {
-            return parserCollection.getAllowedSchemaFields();
-        }
-        return super.getAllowedSchemaFields();
-    }
-
-    private ObjectNode parseClassField(final Field field) {
-        final Class type = field.getType();
-        if (isArray(type)) {
-            return parserArray.parseArray(field);
-        }
-        if (isMap(type)) {
-            return parserMap.parseMap(field);
-        }
-        if (isSet(type)) {
-            return parserSet.parseSet(field);
-        }
-        //Catch all collections that are not map or set. Should only be lists.
-        if (isCollection(type)) {
-            return parserCollection.parseCollection(field);
-        }
-        return parsers.parseClass(type);
-    }
-
     private void parseClassFields(final ObjectNode properties, final ArrayNode required, final Class type) {
         //Parse super classes first.
         final Class superType = type.getSuperclass();
@@ -97,7 +52,7 @@ public class ParserClass extends ParserBase {
             }
             final String name = ReflectionUtil.getFieldName(field);
 
-            final ObjectNode fieldNode = parseClassField(field);
+            final ObjectNode fieldNode = parsers.parseClassField(field);
             final boolean isRequired = JsonSchemaUtil.isRequired(field);
             setIsNullable(field.getType(), fieldNode, !isRequired);
             if (isRequired) {
@@ -112,7 +67,7 @@ public class ParserClass extends ParserBase {
     }
 
     private void appendSchemaFields(final Field field, final ObjectNode target) {
-        final Set<JsonSchemaField> allowedFields = parsers.getAllowedSchemaFields(field);
+        final Set<JsonSchemaField> allowedFields = parsers.getAllowedSchemaFields(field.getType());
         JsonSchemaUtil.addFields(field.getType(), target, field, allowedFields);
     }
 
@@ -127,22 +82,6 @@ public class ParserClass extends ParserBase {
             typeStr = typeStr.replace(", null", "");
         }
         node.put("type", typeStr);
-    }
-
-    private boolean isArray(final Class type) {
-        return type.isArray();
-    }
-
-    private boolean isCollection(final Class type) {
-        return Collection.class.isAssignableFrom(type);
-    }
-
-    private boolean isSet(final Class type) {
-        return Set.class.isAssignableFrom(type);
-    }
-
-    private boolean isMap(final Class type) {
-        return Map.class.isAssignableFrom(type);
     }
 
 }

@@ -74,7 +74,7 @@ public abstract class AssertJson {
             }
         }
 
-        return true;
+        return a.asText().equals(b.asText());
     }
 
 }

@@ -43,6 +43,19 @@ public class ArrayTest {
         );
     }
 
+    @Test
+    public void testArrayListBoolRoot() {
+        AssertJson.assertEquals(new JsonBuilder()
+                .setType(JsonType.ARRAY)
+                .setItems(new JsonBuilder()
+                        .setTypeNull(JsonType.BOOLEAN)
+                        .build()
+                )
+                .build(),
+                gen.create(Boolean[].class)
+        );
+    }
+
     private JsonNode getExpected(final JsonNode items) {
         return new JsonBuilder()
                 .setType(JsonType.OBJECT)

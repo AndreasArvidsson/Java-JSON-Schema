@@ -25,7 +25,8 @@ public class ParserMap extends ParserBase {
         this.parsers = parsers;
     }
 
-    public ObjectNode parseMap(final Field field) {
+    @Override
+    public ObjectNode parseClassField(final Field field) {
         final ObjectNode result = super.parseClass(field.getType());
         final Class valueType = ReflectionUtil.getGenericValueType(field);
         final ObjectNode patternProperties = MAPPER.createObjectNode();

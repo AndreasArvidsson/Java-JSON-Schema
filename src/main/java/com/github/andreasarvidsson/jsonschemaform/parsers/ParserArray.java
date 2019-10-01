@@ -3,7 +3,6 @@ package com.github.andreasarvidsson.jsonschemaform.parsers;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.andreasarvidsson.jsonschemaform.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschemaform.JsonType;
-import java.lang.reflect.Field;
 import java.util.Arrays;
 
 /**
@@ -24,9 +23,10 @@ public class ParserArray extends ParserBase {
         this.parsers = parsers;
     }
 
-    public ObjectNode parseArray(final Field field) {
-        final ObjectNode result = super.parseClass(field.getType());
-        final Class valueType = field.getType().getComponentType();
+    @Override
+    public ObjectNode parseClass(final Class type) {
+        final ObjectNode result = super.parseClass(type);
+        final Class valueType = type.getComponentType();
         result.set("items", parsers.parseClass(valueType));
         return result;
     }

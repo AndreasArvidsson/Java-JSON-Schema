@@ -1,6 +1,7 @@
 package com.github.andreasarvidsson.jsonschemaform;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +21,7 @@ public class CollectionTest {
     public void testListBool() {
         AssertJson.assertEquals(
                 getExpected(new JsonBuilder()
-                        .setType(JsonType.BOOLEAN)
+                        .setTypeNull(JsonType.BOOLEAN)
                         .build()),
                 gen.create(ListBool.class)
         );
@@ -41,6 +42,17 @@ public class CollectionTest {
                 gen.create(ListDefault.class)
         );
     }
+
+    @Test
+    public void testArrayListRoot() {
+        AssertJson.assertEquals(
+                new JsonBuilder()
+                .setType(JsonType.ARRAY)
+                .build(),
+                new JsonSchemaGenerator().hideSchemaField().create(ArrayList.class)
+        );
+    }
+
 
     private JsonNode getExpected(final JsonNode items) {
         return new JsonBuilder()
