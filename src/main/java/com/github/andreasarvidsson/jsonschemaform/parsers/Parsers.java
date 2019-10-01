@@ -2,6 +2,7 @@ package com.github.andreasarvidsson.jsonschemaform.parsers;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.andreasarvidsson.jsonschemaform.ClassDefinitions;
+import com.github.andreasarvidsson.jsonschemaform.JsonSchemaField;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -9,6 +10,7 @@ import java.util.Arrays;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -43,17 +45,15 @@ public class Parsers {
         return classDefinitions.getRef(type);
     }
 
-    public void parseField(final Field field, final ObjectNode target) {
+    public Set<JsonSchemaField> getAllowedSchemaFields(final Field field) {
         final Class type = field.getType();
         if (simpleParsers.containsKey(type)) {
-            simpleParsers.get(type).parseField(field, target);
-            return;
+            return simpleParsers.get(type).getAllowedSchemaFields();
         }
         if (customParsers.containsKey(type)) {
-            customParsers.get(type).parseField(field, target);
-            return;
+            return customParsers.get(type).getAllowedSchemaFields();
         }
-        classParser.parseField(field, target);
+        return classParser.getAllowedSchemaFields(field);
     }
 
     public String getDefType(final Class type) {

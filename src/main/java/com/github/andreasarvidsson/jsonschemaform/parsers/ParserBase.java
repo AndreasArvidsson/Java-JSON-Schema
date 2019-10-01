@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.andreasarvidsson.jsonschemaform.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschemaform.JsonSchemaUtil;
 import com.github.andreasarvidsson.jsonschemaform.JsonType;
-import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,8 +38,8 @@ public abstract class ParserBase implements Parser {
     }
 
     @Override
-    public void parseField(final Field field, final ObjectNode target) {
-        JsonSchemaUtil.addFields(field.getType(), target, field, schemaFields);
+    public Set<JsonSchemaField> getAllowedSchemaFields() {
+        return schemaFields;
     }
 
     private void addType(final Class type, final ObjectNode node) {

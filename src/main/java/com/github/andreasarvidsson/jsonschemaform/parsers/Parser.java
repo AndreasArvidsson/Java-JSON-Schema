@@ -1,7 +1,8 @@
 package com.github.andreasarvidsson.jsonschemaform.parsers;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import java.lang.reflect.Field;
+import com.github.andreasarvidsson.jsonschemaform.JsonSchemaField;
+import java.util.Set;
 
 /**
  *
@@ -11,6 +12,6 @@ public interface Parser {
 
     public ObjectNode parseClass(final Class type);
 
-    public void parseField(final Field field, final ObjectNode target);
+    public Set<JsonSchemaField> getAllowedSchemaFields();
 
 }

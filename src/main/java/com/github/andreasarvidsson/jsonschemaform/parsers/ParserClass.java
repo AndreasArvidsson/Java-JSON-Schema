@@ -50,26 +50,21 @@ public class ParserClass extends ParserBase {
         return result;
     }
 
-    @Override
-    public void parseField(final Field field, final ObjectNode target) {
+    public Set<JsonSchemaField> getAllowedSchemaFields(final Field field) {
         final Class type = field.getType();
         if (isArray(type)) {
-            parserArray.parseField(field, target);
-            return;
+            return parserArray.getAllowedSchemaFields();
         }
         if (isMap(type)) {
-            parserMap.parseField(field, target);
-            return;
+            return parserMap.getAllowedSchemaFields();
         }
         if (isSet(type)) {
-            parserSet.parseField(field, target);
-            return;
+            return parserSet.getAllowedSchemaFields();
         }
         if (isCollection(type)) {
-            parserCollection.parseField(field, target);
-            return;
+            return parserCollection.getAllowedSchemaFields();
         }
-        super.parseField(field, target);
+        return super.getAllowedSchemaFields();
     }
 
     private ObjectNode parseClassField(final Field field) {
@@ -110,10 +105,15 @@ public class ParserClass extends ParserBase {
             }
 
             //Add field anotations
-            parsers.parseField(field, fieldNode);
+            appendSchemaFields(field, fieldNode);
 
             properties.set(name, fieldNode);
         }
+    }
+
+    private void appendSchemaFields(final Field field, final ObjectNode target) {
+        final Set<JsonSchemaField> allowedFields = parsers.getAllowedSchemaFields(field);
+        JsonSchemaUtil.addFields(field.getType(), target, field, allowedFields);
     }
 
     private void setIsNullable(final Class type, final ObjectNode node, final boolean isNullable) {

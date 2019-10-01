@@ -13,34 +13,36 @@ import java.util.Set;
  */
 public abstract class JsonSchemaUtil {
 
-    public static void addFields(final Class type, final ObjectNode res, final AnnotatedElement elem, final Set<JsonSchemaField> schemaFields) {
+    public static void addFields(
+            final Class type, final ObjectNode target, final AnnotatedElement elem,
+            final Set<JsonSchemaField> allowed) {
         final JsonSchema[] anotations = elem.getAnnotationsByType(JsonSchema.class);
         for (final JsonSchema anot : anotations) {
             if (anot.crossFieldConstraint() == CrossFieldConstraint.NONE) {
                 //General
-                set(type, schemaFields, res, JsonSchemaField.TITLE, anot.title());
-                set(type, schemaFields, res, JsonSchemaField.DESCRIPTION, anot.description());
+                set(type, allowed, target, JsonSchemaField.TITLE, anot.title());
+                set(type, allowed, target, JsonSchemaField.DESCRIPTION, anot.description());
 
                 //Object
-                set(type, schemaFields, res, JsonSchemaField.MIN_PROPERTIES, anot.minProperties());
-                set(type, schemaFields, res, JsonSchemaField.MAX_PROPERTIES, anot.maxProperties());
+                set(type, allowed, target, JsonSchemaField.MIN_PROPERTIES, anot.minProperties());
+                set(type, allowed, target, JsonSchemaField.MAX_PROPERTIES, anot.maxProperties());
 
                 //Array
-                set(type, schemaFields, res, JsonSchemaField.MIN_ITEMS, anot.minItems());
-                set(type, schemaFields, res, JsonSchemaField.MAX_ITEMS, anot.maxItems());
+                set(type, allowed, target, JsonSchemaField.MIN_ITEMS, anot.minItems());
+                set(type, allowed, target, JsonSchemaField.MAX_ITEMS, anot.maxItems());
 
                 //String
-                set(type, schemaFields, res, JsonSchemaField.MIN_LENGTH, anot.minLength());
-                set(type, schemaFields, res, JsonSchemaField.MAX_LENGTH, anot.maxLength());
-                set(type, schemaFields, res, JsonSchemaField.PATTERN, anot.pattern());
+                set(type, allowed, target, JsonSchemaField.MIN_LENGTH, anot.minLength());
+                set(type, allowed, target, JsonSchemaField.MAX_LENGTH, anot.maxLength());
+                set(type, allowed, target, JsonSchemaField.PATTERN, anot.pattern());
 //                set(schemaFields, res, JsonSchemaField.FORMAT, anot.format());
 
                 //Number / integer
-                set(type, schemaFields, res, JsonSchemaField.MINIMUM, anot.minimum());
-                set(type, schemaFields, res, JsonSchemaField.MAXIMUM, anot.maximum());
-                set(type, schemaFields, res, JsonSchemaField.EXCLUSIVE_MINIMUM, anot.exclusiveMinimum());
-                set(type, schemaFields, res, JsonSchemaField.EXCLUSIVE_MAXIMUM, anot.exclusiveMaximum());
-                set(type, schemaFields, res, JsonSchemaField.MULTIPLE_OF, anot.multipleOf());
+                set(type, allowed, target, JsonSchemaField.MINIMUM, anot.minimum());
+                set(type, allowed, target, JsonSchemaField.MAXIMUM, anot.maximum());
+                set(type, allowed, target, JsonSchemaField.EXCLUSIVE_MINIMUM, anot.exclusiveMinimum());
+                set(type, allowed, target, JsonSchemaField.EXCLUSIVE_MAXIMUM, anot.exclusiveMaximum());
+                set(type, allowed, target, JsonSchemaField.MULTIPLE_OF, anot.multipleOf());
             }
         }
     }
@@ -64,17 +66,17 @@ public abstract class JsonSchemaUtil {
     }
 
     private static void set(
-            final Class type, final Collection<JsonSchemaField> schemaFields,
-            final ObjectNode result, final JsonSchemaField field, final Object value) {
+            final Class type, final Collection<JsonSchemaField> allowed,
+            final ObjectNode target, final JsonSchemaField field, final Object value) {
         //If still default value. Just stop/return.
         if (Objects.equals(getDefaultValue(field), value)) {
             return;
         }
         //New value. Check if valid for this node.
-        if (!schemaFields.contains(field)) {
+        if (!allowed.contains(field)) {
             throw new RuntimeException(String.format("Json schema field '%s' is not applicable for '%s'", field.toString(), type.getTypeName()));
         }
-        result.putPOJO(field.toString(), value);
+        target.putPOJO(field.toString(), value);
     }
 
     private static Object getDefaultValue(final JsonSchemaField field) {
