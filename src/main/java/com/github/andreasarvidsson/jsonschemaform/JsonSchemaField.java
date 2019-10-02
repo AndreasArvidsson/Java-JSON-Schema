@@ -5,7 +5,6 @@ package com.github.andreasarvidsson.jsonschemaform;
  * @author Andreas Arvidsson
  */
 public enum JsonSchemaField {
-
     //General
     TITLE,
     DESCRIPTION,
@@ -13,12 +12,15 @@ public enum JsonSchemaField {
     //Object
     MIN_PROPERTIES,
     MAX_PROPERTIES,
-    //propertyNames / pattern: String
-    //dependencies: Map<String, String[]>
-    
+//  REQUIRED - Special case not handled by parsers
+//  DEPENDENCIES  - Special case not handled by parsers
+//  PATTERN_PROPERTIES - Use type of Map. Dont enable loose typing validation.
+//  propertyNames / pattern: String - Not implemented yet
+
     //Array
     MIN_ITEMS,
     MAX_ITEMS,
+//  UNIQUE_ITEMS - Added automatically for sets    
     
     //String
     MIN_LENGTH,

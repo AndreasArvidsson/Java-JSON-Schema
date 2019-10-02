@@ -19,6 +19,7 @@ public class ObjectTest {
     private final String descOuter = "This is an outer class";
     private final String fieldTitle = "My field";
     private final String fieldDesc = "This is a field";
+    private final String dependency = "anoterValue";
 
     @Test
     public void testObj() {
@@ -61,6 +62,27 @@ public class ObjectTest {
         AssertJson.assertEquals(
                 expected,
                 gen.create(AnyGetterSetterClass.class)
+        );
+    }
+
+    @Test
+    public void testDependencyClass() {
+        final ObjectNode expected = new JsonBuilder()
+                .setType(JsonType.OBJECT)
+                .addField("additionalProperties", false)
+                .addDependencies("value", new String[]{dependency})
+                .addProperty("value", new JsonBuilder()
+                        .setTypeNull(JsonType.STRING)
+                        .build()
+                )
+                .addProperty(dependency, new JsonBuilder()
+                        .setTypeNull(JsonType.STRING)
+                        .build()
+                )
+                .build();
+        AssertJson.assertEquals(
+                expected,
+                gen.create(DependencyClass.class)
         );
     }
 
@@ -124,6 +146,17 @@ public class ObjectTest {
         public Map<String, String> get() {
             return properties;
         }
+
+    }
+
+    class DependencyClass {
+
+        @JsonSchema(
+                dependencies = {dependency}
+        )
+        String value;
+
+        String anoterValue;
 
     }
 

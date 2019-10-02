@@ -45,7 +45,8 @@ public abstract class JsonSchemaUtil {
                 set(type, allowed, target, JsonSchemaField.MIN_PROPERTIES, anot.minProperties());
                 set(type, allowed, target, JsonSchemaField.MAX_PROPERTIES, anot.maxProperties());
                 //required is a special case used by the class parser and not by each type parser.
-                
+                //dependencies: Se above
+
                 //Array
                 set(type, allowed, target, JsonSchemaField.MIN_ITEMS, anot.minItems());
                 set(type, allowed, target, JsonSchemaField.MAX_ITEMS, anot.maxItems());
@@ -68,6 +69,16 @@ public abstract class JsonSchemaUtil {
 
     public static boolean isRequired(final Field field) {
         return field.getType().isPrimitive() || isAnotRequired(field);
+    }
+
+    public static String[] getDependencies(final Field field) {
+        final JsonSchema[] anotations = field.getAnnotationsByType(JsonSchema.class);
+        for (final JsonSchema anot : anotations) {
+            if (anot.crossFieldConstraint() == CrossFieldConstraint.NONE && anot.dependencies().length > 0) {
+                return anot.dependencies();
+            }
+        }
+        return new String[]{};
     }
 
     public static boolean isRequired(final Class type) {

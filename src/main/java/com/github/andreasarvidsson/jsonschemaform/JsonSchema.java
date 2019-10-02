@@ -21,7 +21,7 @@ public @interface JsonSchema {
     long minProperties() default -1;
     long maxProperties() default -1;
     boolean required() default false;    
-    //dependencies: Map<String, String[]>
+    String[] dependencies() default {};
         
     //Array
     long minItems() default -1;

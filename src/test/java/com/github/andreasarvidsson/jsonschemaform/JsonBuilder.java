@@ -13,7 +13,7 @@ import java.util.Collection;
 public class JsonBuilder {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private final ObjectNode res, properties, patternProperties;
+    private final ObjectNode res, properties, patternProperties, dependencies;
     private final ArrayNode required, enums, oneOf;
     private JsonNode items = null;
     private Boolean additionalProperties = null;
@@ -22,6 +22,7 @@ public class JsonBuilder {
         res = MAPPER.createObjectNode();
         properties = MAPPER.createObjectNode();
         patternProperties = MAPPER.createObjectNode();
+        dependencies = MAPPER.createObjectNode();
         required = MAPPER.createArrayNode();
         enums = MAPPER.createArrayNode();
         oneOf = MAPPER.createArrayNode();
@@ -72,8 +73,13 @@ public class JsonBuilder {
         return this;
     }
 
-    public JsonBuilder addRequired(final Collection< String> required) {
+    public JsonBuilder addRequired(final Collection<String> required) {
         required.forEach(r -> addRequired(r));
+        return this;
+    }
+
+    public JsonBuilder addDependencies(final String field, final String[] deps) {
+        dependencies.putPOJO(field, deps);
         return this;
     }
 
@@ -93,6 +99,9 @@ public class JsonBuilder {
         }
         if (required.size() > 0) {
             res.set("required", required);
+        }
+        if (dependencies.size() > 0) {
+            res.set("dependencies", dependencies);
         }
         if (properties.size() > 0) {
             res.set("properties", properties);
