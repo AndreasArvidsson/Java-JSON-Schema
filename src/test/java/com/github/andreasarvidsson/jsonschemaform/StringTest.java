@@ -1,6 +1,7 @@
 package com.github.andreasarvidsson.jsonschemaform;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -66,6 +67,14 @@ public class StringTest {
         AssertJson.assertEquals(
                 expected,
                 gen.create(StringClass.class)
+        );
+    }
+
+    @Test
+    public void testUUID() {
+        AssertJson.assertEquals(
+                getStringExpected(),
+                gen.create(UUID.class)
         );
     }
 

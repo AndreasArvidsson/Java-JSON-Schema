@@ -16,20 +16,16 @@ public @interface JsonSchema {
     //General
     String title() default "";
     String description() default "";
-    //default: Object
-    //examples: Object[]
     
     //Object
     long minProperties() default -1;
     long maxProperties() default -1;
     boolean required() default false;    
-    //propertyNames / pattern: String
     //dependencies: Map<String, String[]>
         
     //Array
     long minItems() default -1;
     long maxItems() default -1;
-//    boolean uniqueItems() default false;
     
     //String
     long minLength() default -1;

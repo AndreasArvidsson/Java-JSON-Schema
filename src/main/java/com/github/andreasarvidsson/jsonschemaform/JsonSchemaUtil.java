@@ -35,7 +35,7 @@ public abstract class JsonSchemaUtil {
                 set(type, allowed, target, JsonSchemaField.MIN_LENGTH, anot.minLength());
                 set(type, allowed, target, JsonSchemaField.MAX_LENGTH, anot.maxLength());
                 set(type, allowed, target, JsonSchemaField.PATTERN, anot.pattern());
-//                set(schemaFields, res, JsonSchemaField.FORMAT, anot.format());
+//                set(type, allowed, target, JsonSchemaField.FORMAT, anot.format());
 
                 //Number / integer
                 set(type, allowed, target, JsonSchemaField.MINIMUM, anot.minimum());

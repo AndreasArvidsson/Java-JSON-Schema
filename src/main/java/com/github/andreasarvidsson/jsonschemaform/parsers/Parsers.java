@@ -14,6 +14,7 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  *
@@ -140,7 +141,8 @@ public class Parsers {
         ));
         addSimples(new ParserString(), Arrays.asList(
                 String.class,
-                CharSequence.class
+                CharSequence.class,
+                UUID.class
         ));
         simpleParsers.put(Object.class, new ParserObject());
     }

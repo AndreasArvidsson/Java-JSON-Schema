@@ -16,7 +16,7 @@ public enum JsonSchemaField {
     MIN_ITEMS,
     MAX_ITEMS,
     PATTERN,
-    //    FORMAT,
+    FORMAT,
     MIN_LENGTH,
     MAX_LENGTH,
     MINIMUM,
