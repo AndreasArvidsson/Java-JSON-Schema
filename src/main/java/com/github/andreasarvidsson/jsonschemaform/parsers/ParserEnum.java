@@ -1,6 +1,7 @@
 package com.github.andreasarvidsson.jsonschemaform.parsers;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.andreasarvidsson.jsonschemaform.JsonSchemaEnum;
@@ -27,7 +28,7 @@ public class ParserEnum extends ParserBase {
 
     @Override
     public ObjectNode parseClass(final Class type) {
-        return parseClass(type, false);
+        return parseClass(type, true);
     }
 
     @Override
@@ -40,39 +41,55 @@ public class ParserEnum extends ParserBase {
         final Method jsonValueMethod = ReflectionUtil.getFirstMethod(type, JsonValue.class);
         //Enum with description. Use oneOf array
         if (JsonSchemaEnum.class.isAssignableFrom(type)) {
-            addDescriptiveValues(result, jsonValueMethod, (Enum[]) type.getEnumConstants());
+            addDescriptiveValues(result, jsonValueMethod, (Enum[]) type.getEnumConstants(), isRequired);
         }
         //Basic enum array without description.
         else {
-            addSimpleValues(result, jsonValueMethod, (Enum[]) type.getEnumConstants());
+            addSimpleValues(result, jsonValueMethod, (Enum[]) type.getEnumConstants(), isRequired);
         }
         return result;
     }
 
-    private void addDescriptiveValues(final ObjectNode result, final Method jsonValueMethod, final Enum[] enumValues) {
+    private void addDescriptiveValues(
+            final ObjectNode result, final Method jsonValueMethod,
+            final Enum[] enumValues, final boolean isRequired) {
         final ArrayNode oneOfNode = MAPPER.createArrayNode();
+        if (!isRequired) {
+            oneOfNode.add(createDesc(null, null, null));
+        }
         for (final Enum e : enumValues) {
-            final ObjectNode node = MAPPER.createObjectNode();
-            node.putPOJO("const", getEnumValue(e, jsonValueMethod));
-            final String title = ((JsonSchemaEnum) e).getTitle();
-            final String description = ((JsonSchemaEnum) e).getDescription();
-            if (title != null) {
-                node.put(JsonSchemaField.TITLE.toString(), title);
-            }
-            if (description != null) {
-                node.put(JsonSchemaField.DESCRIPTION.toString(), description);
-            }
-            oneOfNode.add(node);
+            oneOfNode.add(createDesc(
+                    getEnumValue(e, jsonValueMethod),
+                    ((JsonSchemaEnum) e).getTitle(),
+                    ((JsonSchemaEnum) e).getDescription()
+            ));
         }
         result.set("oneOf", oneOfNode);
     }
 
-    private void addSimpleValues(final ObjectNode result, final Method jsonValueMethod, final Enum[] enumValues) {
+    private void addSimpleValues(
+            final ObjectNode result, final Method jsonValueMethod,
+            final Enum[] enumValues, final boolean isRequired) {
         final ArrayNode enumNode = MAPPER.createArrayNode();
+        if (!isRequired) {
+            enumNode.addPOJO(null);
+        }
         for (final Enum e : enumValues) {
             enumNode.addPOJO(getEnumValue(e, jsonValueMethod));
         }
         result.set("enum", enumNode);
+    }
+
+    private JsonNode createDesc(final Object value, final String title, final String description) {
+        final ObjectNode result = MAPPER.createObjectNode();
+        result.putPOJO("const", value);
+        if (title != null) {
+            result.put(JsonSchemaField.TITLE.toString(), title);
+        }
+        if (description != null) {
+            result.put(JsonSchemaField.DESCRIPTION.toString(), description);
+        }
+        return result;
     }
 
     private Object getEnumValue(final Enum e, final Method jsonValueMethod) {

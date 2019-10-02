@@ -1,16 +1,12 @@
 package com.github.andreasarvidsson.jsonschemaform.parsers;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.andreasarvidsson.jsonschemaform.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschemaform.JsonSchemaUtil;
 import com.github.andreasarvidsson.jsonschemaform.JsonType;
 import com.github.andreasarvidsson.jsonschemaform.ReflectionUtil;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Set;
 

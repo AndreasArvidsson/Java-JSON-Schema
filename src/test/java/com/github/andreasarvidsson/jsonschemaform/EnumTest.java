@@ -24,13 +24,43 @@ public class EnumTest {
 
     @Test
     public void testSimpleEnumClass() {
-        AssertJson.assertEquals(
-                new JsonBuilder()
+        AssertJson.assertEquals(new JsonBuilder()
                 .setType(JsonType.OBJECT)
                 .setAdditionalProps(false)
                 .addProperty("value", getSimpleExpected(true))
                 .build(),
                 gen.create(SimpleEnumClass.class)
+        );
+    }
+
+    @Test
+    public void testSimpleEnumRequiredClass() {
+        AssertJson.assertEquals(new JsonBuilder()
+                .setType(JsonType.OBJECT)
+                .setAdditionalProps(false)
+                .addRequired("value")
+                .addProperty("value", getSimpleExpected(false))
+                .build(),
+                gen.create(SimpleEnumRequiredClass.class)
+        );
+    }
+
+    @Test
+    public void testDescriptiveEnum() {
+        AssertJson.assertEquals(
+                getDescriptiveExpected(false),
+                gen.create(DescriptiveEnum.class)
+        );
+    }
+
+    @Test
+    public void testDescriptiveEnumClass() {
+        AssertJson.assertEquals(new JsonBuilder()
+                .setType(JsonType.OBJECT)
+                .setAdditionalProps(false)
+                .addProperty("value", getDescriptiveExpected(true))
+                .build(),
+                gen.create(DescriptiveEnumClass.class)
         );
     }
 
@@ -48,18 +78,22 @@ public class EnumTest {
                 .build();
     }
 
-    @Test
-    public void testDescriptiveEnum() {
-        AssertJson.assertEquals(
-                new JsonBuilder()
+    private JsonNode getDescriptiveExpected(final boolean includeNull) {
+        final JsonBuilder b = new JsonBuilder()
                 .addField(JsonSchemaField.TITLE, title)
-                .addField(JsonSchemaField.DESCRIPTION, desc)
-                .addOneOf(new JsonBuilder()
-                        .addField("const", "A")
-                        .addField(JsonSchemaField.TITLE, "a")
-                        .addField(JsonSchemaField.DESCRIPTION, "A_desc")
-                        .build()
-                )
+                .addField(JsonSchemaField.DESCRIPTION, desc);
+        if (includeNull) {
+            b.addOneOf(new JsonBuilder()
+                    .addField("const", null)
+                    .build()
+            );
+        }
+        return b.addOneOf(new JsonBuilder()
+                .addField("const", "A")
+                .addField(JsonSchemaField.TITLE, "a")
+                .addField(JsonSchemaField.DESCRIPTION, "A_desc")
+                .build()
+        )
                 .addOneOf(new JsonBuilder()
                         .addField("const", "B")
                         .addField(JsonSchemaField.TITLE, "b")
@@ -72,9 +106,7 @@ public class EnumTest {
                         .addField(JsonSchemaField.DESCRIPTION, "C_desc")
                         .build()
                 )
-                .build(),
-                gen.create(DescriptiveEnum.class)
-        );
+                .build();
     }
 
     @JsonSchema(
@@ -113,6 +145,19 @@ public class EnumTest {
     class SimpleEnumClass {
 
         SimpleEnum value;
+    }
+
+    class SimpleEnumRequiredClass {
+
+        @JsonSchema(
+                required = true
+        )
+        SimpleEnum value;
+    }
+
+    class DescriptiveEnumClass {
+
+        DescriptiveEnum value;
     }
 
 }
