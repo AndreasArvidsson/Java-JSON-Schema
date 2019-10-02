@@ -9,8 +9,7 @@ import java.lang.annotation.Target;
  *
  * @author andreas.arvidsson@redpill-linpro.com
  */
-//@Target({ElementType.FIELD})
-@Target({ElementType.METHOD, ElementType.FIELD, ElementType.TYPE})
+@Target({ElementType.FIELD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface JsonSchema {
     

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -39,9 +40,18 @@ public abstract class ReflectionUtil {
     }
 
     public static Method getFirstMethod(final Class type, final Class<? extends Annotation> annotation) {
-        for (final Method method : type.getMethods()) {
+        for (final Method method : type.getDeclaredMethods()) {
             if (method.isAnnotationPresent(annotation)) {
                 return method;
+            }
+        }
+        return null;
+    }
+
+    public static Constructor getFirstConstructor(final Class type, final Class<? extends Annotation> annotation) {
+        for (final Constructor constructor : type.getDeclaredConstructors()) {
+            if (constructor.isAnnotationPresent(annotation)) {
+                return constructor;
             }
         }
         return null;

@@ -1,8 +1,10 @@
 package com.github.andreasarvidsson.jsonschemaform.parsers;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.andreasarvidsson.jsonschemaform.ClassDefinitions;
 import com.github.andreasarvidsson.jsonschemaform.JsonSchemaField;
+import com.github.andreasarvidsson.jsonschemaform.ReflectionUtil;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -65,14 +67,7 @@ public class Parsers {
         return classDefinitions.getType(type);
     }
 
-    private ObjectNode createClassNode(final Class type) {
-        if (customParsers.containsKey(type)) {
-            return customParsers.get(type).parseClass(type);
-        }
-        return parserClass.parseClass(type);
-    }
-
-    private Parser getParser(final Class type) {
+    public Parser getParser(final Class type) {
         final Parser simpleParser = getSimpleParser(type);
         if (simpleParser != null) {
             return simpleParser;
@@ -103,7 +98,17 @@ public class Parsers {
         if (Collection.class.isAssignableFrom(type)) {
             return parserCollection;
         }
+        if (ReflectionUtil.hasMethod(type, JsonValue.class)) {
+            return new ParserJsonValue(this, type);
+        }
         return null;
+    }
+
+    private ObjectNode createClassNode(final Class type) {
+        if (customParsers.containsKey(type)) {
+            return customParsers.get(type).parseClass(type);
+        }
+        return parserClass.parseClass(type);
     }
 
     private void addSimples(final boolean autoRangeNumbers) {
