@@ -16,7 +16,8 @@ public class ParserString extends ParserBase {
                 JsonSchemaField.DESCRIPTION,
                 JsonSchemaField.MIN_LENGTH,
                 JsonSchemaField.MAX_LENGTH,
-                JsonSchemaField.PATTERN
+                JsonSchemaField.PATTERN,
+                JsonSchemaField.FORMAT
         ));
     }
 

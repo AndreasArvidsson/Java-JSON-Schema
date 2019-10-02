@@ -31,7 +31,7 @@ public @interface JsonSchema {
     long minLength() default -1;
     long maxLength() default -1;
     String pattern() default "";
-//    String format() default "";
+    String format() default "";
     
     //Number / integer
     long minimum() default Long.MIN_VALUE;

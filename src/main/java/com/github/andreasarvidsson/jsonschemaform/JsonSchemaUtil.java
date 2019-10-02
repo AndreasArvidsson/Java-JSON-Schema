@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -12,6 +14,22 @@ import java.util.Set;
  * @author Andreas Arvidsson
  */
 public abstract class JsonSchemaUtil {
+
+    private static final Map<JsonSchemaField, Object> DEFAULT_VALUES = new HashMap();
+
+    static {
+        try {
+            for (final JsonSchemaField field : JsonSchemaField.values()) {
+                final Object defaultValue = JsonSchema.class
+                        .getDeclaredMethod(field.toString())
+                        .getDefaultValue();
+                DEFAULT_VALUES.put(field, defaultValue);
+            }
+        }
+        catch (final NoSuchMethodException | SecurityException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
 
     public static void addFields(
             final Class type, final ObjectNode target, final AnnotatedElement elem,
@@ -26,7 +44,8 @@ public abstract class JsonSchemaUtil {
                 //Object
                 set(type, allowed, target, JsonSchemaField.MIN_PROPERTIES, anot.minProperties());
                 set(type, allowed, target, JsonSchemaField.MAX_PROPERTIES, anot.maxProperties());
-
+                //required is a special case used by the class parser and not by each type parser.
+                
                 //Array
                 set(type, allowed, target, JsonSchemaField.MIN_ITEMS, anot.minItems());
                 set(type, allowed, target, JsonSchemaField.MAX_ITEMS, anot.maxItems());
@@ -35,7 +54,7 @@ public abstract class JsonSchemaUtil {
                 set(type, allowed, target, JsonSchemaField.MIN_LENGTH, anot.minLength());
                 set(type, allowed, target, JsonSchemaField.MAX_LENGTH, anot.maxLength());
                 set(type, allowed, target, JsonSchemaField.PATTERN, anot.pattern());
-//                set(type, allowed, target, JsonSchemaField.FORMAT, anot.format());
+                set(type, allowed, target, JsonSchemaField.FORMAT, anot.format());
 
                 //Number / integer
                 set(type, allowed, target, JsonSchemaField.MINIMUM, anot.minimum());
@@ -69,7 +88,7 @@ public abstract class JsonSchemaUtil {
             final Class type, final Collection<JsonSchemaField> allowed,
             final ObjectNode target, final JsonSchemaField field, final Object value) {
         //If still default value. Just stop/return.
-        if (Objects.equals(getDefaultValue(field), value)) {
+        if (Objects.equals(DEFAULT_VALUES.get(field), value)) {
             return;
         }
         //New value. Check if valid for this node.
@@ -77,17 +96,6 @@ public abstract class JsonSchemaUtil {
             throw new RuntimeException(String.format("Json schema field '%s' is not applicable for '%s'", field.toString(), type.getTypeName()));
         }
         target.putPOJO(field.toString(), value);
-    }
-
-    private static Object getDefaultValue(final JsonSchemaField field) {
-        try {
-            return JsonSchema.class
-                    .getDeclaredMethod(field.toString())
-                    .getDefaultValue();
-        }
-        catch (final NoSuchMethodException | SecurityException ex) {
-            throw new RuntimeException(ex);
-        }
     }
 
 }

@@ -14,6 +14,7 @@ public class StringTest {
     private final String title = "title";
     private final String desc = "desc";
     private final String pattern = "\\s";
+    private final String format = "any";
     private final int min = 2;
     private final int max = 3;
 
@@ -61,6 +62,7 @@ public class StringTest {
                         .addField(JsonSchemaField.MIN_LENGTH, min)
                         .addField(JsonSchemaField.MAX_LENGTH, max)
                         .addField(JsonSchemaField.PATTERN, pattern)
+                        .addField(JsonSchemaField.FORMAT, format)
                         .build()
                 )
                 .build();
@@ -99,7 +101,8 @@ public class StringTest {
                 description = desc,
                 minLength = min,
                 maxLength = max,
-                pattern = pattern
+                pattern = pattern,
+                format = format
         )
         String value;
     }

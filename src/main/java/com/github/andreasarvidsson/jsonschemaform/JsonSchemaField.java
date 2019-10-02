@@ -6,19 +6,27 @@ package com.github.andreasarvidsson.jsonschemaform;
  */
 public enum JsonSchemaField {
 
+    //General
     TITLE,
     DESCRIPTION,
-    REQUIRED,
+    
+    //Object
     MIN_PROPERTIES,
     MAX_PROPERTIES,
     //propertyNames / pattern: String
     //dependencies: Map<String, String[]>
+    
+    //Array
     MIN_ITEMS,
     MAX_ITEMS,
-    PATTERN,
-    FORMAT,
+    
+    //String
     MIN_LENGTH,
     MAX_LENGTH,
+    PATTERN,
+    FORMAT,
+    
+    //Number / integer
     MINIMUM,
     MAXIMUM,
     EXCLUSIVE_MINIMUM,
