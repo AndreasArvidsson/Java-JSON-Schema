@@ -1,6 +1,7 @@
 package com.github.andreasarvidsson.jsonschemaform;
 
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -16,15 +17,35 @@ public class EnumTest {
     @Test
     public void testSimpleEnum() {
         AssertJson.assertEquals(
+                getSimpleExpected(false),
+                gen.create(SimpleEnum.class)
+        );
+    }
+
+    @Test
+    public void testSimpleEnumClass() {
+        AssertJson.assertEquals(
                 new JsonBuilder()
+                .setType(JsonType.OBJECT)
+                .setAdditionalProps(false)
+                .addProperty("value", getSimpleExpected(true))
+                .build(),
+                gen.create(SimpleEnumClass.class)
+        );
+    }
+
+    private JsonNode getSimpleExpected(final boolean includeNull) {
+        final JsonBuilder b = new JsonBuilder()
                 .addField(JsonSchemaField.TITLE, title)
-                .addField(JsonSchemaField.DESCRIPTION, desc)
+                .addField(JsonSchemaField.DESCRIPTION, desc);
+        if (includeNull) {
+            b.addEnum(null);
+        }
+        return b
                 .addEnum("A")
                 .addEnum("B")
                 .addEnum("C")
-                .build(),
-                gen.create(SimpleEnum.class)
-        );
+                .build();
     }
 
     @Test
@@ -87,6 +108,11 @@ public class EnumTest {
         public String getDescription() {
             return toString() + "_desc";
         }
+    }
+
+    class SimpleEnumClass {
+
+        SimpleEnum value;
     }
 
 }

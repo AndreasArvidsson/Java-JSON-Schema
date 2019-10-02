@@ -82,11 +82,11 @@ public class Parsers {
         if (simpleParsers.containsKey(type)) {
             return simpleParsers.get(type);
         }
-        if (type.isArray()) {
-            return parserArray;
-        }
         if (type.isEnum()) {
             return parserEnum;
+        }
+        if (type.isArray()) {
+            return parserArray;
         }
         if (Map.class.isAssignableFrom(type)) {
             return parserMap;

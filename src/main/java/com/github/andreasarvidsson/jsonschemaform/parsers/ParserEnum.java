@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.andreasarvidsson.jsonschemaform.JsonSchemaEnum;
 import com.github.andreasarvidsson.jsonschemaform.JsonSchemaField;
+import com.github.andreasarvidsson.jsonschemaform.JsonSchemaUtil;
 import com.github.andreasarvidsson.jsonschemaform.ReflectionUtil;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -25,6 +27,15 @@ public class ParserEnum extends ParserBase {
 
     @Override
     public ObjectNode parseClass(final Class type) {
+        return parseClass(type, false);
+    }
+
+    @Override
+    public ObjectNode parseClassField(final Field field) {
+        return parseClass(field.getType(), JsonSchemaUtil.isRequired(field));
+    }
+
+    private ObjectNode parseClass(final Class type, final boolean isRequired) {
         final ObjectNode result = super.parseClass(type);
         final Method jsonValueMethod = ReflectionUtil.getFirstMethod(type, JsonValue.class);
         //Enum with description. Use oneOf array

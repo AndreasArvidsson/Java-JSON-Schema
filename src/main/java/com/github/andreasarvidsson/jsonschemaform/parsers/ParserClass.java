@@ -77,6 +77,9 @@ public class ParserClass extends ParserBase {
 
     private void setIsNullable(final Class type, final ObjectNode node, final boolean isNullable) {
         String typeStr = node.has("type") ? node.get("type").asText() : parsers.getDefType(type);
+        if (typeStr == null) {
+            return;
+        }
         if (isNullable) {
             if (!typeStr.endsWith(", null")) {
                 typeStr += ", null";

@@ -36,6 +36,9 @@ public class ClassDefinitions {
     }
 
     public String getType(final Class type) {
+        if (!classes.containsKey(type)) {
+            return null;
+        }
         return classes.get(type).classNode.get("type").asText();
     }
 
