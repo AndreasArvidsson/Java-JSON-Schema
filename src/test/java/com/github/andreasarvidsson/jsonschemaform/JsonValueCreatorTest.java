@@ -1,11 +1,7 @@
 package com.github.andreasarvidsson.jsonschemaform;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import java.util.Map;
 import javax.validation.constraints.Pattern;
 import org.junit.jupiter.api.Test;
 
