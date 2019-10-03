@@ -64,9 +64,7 @@ public class ParserClass extends ParserBase {
             fieldNames.add(name);
 
             final ObjectNode fieldNode = parsers.parseClassField(field);
-            final boolean isRequired = JsonSchemaUtil.isRequired(field);
-            setIsNullable(field.getType(), fieldNode, !isRequired);
-            if (isRequired) {
+            if (JsonSchemaUtil.isRequired(field)) {
                 required.add(name);
             }
 
@@ -103,22 +101,6 @@ public class ParserClass extends ParserBase {
     private void appendSchemaFields(final Field field, final ObjectNode target) {
         final Set<JsonSchemaField> allowedFields = parsers.getAllowedSchemaFields(field.getType());
         JsonSchemaUtil.addFields(field.getType(), target, field, allowedFields);
-    }
-
-    private void setIsNullable(final Class type, final ObjectNode node, final boolean isNullable) {
-        String typeStr = node.has("type") ? node.get("type").asText() : parsers.getDefType(type);
-        if (typeStr == null) {
-            return;
-        }
-        if (isNullable) {
-            if (!typeStr.endsWith(", null")) {
-                typeStr += ", null";
-            }
-        }
-        else if (typeStr.endsWith(", null")) {
-            typeStr = typeStr.replace(", null", "");
-        }
-        node.put("type", typeStr);
     }
 
 }

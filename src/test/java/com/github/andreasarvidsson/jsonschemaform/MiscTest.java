@@ -1,5 +1,7 @@
 package com.github.andreasarvidsson.jsonschemaform;
 
+import com.github.andreasarvidsson.jsonschemaform.util.JsonBuilder;
+import com.github.andreasarvidsson.jsonschemaform.util.AssertJson;
 import java.net.URI;
 import java.net.URISyntaxException;
 import org.junit.jupiter.api.Assertions;

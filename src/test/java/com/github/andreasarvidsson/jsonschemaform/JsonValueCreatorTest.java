@@ -1,5 +1,7 @@
 package com.github.andreasarvidsson.jsonschemaform;
 
+import com.github.andreasarvidsson.jsonschemaform.util.JsonBuilder;
+import com.github.andreasarvidsson.jsonschemaform.util.AssertJson;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import javax.validation.constraints.Pattern;
@@ -20,7 +22,7 @@ public class JsonValueCreatorTest {
                 .setType(JsonType.OBJECT)
                 .setAdditionalProps(false)
                 .addProperty("value", new JsonBuilder()
-                        .setTypeNull(JsonType.STRING)
+                        .setType(JsonType.STRING)
                         .build()
                 )
                 .build(),

@@ -1,5 +1,7 @@
 package com.github.andreasarvidsson.jsonschemaform;
 
+import com.github.andreasarvidsson.jsonschemaform.util.JsonBuilder;
+import com.github.andreasarvidsson.jsonschemaform.util.AssertJson;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.Test;
 
@@ -29,7 +31,7 @@ public class ArrayTest {
     public void testArrayBoolClass() {
         AssertJson.assertEquals(
                 getExpected(new JsonBuilder()
-                        .setTypeNull(JsonType.BOOLEAN)
+                        .setType(JsonType.BOOLEAN)
                         .build()),
                 gen.create(ArrayBoolClass.class)
         );
@@ -48,7 +50,7 @@ public class ArrayTest {
         AssertJson.assertEquals(new JsonBuilder()
                 .setType(JsonType.ARRAY)
                 .setItems(new JsonBuilder()
-                        .setTypeNull(JsonType.BOOLEAN)
+                        .setType(JsonType.BOOLEAN)
                         .build()
                 )
                 .build(),
@@ -61,7 +63,7 @@ public class ArrayTest {
                 .setType(JsonType.OBJECT)
                 .setAdditionalProps(false)
                 .addProperty("value", new JsonBuilder()
-                        .setTypeNull(JsonType.ARRAY)
+                        .setType(JsonType.ARRAY)
                         .addField(JsonSchemaField.TITLE, title)
                         .addField(JsonSchemaField.DESCRIPTION, desc)
                         .addField(JsonSchemaField.MIN_ITEMS, min)

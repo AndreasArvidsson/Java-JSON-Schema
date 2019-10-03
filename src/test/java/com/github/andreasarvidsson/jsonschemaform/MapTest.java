@@ -1,5 +1,7 @@
 package com.github.andreasarvidsson.jsonschemaform;
 
+import com.github.andreasarvidsson.jsonschemaform.util.JsonBuilder;
+import com.github.andreasarvidsson.jsonschemaform.util.AssertJson;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -20,7 +22,7 @@ public class MapTest {
     public void testMapBool() {
         AssertJson.assertEquals(
                 getExpected(new JsonBuilder()
-                        .setTypeNull(JsonType.BOOLEAN)
+                        .setType(JsonType.BOOLEAN)
                         .build()),
                 gen.create(MapBoolClass.class)
         );
@@ -47,7 +49,7 @@ public class MapTest {
                 .setType(JsonType.OBJECT)
                 .setAdditionalProps(false)
                 .addProperty("value", new JsonBuilder()
-                        .setTypeNull(JsonType.OBJECT)
+                        .setType(JsonType.OBJECT)
                         .addField(JsonSchemaField.TITLE, title)
                         .addField(JsonSchemaField.DESCRIPTION, desc)
                         .addField(JsonSchemaField.MIN_PROPERTIES, min)

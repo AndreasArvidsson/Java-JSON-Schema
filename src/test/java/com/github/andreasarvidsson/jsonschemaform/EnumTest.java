@@ -1,5 +1,7 @@
 package com.github.andreasarvidsson.jsonschemaform;
 
+import com.github.andreasarvidsson.jsonschemaform.util.JsonBuilder;
+import com.github.andreasarvidsson.jsonschemaform.util.AssertJson;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.Test;
@@ -17,7 +19,7 @@ public class EnumTest {
     @Test
     public void testSimpleEnum() {
         AssertJson.assertEquals(
-                getSimpleExpected(false),
+                getSimpleExpected(),
                 gen.create(SimpleEnum.class)
         );
     }
@@ -27,7 +29,7 @@ public class EnumTest {
         AssertJson.assertEquals(new JsonBuilder()
                 .setType(JsonType.OBJECT)
                 .setAdditionalProps(false)
-                .addProperty("value", getSimpleExpected(true))
+                .addProperty("value", getSimpleExpected())
                 .build(),
                 gen.create(SimpleEnumClass.class)
         );
@@ -39,7 +41,7 @@ public class EnumTest {
                 .setType(JsonType.OBJECT)
                 .setAdditionalProps(false)
                 .addRequired("value")
-                .addProperty("value", getSimpleExpected(false))
+                .addProperty("value", getSimpleExpected())
                 .build(),
                 gen.create(SimpleEnumRequiredClass.class)
         );
@@ -48,7 +50,7 @@ public class EnumTest {
     @Test
     public void testDescriptiveEnum() {
         AssertJson.assertEquals(
-                getDescriptiveExpected(false),
+                getDescriptiveExpected(),
                 gen.create(DescriptiveEnum.class)
         );
     }
@@ -58,42 +60,32 @@ public class EnumTest {
         AssertJson.assertEquals(new JsonBuilder()
                 .setType(JsonType.OBJECT)
                 .setAdditionalProps(false)
-                .addProperty("value", getDescriptiveExpected(true))
+                .addProperty("value", getDescriptiveExpected())
                 .build(),
                 gen.create(DescriptiveEnumClass.class)
         );
     }
 
-    private JsonNode getSimpleExpected(final boolean includeNull) {
-        final JsonBuilder b = new JsonBuilder()
+    private JsonNode getSimpleExpected() {
+        return new JsonBuilder()
                 .addField(JsonSchemaField.TITLE, title)
-                .addField(JsonSchemaField.DESCRIPTION, desc);
-        if (includeNull) {
-            b.addEnum(null);
-        }
-        return b
+                .addField(JsonSchemaField.DESCRIPTION, desc)
                 .addEnum("A")
                 .addEnum("B")
                 .addEnum("C")
                 .build();
     }
 
-    private JsonNode getDescriptiveExpected(final boolean includeNull) {
-        final JsonBuilder b = new JsonBuilder()
+    private JsonNode getDescriptiveExpected() {
+        return new JsonBuilder()
                 .addField(JsonSchemaField.TITLE, title)
-                .addField(JsonSchemaField.DESCRIPTION, desc);
-        if (includeNull) {
-            b.addOneOf(new JsonBuilder()
-                    .addField("const", null)
-                    .build()
-            );
-        }
-        return b.addOneOf(new JsonBuilder()
-                .addField("const", "A")
-                .addField(JsonSchemaField.TITLE, "a")
-                .addField(JsonSchemaField.DESCRIPTION, "A_desc")
-                .build()
-        )
+                .addField(JsonSchemaField.DESCRIPTION, desc)
+                .addOneOf(new JsonBuilder()
+                        .addField("const", "A")
+                        .addField(JsonSchemaField.TITLE, "a")
+                        .addField(JsonSchemaField.DESCRIPTION, "A_desc")
+                        .build()
+                )
                 .addOneOf(new JsonBuilder()
                         .addField("const", "B")
                         .addField(JsonSchemaField.TITLE, "b")

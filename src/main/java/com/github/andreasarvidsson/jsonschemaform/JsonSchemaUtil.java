@@ -68,7 +68,16 @@ public abstract class JsonSchemaUtil {
     }
 
     public static boolean isRequired(final Field field) {
-        return field.getType().isPrimitive() || isAnotRequired(field);
+        if (field.getType().isPrimitive()) {
+            return true;
+        }
+        final JsonSchema[] anotations = field.getAnnotationsByType(JsonSchema.class);
+        for (final JsonSchema anot : anotations) {
+            if (anot.crossFieldConstraint() == CrossFieldConstraint.NONE && anot.required()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static String[] getDependencies(final Field field) {
@@ -79,20 +88,6 @@ public abstract class JsonSchemaUtil {
             }
         }
         return new String[]{};
-    }
-
-    public static boolean isRequired(final Class type) {
-        return type.isPrimitive();
-    }
-
-    private static boolean isAnotRequired(final Field field) {
-        final JsonSchema[] anotations = field.getAnnotationsByType(JsonSchema.class);
-        for (final JsonSchema anot : anotations) {
-            if (anot.crossFieldConstraint() == CrossFieldConstraint.NONE && anot.required()) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private static void set(

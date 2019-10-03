@@ -1,9 +1,11 @@
-package com.github.andreasarvidsson.jsonschemaform;
+package com.github.andreasarvidsson.jsonschemaform.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.andreasarvidsson.jsonschemaform.JsonSchemaField;
+import com.github.andreasarvidsson.jsonschemaform.JsonType;
 import java.util.Collection;
 
 /**
@@ -30,11 +32,6 @@ public class JsonBuilder {
 
     public JsonBuilder setType(final JsonType type) {
         res.put("type", type.toString());
-        return this;
-    }
-
-    public JsonBuilder setTypeNull(final JsonType type) {
-        res.put("type", String.format("%s, null", type.toString()));
         return this;
     }
 

@@ -33,7 +33,7 @@ public abstract class ParserBase implements Parser {
     @Override
     public ObjectNode parseClass(final Class type) {
         final ObjectNode result = MAPPER.createObjectNode();
-        addType(type, result);
+        addType(result);
         JsonSchemaUtil.addFields(type, result, type, schemaFields);
         return result;
     }
@@ -48,14 +48,9 @@ public abstract class ParserBase implements Parser {
         return schemaFields;
     }
 
-    private void addType(final Class type, final ObjectNode node) {
+    private void addType(final ObjectNode node) {
         if (jsonType != null) {
-            if (JsonSchemaUtil.isRequired(type)) {
-                node.put("type", jsonType.toString());
-            }
-            else {
-                node.put("type", String.format("%s, null", jsonType.toString()));
-            }
+            node.put("type", jsonType.toString());
         }
     }
 

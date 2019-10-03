@@ -1,5 +1,7 @@
 package com.github.andreasarvidsson.jsonschemaform;
 
+import com.github.andreasarvidsson.jsonschemaform.util.JsonBuilder;
+import com.github.andreasarvidsson.jsonschemaform.util.AssertJson;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.math.BigInteger;
 import org.junit.jupiter.api.Test;
@@ -111,7 +113,7 @@ public class IntegerTest {
                 .setAdditionalProps(false)
                 .addProperty("value",
                         new JsonBuilder()
-                        .setTypeNull(JsonType.INTEGER)
+                        .setType(JsonType.INTEGER)
                         .addField(JsonSchemaField.TITLE, title)
                         .addField(JsonSchemaField.DESCRIPTION, desc)
                         .addField(JsonSchemaField.MINIMUM, min)

@@ -1,5 +1,7 @@
 package com.github.andreasarvidsson.jsonschemaform;
 
+import com.github.andreasarvidsson.jsonschemaform.util.JsonBuilder;
+import com.github.andreasarvidsson.jsonschemaform.util.AssertJson;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -55,7 +57,7 @@ public class ObjectTest {
                 .setType(JsonType.OBJECT)
                 .addField("additionalProperties", true)
                 .addProperty("value", new JsonBuilder()
-                        .setTypeNull(JsonType.STRING)
+                        .setType(JsonType.STRING)
                         .build()
                 )
                 .build();
@@ -72,11 +74,11 @@ public class ObjectTest {
                 .addField("additionalProperties", false)
                 .addDependencies("value", new String[]{dependency})
                 .addProperty("value", new JsonBuilder()
-                        .setTypeNull(JsonType.STRING)
+                        .setType(JsonType.STRING)
                         .build()
                 )
                 .addProperty(dependency, new JsonBuilder()
-                        .setTypeNull(JsonType.STRING)
+                        .setType(JsonType.STRING)
                         .build()
                 )
                 .build();
@@ -93,7 +95,7 @@ public class ObjectTest {
                 .addField(JsonSchemaField.DESCRIPTION, classDesc)
                 .addField("additionalProperties", false)
                 .addProperty("value", new JsonBuilder()
-                        .setTypeNull(JsonType.STRING)
+                        .setType(JsonType.STRING)
                         .addField(JsonSchemaField.TITLE, fieldTitle)
                         .addField(JsonSchemaField.DESCRIPTION, fieldDesc)
                         .addField(JsonSchemaField.MIN_LENGTH, 1)
