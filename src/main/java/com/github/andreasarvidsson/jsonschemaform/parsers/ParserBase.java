@@ -34,7 +34,7 @@ public abstract class ParserBase implements Parser {
     public ObjectNode parseClass(final Class type) {
         final ObjectNode result = MAPPER.createObjectNode();
         addType(result);
-        JsonSchemaUtil.addFields(type, result, type, schemaFields);
+        JsonSchemaUtil.addFields(type, result, schemaFields);
         return result;
     }
 

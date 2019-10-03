@@ -76,7 +76,11 @@ public class JsonBuilder {
     }
 
     public JsonBuilder addDependencies(final String field, final String[] deps) {
-        dependencies.putPOJO(field, deps);
+        final ArrayNode depsNode = MAPPER.createArrayNode();
+        for (final String dep : deps) {
+            depsNode.add(dep);
+        }
+        dependencies.set(field, depsNode);
         return this;
     }
 
