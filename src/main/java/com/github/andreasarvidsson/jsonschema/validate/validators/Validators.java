@@ -17,10 +17,12 @@ public class Validators {
     private final Map<Class, Validator> defaultValidators = new IdentityHashMap();
 
     private final ValidatorClass validatorClass;
+    private final Validator validatorArray;
 
     public Validators() {
         addDefaults();
         validatorClass = new ValidatorClass(this);
+        validatorArray = new ValidatorArray(this);
     }
 
     public void validate(final List<Error> errors, final String path, final Object instance) {
@@ -28,15 +30,19 @@ public class Validators {
     }
 
     public void validate(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema) {
-        final Class type = instance.getClass();
+        final Validator validator = getValidator(instance.getClass());
+        validator.validate(errors, path, instance, jsonSchema);
+    }
 
+    private Validator getValidator(final Class type) {
         if (defaultValidators.containsKey(type)) {
-            defaultValidators.get(type).validate(errors, path, instance, jsonSchema);
-            return;
+            return defaultValidators.get(type);
         }
+        if (type.isArray()) {
+            return validatorArray;
+        }
+        return validatorClass;
 
-        validatorClass.validate(errors, path, instance, jsonSchema);
-        
 //        throw new RuntimeException(String.format("Unknown type %s", type.getTypeName()));
 //
 ////        if (type.isArray()) {

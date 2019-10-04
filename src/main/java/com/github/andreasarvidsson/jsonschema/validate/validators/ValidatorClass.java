@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author Andreas Arvidsson
  */
-public class ValidatorClass {
+public class ValidatorClass implements Validator {
 
     private final Validators validators;
 

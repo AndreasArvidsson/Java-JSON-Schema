@@ -2,6 +2,7 @@ package com.github.andreasarvidsson.jsonschema.validate;
 
 import com.github.andreasarvidsson.jsonschema.JsonSchema;
 import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
+import com.github.andreasarvidsson.jsonschema.util.AssertError;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +10,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author Andreas Arvidssonas Arvidsson
  */
-public class BaseTest {
+public class ClassTest {
 
     private final JsonSchemaValidator validator = new JsonSchemaValidator();
 
@@ -35,7 +36,7 @@ public class BaseTest {
         final RequiredInt instance = new RequiredInt();
         final ValidationReport report = validator.validate(instance);
         Assertions.assertFalse(report.isSuccess());
-        assertError(
+        AssertError.assertError(
                 report.getErrors().get(0),
                 report.propertyPath,
                 JsonSchemaField.Disabled.REQUIRED.toString(),
@@ -49,19 +50,12 @@ public class BaseTest {
         instance.wrapper = new RequiredInt();
         final ValidationReport report = validator.validate(instance);
         Assertions.assertFalse(report.isSuccess());
-        assertError(
+        AssertError.assertError(
                 report.getErrors().get(0),
                 String.format("%s.%s", report.propertyPath, "wrapper"),
                 JsonSchemaField.Disabled.REQUIRED.toString(),
                 "value"
         );
-    }
-
-//              System.out.println(report.toString());
-    private void assertError(final Error error, final String property, final String name, final String argument) {
-        Assertions.assertEquals(property, error.property, "Error.property");
-        Assertions.assertEquals(name, error.name, "Error.name");
-        Assertions.assertEquals(argument, error.argument, "Error.argument");
     }
 
     public static class RequiredInt {

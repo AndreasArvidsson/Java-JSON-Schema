@@ -32,6 +32,10 @@ public abstract class JsonSchemaUtil {
         }
     }
 
+    public static Object getDefaultValue(final JsonSchemaField field) {
+        return DEFAULT_VALUES.get(field);
+    }
+
     public static void addFields(
             final Class type, final ObjectNode target,
             final Set<JsonSchemaField> allowed) {
