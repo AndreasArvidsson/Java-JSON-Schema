@@ -11,7 +11,7 @@ import java.util.Map;
 
 /**
  *
- * @author Andreas Arvidsson
+ * @author Andreas Arvidssonas Arvidsson
  */
 public class ClassDefinitions {
 

@@ -12,7 +12,7 @@ import javax.validation.constraints.Pattern;
 
 /**
  *
- * @author Andreas Arvidsson
+ * @author Andreas Arvidssonas Arvidsson
  */
 public class ParserJsonValue implements InterfaceParser {
 

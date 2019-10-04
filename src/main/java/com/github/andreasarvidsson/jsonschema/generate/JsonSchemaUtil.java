@@ -10,7 +10,7 @@ import java.util.Set;
 
 /**
  *
- * @author Andreas Arvidsson
+ * @author Andreas Arvidssonas Arvidsson
  */
 public abstract class JsonSchemaUtil {
 

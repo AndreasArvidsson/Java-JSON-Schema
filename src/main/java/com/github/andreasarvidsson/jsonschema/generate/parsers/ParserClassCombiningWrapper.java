@@ -5,7 +5,7 @@ import com.github.andreasarvidsson.jsonschema.JsonSchema;
 
 /**
  *
- * @author Andreas Arvidsson
+ * @author Andreas Arvidssonas Arvidsson
  */
 public class ParserClassCombiningWrapper {
 

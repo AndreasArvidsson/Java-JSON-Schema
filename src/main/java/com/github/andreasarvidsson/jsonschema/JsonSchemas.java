@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  *
- * @author andreas.arvidsson@redpill-linpro.com
+ * @author Andreas Arvidssonas Arvidsson
  */
 @Target({ElementType.TYPE, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)

@@ -10,7 +10,7 @@ import java.util.Collection;
 
 /**
  *
- * @author Andreas Arvidsson
+ * @author Andreas Arvidssonas Arvidsson
  */
 public class JsonBuilder {
 

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Assertions;
 
 /**
  *
- * @author Andreas Arvidsson
+ * @author Andreas Arvidssonas Arvidsson
  */
 public abstract class AssertJson {
 

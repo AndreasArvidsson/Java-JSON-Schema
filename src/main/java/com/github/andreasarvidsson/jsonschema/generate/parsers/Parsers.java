@@ -18,7 +18,7 @@ import java.util.UUID;
 
 /**
  *
- * @author Andreas Arvidsson
+ * @author Andreas Arvidssonas Arvidsson
  */
 public class Parsers {
 

@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 /**
  *
- * @author Andreas Arvidsson
+ * @author Andreas Arvidssonas Arvidsson
  */
 public class ParserSet extends ParserBase implements InterfaceParserCollection {
 

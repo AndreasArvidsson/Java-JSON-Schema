@@ -11,7 +11,7 @@ import com.github.andreasarvidsson.jsonschema.generate.parsers.InterfaceParser;
 
 /**
  *
- * @author Andreas Arvidsson
+ * @author Andreas Arvidssonas Arvidsson
  */
 public class JsonSchemaGenerator {
 

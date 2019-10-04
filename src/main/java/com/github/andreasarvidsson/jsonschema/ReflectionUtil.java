@@ -11,12 +11,10 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
- * @author Andreas Arvidsson
+ * @author Andreas Arvidssonas Arvidsson
  */
 public abstract class ReflectionUtil {
 
@@ -39,6 +37,16 @@ public abstract class ReflectionUtil {
         return property != null && !property.value().isEmpty() ? property.value() : field.getName();
     }
 
+    public static Object getFieldValue(final Field field, final Object object) {
+        try {
+            field.setAccessible(true);
+            return field.get(object);
+        }
+        catch (final IllegalAccessException | IllegalArgumentException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
     public static Method getFirstMethod(final Class type, final Class<? extends Annotation> annotation) {
         for (final Method method : type.getDeclaredMethods()) {
             if (method.isAnnotationPresent(annotation)) {
@@ -59,16 +67,6 @@ public abstract class ReflectionUtil {
 
     public static boolean hasMethod(final Class type, final Class<? extends Annotation> annotation) {
         return getFirstMethod(type, annotation) != null;
-    }
-
-    public static List<Method> getMethods(final Class type, final Class<? extends Annotation> annotation) {
-        final List<Method> res = new ArrayList();
-        for (final Method method : type.getMethods()) {
-            if (method.isAnnotationPresent(annotation)) {
-                res.add(method);
-            }
-        }
-        return res;
     }
 
     public static boolean hasAnyGetterAndAnySetter(final Class type) {

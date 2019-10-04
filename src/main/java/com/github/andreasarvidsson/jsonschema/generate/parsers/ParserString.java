@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 /**
  *
- * @author Andreas Arvidsson
+ * @author Andreas Arvidssonas Arvidsson
  */
 public class ParserString extends ParserBase {
 

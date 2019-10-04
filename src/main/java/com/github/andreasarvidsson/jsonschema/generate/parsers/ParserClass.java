@@ -19,7 +19,7 @@ import java.util.Set;
 
 /**
  *
- * @author Andreas Arvidsson
+ * @author Andreas Arvidssonas Arvidsson
  */
 public class ParserClass extends ParserBase {
 

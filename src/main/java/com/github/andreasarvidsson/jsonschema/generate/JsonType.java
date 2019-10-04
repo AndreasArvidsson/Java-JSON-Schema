@@ -2,7 +2,7 @@ package com.github.andreasarvidsson.jsonschema.generate;
 
 /**
  *
- * @author Andreas Arvidsson
+ * @author Andreas Arvidssonas Arvidsson
  */
 public enum JsonType {
 
