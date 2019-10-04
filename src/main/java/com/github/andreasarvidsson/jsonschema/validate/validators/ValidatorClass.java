@@ -2,6 +2,7 @@ package com.github.andreasarvidsson.jsonschema.validate.validators;
 
 import com.github.andreasarvidsson.jsonschema.JsonSchema;
 import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
+import com.github.andreasarvidsson.jsonschema.PropertyPath;
 import com.github.andreasarvidsson.jsonschema.ReflectionUtil;
 import com.github.andreasarvidsson.jsonschema.validate.Error;
 import java.lang.reflect.Field;
@@ -19,11 +20,13 @@ public class ValidatorClass implements Validator {
         this.validators = validators;
     }
 
-    public void validate(final List<Error> errors, final String path, final Object instance) {
+    @Override
+    public void validate(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema) {
         validateClassFields(errors, path, instance, instance.getClass());
     }
 
-    public void validate(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema) {
+    @Override
+    public void validate(final List<Error> errors, final String path, final Object instance) {
         validateClassFields(errors, path, instance, instance.getClass());
     }
 
@@ -39,7 +42,7 @@ public class ValidatorClass implements Validator {
             }
             final String fieldName = ReflectionUtil.getFieldName(field);
             final Object fieldValue = ReflectionUtil.getFieldValue(field, instance);
-            final String fieldPath = path + "." + fieldName;
+            final String fieldPath = PropertyPath.append(path, fieldName);
             final JsonSchema[] jsonSchemas = field.getAnnotationsByType(JsonSchema.class);
             for (final JsonSchema jsonSchema : jsonSchemas) {
                 if (jsonSchema.combining() == JsonSchema.Combining.NONE) {

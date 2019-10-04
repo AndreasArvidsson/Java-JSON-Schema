@@ -12,4 +12,6 @@ public interface Validator {
 
     public void validate(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema);
 
+    public void validate(final List<Error> errors, final String path, final Object instance);
+
 }

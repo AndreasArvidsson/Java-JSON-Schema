@@ -2,6 +2,7 @@ package com.github.andreasarvidsson.jsonschema.validate;
 
 import com.github.andreasarvidsson.jsonschema.JsonSchema;
 import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
+import com.github.andreasarvidsson.jsonschema.PropertyPath;
 import com.github.andreasarvidsson.jsonschema.util.AssertError;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -52,7 +53,7 @@ public class ClassTest {
         Assertions.assertFalse(report.isSuccess());
         AssertError.assertError(
                 report.getErrors().get(0),
-                String.format("%s.%s", report.propertyPath, "wrapper"),
+                PropertyPath.append(report.propertyPath, "wrapper"),
                 JsonSchemaField.Disabled.REQUIRED.toString(),
                 "value"
         );

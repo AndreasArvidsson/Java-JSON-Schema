@@ -2,6 +2,7 @@ package com.github.andreasarvidsson.jsonschema.validate;
 
 import com.github.andreasarvidsson.jsonschema.JsonSchema;
 import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
+import com.github.andreasarvidsson.jsonschema.PropertyPath;
 import com.github.andreasarvidsson.jsonschema.util.AssertError;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,7 @@ public class ArrayTest {
         Assertions.assertFalse(report.isSuccess());
         AssertError.assertError(
                 report.getErrors().get(0),
-                String.format("%s.%s", report.propertyPath, "values"),
+                PropertyPath.append(report.propertyPath, "values"),
                 JsonSchemaField.MIN_ITEMS.toString(),
                 2L
         );
@@ -31,11 +32,10 @@ public class ArrayTest {
     public void testMaxItemsFailed() {
         final ArrayMaxItems instance = new ArrayMaxItems();
         final ValidationReport report = validator.validate(instance);
-//        System.out.println(report.toString());
         Assertions.assertFalse(report.isSuccess());
         AssertError.assertError(
                 report.getErrors().get(0),
-                String.format("%s.%s", report.propertyPath, "values"),
+                PropertyPath.append(report.propertyPath, "values"),
                 JsonSchemaField.MAX_ITEMS.toString(),
                 5L
         );
