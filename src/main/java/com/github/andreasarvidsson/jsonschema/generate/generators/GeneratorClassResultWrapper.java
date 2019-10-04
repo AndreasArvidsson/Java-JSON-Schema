@@ -1,4 +1,4 @@
-package com.github.andreasarvidsson.jsonschema.generate.parsers;
+package com.github.andreasarvidsson.jsonschema.generate.generators;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -16,7 +16,7 @@ import java.util.Set;
  *
  * @author Andreas Arvidssonas Arvidsson
  */
-public class ParserClassResultWrapper {
+public class GeneratorClassResultWrapper {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
@@ -25,16 +25,16 @@ public class ParserClassResultWrapper {
     final ObjectNode properties = MAPPER.createObjectNode();
     final ArrayNode required = MAPPER.createArrayNode();
     final ObjectNode dependencies = MAPPER.createObjectNode();
-    final Map<Long, List<ParserClassCombiningWrapper>> oneOfs = new LinkedHashMap();
-    final Map<Long, List<ParserClassCombiningWrapper>> anyOfs = new LinkedHashMap();
-    final Map<Long, List<ParserClassCombiningWrapper>> allOfs = new LinkedHashMap();
+    final Map<Long, List<GeneratorClassCombiningWrapper>> oneOfs = new LinkedHashMap();
+    final Map<Long, List<GeneratorClassCombiningWrapper>> anyOfs = new LinkedHashMap();
+    final Map<Long, List<GeneratorClassCombiningWrapper>> allOfs = new LinkedHashMap();
 
     public void addCombining(final String fieldName, final ObjectNode fieldNode, final JsonSchema jsonSchema) {
         final long combiningGroup = getCombiningGroup(jsonSchema);
         add(
                 jsonSchema.combining(),
                 combiningGroup,
-                new ParserClassCombiningWrapper(fieldName, fieldNode, jsonSchema, combiningGroup == 0)
+                new GeneratorClassCombiningWrapper(fieldName, fieldNode, jsonSchema, combiningGroup == 0)
         );
     }
 
@@ -42,7 +42,7 @@ public class ParserClassResultWrapper {
         return getMap(combining).size();
     }
 
-    public Map<Long, List<ParserClassCombiningWrapper>> getMap(final Combining combining) {
+    public Map<Long, List<GeneratorClassCombiningWrapper>> getMap(final Combining combining) {
         switch (combining) {
             case ANY_OF:
                 return anyOfs;
@@ -73,8 +73,8 @@ public class ParserClassResultWrapper {
         return combiningGroup;
     }
 
-    private void add(final Combining combining, final long group, final ParserClassCombiningWrapper wrapper) {
-        final Map<Long, List<ParserClassCombiningWrapper>> map = getMap(combining);
+    private void add(final Combining combining, final long group, final GeneratorClassCombiningWrapper wrapper) {
+        final Map<Long, List<GeneratorClassCombiningWrapper>> map = getMap(combining);
         if (!map.containsKey(group)) {
             map.put(group, new ArrayList());
         }

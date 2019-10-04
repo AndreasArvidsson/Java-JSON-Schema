@@ -1,4 +1,4 @@
-package com.github.andreasarvidsson.jsonschema.generate.parsers;
+package com.github.andreasarvidsson.jsonschema.generate.generators;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -15,9 +15,9 @@ import java.util.Arrays;
  *
  * @author Andreas Arvidssonas Arvidsson
  */
-public class ParserEnum extends ParserBase {
+public class GeneratorEnum extends GeneratorBase {
 
-    public ParserEnum() {
+    public GeneratorEnum() {
         super(Arrays.asList(
                 JsonSchemaField.TITLE,
                 JsonSchemaField.DESCRIPTION

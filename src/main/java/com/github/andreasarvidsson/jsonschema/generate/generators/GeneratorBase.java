@@ -1,4 +1,4 @@
-package com.github.andreasarvidsson.jsonschema.generate.parsers;
+package com.github.andreasarvidsson.jsonschema.generate.generators;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -13,18 +13,18 @@ import java.util.Set;
  *
  * @author Andreas Arvidssonas Arvidsson
  */
-public abstract class ParserBase implements InterfaceParser {
+public abstract class GeneratorBase implements Generator {
 
     protected static final ObjectMapper MAPPER = new ObjectMapper();
 
     private final JsonType jsonType;
     protected final Set<JsonSchemaField> schemaFields;
 
-    public ParserBase(final Collection<JsonSchemaField> schemaFields) {
+    public GeneratorBase(final Collection<JsonSchemaField> schemaFields) {
         this(null, schemaFields);
     }
 
-    public ParserBase(final JsonType jsonType, final Collection<JsonSchemaField> schemaFields) {
+    public GeneratorBase(final JsonType jsonType, final Collection<JsonSchemaField> schemaFields) {
         this.jsonType = jsonType;
         this.schemaFields = new HashSet(schemaFields);
     }

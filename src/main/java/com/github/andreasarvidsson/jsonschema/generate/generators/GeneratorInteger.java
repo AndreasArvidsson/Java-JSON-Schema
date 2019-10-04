@@ -1,4 +1,4 @@
-package com.github.andreasarvidsson.jsonschema.generate.parsers;
+package com.github.andreasarvidsson.jsonschema.generate.generators;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.andreasarvidsson.jsonschema.generate.JsonSchemaField;
@@ -11,7 +11,7 @@ import java.util.Map;
  *
  * @author Andreas Arvidssonas Arvidsson
  */
-public class ParserInteger extends ParserBase {
+public class GeneratorInteger extends GeneratorBase {
 
     private final static Map<Class, Long> MIN_VALUES = new HashMap();
     private final static Map<Class, Long> MAX_VALUES = new HashMap();
@@ -34,7 +34,7 @@ public class ParserInteger extends ParserBase {
 
     private final boolean autoRangeNumbers;
 
-    public ParserInteger(final boolean autoRangeNumbers) {
+    public GeneratorInteger(final boolean autoRangeNumbers) {
         super(JsonType.INTEGER, Arrays.asList(
                 JsonSchemaField.TITLE,
                 JsonSchemaField.DESCRIPTION,

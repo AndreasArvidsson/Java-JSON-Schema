@@ -1,4 +1,4 @@
-package com.github.andreasarvidsson.jsonschema.generate.parsers;
+package com.github.andreasarvidsson.jsonschema.generate.generators;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
@@ -14,14 +14,14 @@ import javax.validation.constraints.Pattern;
  *
  * @author Andreas Arvidssonas Arvidsson
  */
-public class ParserJsonValue implements InterfaceParser {
+public class GeneratorJsonValue implements Generator {
 
-    private final InterfaceParser parser;
+    private final Generator parser;
 
-    public ParserJsonValue(final Parsers parsers, final Class type) {
+    public GeneratorJsonValue(final Generators parsers, final Class type) {
         final Method jsonValueMethod = ReflectionUtil.getFirstMethod(type, JsonValue.class);
         final Class returnType = jsonValueMethod.getReturnType();
-        this.parser = parsers.getParser(returnType);
+        this.parser = parsers.getGenerator(returnType);
     }
 
     @Override

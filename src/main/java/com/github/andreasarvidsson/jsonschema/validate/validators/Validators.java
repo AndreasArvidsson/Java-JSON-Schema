@@ -1,7 +1,6 @@
 package com.github.andreasarvidsson.jsonschema.validate.validators;
 
 import com.github.andreasarvidsson.jsonschema.JsonSchema;
-import com.github.andreasarvidsson.jsonschema.generate.parsers.InterfaceParser;
 import com.github.andreasarvidsson.jsonschema.validate.Error;
 import java.math.BigInteger;
 import java.util.Arrays;
@@ -10,6 +9,7 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import com.github.andreasarvidsson.jsonschema.generate.generators.Generator;
 
 /**
  *

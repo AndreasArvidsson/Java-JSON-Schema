@@ -3,11 +3,11 @@ package com.github.andreasarvidsson.jsonschema.generate;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.andreasarvidsson.jsonschema.generate.parsers.Parsers;
+import com.github.andreasarvidsson.jsonschema.generate.generators.Generators;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-import com.github.andreasarvidsson.jsonschema.generate.parsers.InterfaceParser;
+import com.github.andreasarvidsson.jsonschema.generate.generators.Generator;
 
 /**
  *
@@ -19,7 +19,7 @@ public class JsonSchemaGenerator {
 
     private URI schemaField = URI.create("http://json-schema.org/draft-06/schema#");
     private boolean autoRangeNumbes = true;
-    private final Map<Class, InterfaceParser> customParsers = new HashMap();
+    private final Map<Class, Generator> customGenerators = new HashMap();
 
     public JsonSchemaGenerator hideSchemaField() {
         schemaField = null;
@@ -36,22 +36,22 @@ public class JsonSchemaGenerator {
         return this;
     }
 
-    public JsonSchemaGenerator addCustomParser(final Class type, final InterfaceParser parser) {
-        customParsers.put(type, parser);
+    public JsonSchemaGenerator addCustomGenerator(final Class type, final Generator generator) {
+        customGenerators.put(type, generator);
         return this;
     }
 
     public JsonNode create(final Class type) {
         final ObjectNode schemaNode = MAPPER.createObjectNode();
         final ClassDefinitions classDefinitions = new ClassDefinitions();
-        final Parsers parsers = new Parsers(autoRangeNumbes, customParsers, classDefinitions);
+        final Generators generators = new Generators(autoRangeNumbes, customGenerators, classDefinitions);
 
         if (schemaField != null) {
             schemaNode.put("$schema", schemaField.toString());
         }
 
-        //Parse root class
-        final ObjectNode classNode = parsers.parseClass(type);
+        //Generate root class
+        final ObjectNode classNode = generators.parseClass(type);
 
         //Update node with definitions;
         classDefinitions.update(schemaNode);

@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author Andreas Arvidssonas Arvidsson
  */
-public class CrossFieldTest {
+public class CombiningTest {
 
     private final JsonSchemaGenerator gen = new JsonSchemaGenerator().hideSchemaField();
 

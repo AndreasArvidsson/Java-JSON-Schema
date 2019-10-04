@@ -1,4 +1,4 @@
-package com.github.andreasarvidsson.jsonschema.generate.parsers;
+package com.github.andreasarvidsson.jsonschema.generate.generators;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
  *
  * @author Andreas Arvidssonas Arvidsson
  */
-public interface InterfaceParserCollection extends InterfaceParser {
+public interface GeneratorCollectionInterface extends Generator {
 
     public ObjectNode parseCollectionClass(final Class type, final Class valueType);
 

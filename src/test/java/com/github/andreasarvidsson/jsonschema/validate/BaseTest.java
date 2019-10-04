@@ -12,12 +12,12 @@ public class BaseTest {
 
     private final JsonSchemaValidator validator = new JsonSchemaValidator();
 
-    @Test
-    public void testArrayBoolPrim() {
-        final ArrayBoolPrim instance = new ArrayBoolPrim();
-        final ValidationReport report = validator.validate(instance);
-        Assertions.assertTrue(report.isSuccess(), report.toString());
-    }
+//    @Test
+//    public void testArrayBoolPrim() {
+//        final ArrayBoolPrim instance = new ArrayBoolPrim();
+//        final ValidationReport report = validator.validate(instance);
+//        Assertions.assertTrue(report.isSuccess(), report.toString());
+//    }
 
     class ArrayBoolPrim {
 

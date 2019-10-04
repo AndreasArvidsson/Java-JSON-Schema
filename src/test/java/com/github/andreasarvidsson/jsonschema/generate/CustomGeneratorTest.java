@@ -1,7 +1,7 @@
 package com.github.andreasarvidsson.jsonschema.generate;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.github.andreasarvidsson.jsonschema.generate.parsers.ParserString;
+import com.github.andreasarvidsson.jsonschema.generate.generators.GeneratorString;
 import com.github.andreasarvidsson.jsonschema.util.AssertJson;
 import com.github.andreasarvidsson.jsonschema.util.JsonBuilder;
 import org.junit.jupiter.api.Test;
@@ -10,12 +10,12 @@ import org.junit.jupiter.api.Test;
  *
  * @author Andreas Arvidssonas Arvidsson
  */
-public class CustomParserTest {
+public class CustomGeneratorTest {
 
     @Test
-    public void testExistingParser() {
+    public void testExistingGenerator() {
         final JsonSchemaGenerator gen = new JsonSchemaGenerator().hideSchemaField()
-                .addCustomParser(CustomClass.class, new ParserString());
+                .addCustomGenerator(CustomClass.class, new GeneratorString());
         AssertJson.assertEquals(
                 getExpected(),
                 gen.create(CustomClass.class)
@@ -23,9 +23,9 @@ public class CustomParserTest {
     }
 
     @Test
-    public void testCustomParser() {
+    public void testCustomGenerator() {
         final JsonSchemaGenerator gen = new JsonSchemaGenerator().hideSchemaField()
-                .addCustomParser(CustomClass.class, new CustomParser());
+                .addCustomGenerator(CustomClass.class, new CustomGenerator());
         AssertJson.assertEquals(
                 getExpected(),
                 gen.create(CustomClass.class)
@@ -38,7 +38,7 @@ public class CustomParserTest {
                 .build();
     }
 
-    class CustomParser extends ParserString {
+    class CustomGenerator extends GeneratorString {
 
     }
 

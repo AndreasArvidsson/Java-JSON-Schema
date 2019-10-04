@@ -1,4 +1,4 @@
-package com.github.andreasarvidsson.jsonschema.generate.parsers;
+package com.github.andreasarvidsson.jsonschema.generate.generators;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.andreasarvidsson.jsonschema.generate.JsonSchemaField;
@@ -9,11 +9,11 @@ import java.util.Arrays;
  *
  * @author Andreas Arvidssonas Arvidsson
  */
-public class ParserSet extends ParserBase implements InterfaceParserCollection {
+public class GeneratorCollection extends GeneratorBase implements GeneratorCollectionInterface {
 
-    private final Parsers parsers;
+    private final Generators parsers;
 
-    public ParserSet(final Parsers parsers) {
+    public GeneratorCollection(final Generators parsers) {
         super(JsonType.ARRAY, Arrays.asList(
                 JsonSchemaField.TITLE,
                 JsonSchemaField.DESCRIPTION,
@@ -26,7 +26,6 @@ public class ParserSet extends ParserBase implements InterfaceParserCollection {
     @Override
     public ObjectNode parseCollectionClass(final Class type, final Class valueType) {
         final ObjectNode result = super.parseClass(type);
-        result.put("uniqueItems", true);
         result.set("items", parsers.parseClass(valueType));
         return result;
     }

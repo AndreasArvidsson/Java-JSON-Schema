@@ -1,4 +1,4 @@
-package com.github.andreasarvidsson.jsonschema.generate.parsers;
+package com.github.andreasarvidsson.jsonschema.generate.generators;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.andreasarvidsson.jsonschema.JsonSchema;
@@ -7,14 +7,14 @@ import com.github.andreasarvidsson.jsonschema.JsonSchema;
  *
  * @author Andreas Arvidssonas Arvidsson
  */
-public class ParserClassCombiningWrapper {
+public class GeneratorClassCombiningWrapper {
 
     public final String fieldName;
     public final ObjectNode node;
     public final JsonSchema jsonSchema;
     public final boolean ownProperty;
 
-    public ParserClassCombiningWrapper(
+    public GeneratorClassCombiningWrapper(
             final String fieldName, final ObjectNode constraintNode,
             final JsonSchema constraintType, final boolean ownProperty) {
         this.fieldName = fieldName;

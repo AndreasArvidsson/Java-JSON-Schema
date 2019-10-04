@@ -1,4 +1,4 @@
-package com.github.andreasarvidsson.jsonschema.generate.parsers;
+package com.github.andreasarvidsson.jsonschema.generate.generators;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -21,16 +21,16 @@ import java.util.Set;
  *
  * @author Andreas Arvidssonas Arvidsson
  */
-public class ParserClass extends ParserBase {
+public class GeneratorClass extends GeneratorBase {
 
-    private final Parsers parsers;
+    private final Generators generators;
 
-    public ParserClass(final Parsers parsers) {
+    public GeneratorClass(final Generators generators) {
         super(JsonType.OBJECT, Arrays.asList(
                 JsonSchemaField.TITLE,
                 JsonSchemaField.DESCRIPTION
         ));
-        this.parsers = parsers;
+        this.generators = generators;
     }
 
     @Override
@@ -38,7 +38,7 @@ public class ParserClass extends ParserBase {
         final ObjectNode classNode = super.parseClass(type);
         classNode.put("additionalProperties", ReflectionUtil.hasAnyGetterAndAnySetter(type));
 
-        final ParserClassResultWrapper wrapper = new ParserClassResultWrapper();
+        final GeneratorClassResultWrapper wrapper = new GeneratorClassResultWrapper();
         parseClassFields(type, wrapper);
 
         if (wrapper.required.size() > 0) {
@@ -51,16 +51,16 @@ public class ParserClass extends ParserBase {
             classNode.set("dependencies", wrapper.dependencies);
         }
 
-        addCrossFieldConstraints(classNode, Combining.ANY_OF, wrapper.getMap(Combining.ANY_OF).values());
-        addCrossFieldConstraints(classNode, Combining.ONE_OF, wrapper.getMap(Combining.ONE_OF).values());
-        addCrossFieldConstraints(classNode, Combining.ALL_OF, wrapper.getMap(Combining.ALL_OF).values());
+        addCombinations(classNode, Combining.ANY_OF, wrapper.getMap(Combining.ANY_OF).values());
+        addCombinations(classNode, Combining.ONE_OF, wrapper.getMap(Combining.ONE_OF).values());
+        addCombinations(classNode, Combining.ALL_OF, wrapper.getMap(Combining.ALL_OF).values());
 
         validateDependencies(type, wrapper.fieldNames, wrapper.dependencyFieldNames);
 
         return classNode;
     }
 
-    private void parseClassFields(final Class type, final ParserClassResultWrapper wrapper) {
+    private void parseClassFields(final Class type, final GeneratorClassResultWrapper wrapper) {
         //Parse super classes first.
         final Class superType = type.getSuperclass();
         if (superType != null) {
@@ -73,10 +73,10 @@ public class ParserClass extends ParserBase {
             final String fieldName = ReflectionUtil.getFieldName(field);
             wrapper.fieldNames.add(fieldName);
 
-            final ObjectNode fieldNode = parsers.parseClassField(field);
+            final ObjectNode fieldNode = generators.parseClassField(field);
 
             //Add field anotations
-            final Set<JsonSchemaField> allowedFields = parsers.getAllowedSchemaFields(field.getType());
+            final Set<JsonSchemaField> allowedFields = generators.getAllowedSchemaFields(field.getType());
 
             //Add schema anotations
             addSchemas(allowedFields, wrapper, fieldNode, fieldName, field);
@@ -86,7 +86,7 @@ public class ParserClass extends ParserBase {
     }
 
     private void addSchemas(
-            final Set<JsonSchemaField> allowedFields, final ParserClassResultWrapper wrapper,
+            final Set<JsonSchemaField> allowedFields, final GeneratorClassResultWrapper wrapper,
             final ObjectNode fieldNode, final String fieldName, final Field field) {
         final Class type = field.getType();
         final JsonSchema[] jsonSchemas = field.getAnnotationsByType(JsonSchema.class);
@@ -101,7 +101,7 @@ public class ParserClass extends ParserBase {
     }
 
     private void addSchema(
-            final Set<JsonSchemaField> allowedFields, final ParserClassResultWrapper wrapper,
+            final Set<JsonSchemaField> allowedFields, final GeneratorClassResultWrapper wrapper,
             ObjectNode fieldNode, final Class type,
             final String fieldName, final JsonSchema jsonSchema) {
 
@@ -154,20 +154,20 @@ public class ParserClass extends ParserBase {
         }
     }
 
-    private void addCrossFieldConstraints(
+    private void addCombinations(
             final ObjectNode classNode,
             final Combining combining,
-            final Collection<List<ParserClassCombiningWrapper>> groupCombinings) {
+            final Collection<List<GeneratorClassCombiningWrapper>> groupCombinings) {
         final Set<String> uniqueNames = getUniqueNames(groupCombinings);
         final boolean singleField = uniqueNames.size() == 1;
         final ArrayNode combiningArray = MAPPER.createArrayNode();
         final Map<String, ArrayNode> ownPropertyMap = new HashMap();
 
         //Each in this list is a new group.
-        for (final List<ParserClassCombiningWrapper> groupCombining : groupCombinings) {
+        for (final List<GeneratorClassCombiningWrapper> groupCombining : groupCombinings) {
             final ObjectNode combiningGroup = MAPPER.createObjectNode();
             //Each in this list is a new jsonSchema but in the same group.
-            for (final ParserClassCombiningWrapper combiningWrapper : groupCombining) {
+            for (final GeneratorClassCombiningWrapper combiningWrapper : groupCombining) {
                 //Parent level schemas.
                 if (combiningWrapper.jsonSchema.required()) {
                     addRequired(combiningGroup, combiningWrapper.fieldName);
@@ -213,7 +213,7 @@ public class ParserClass extends ParserBase {
                 .set(combining.toString(), combinationArray);
     }
 
-    private void addOwnProperty(final Map<String, ArrayNode> ownPropertyMap, final ParserClassCombiningWrapper combiningWrapper) {
+    private void addOwnProperty(final Map<String, ArrayNode> ownPropertyMap, final GeneratorClassCombiningWrapper combiningWrapper) {
         final ObjectNode ownNode = MAPPER.createObjectNode();
         addProperties(ownNode, combiningWrapper.fieldName, combiningWrapper.node, true);
         if (!ownPropertyMap.containsKey(combiningWrapper.fieldName)) {
@@ -270,7 +270,7 @@ public class ParserClass extends ParserBase {
         }
     }
 
-    private Set<String> getUniqueNames(final Collection<List<ParserClassCombiningWrapper>> groupCombinings) {
+    private Set<String> getUniqueNames(final Collection<List<GeneratorClassCombiningWrapper>> groupCombinings) {
         final Set<String> uniqueNames = new HashSet();
         groupCombinings.forEach(list -> {
             list.forEach(c -> {

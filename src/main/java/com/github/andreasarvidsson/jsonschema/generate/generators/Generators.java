@@ -1,4 +1,4 @@
-package com.github.andreasarvidsson.jsonschema.generate.parsers;
+package com.github.andreasarvidsson.jsonschema.generate.generators;
 
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -20,26 +20,26 @@ import java.util.UUID;
  *
  * @author Andreas Arvidssonas Arvidsson
  */
-public class Parsers {
+public class Generators {
 
-    private final Map<Class, InterfaceParser> simpleParsers = new IdentityHashMap();
-    private final Map<Class, InterfaceParser> customParsers;
-    private final InterfaceParser parserClass, parserArray, parserEnum;
-    private final InterfaceParserCollection parserMap, parserSet, parserCollection;
+    private final Map<Class, Generator> simpleGenerators = new IdentityHashMap();
+    private final Map<Class, Generator> customGenerators;
+    private final Generator generatorClass, generatorArray, generatorEnum;
+    private final GeneratorCollectionInterface generatorMap, generatorSet, generatorCollection;
     private final ClassDefinitions classDefinitions;
 
-    public Parsers(
+    public Generators(
             final boolean autoRangeNumbers,
-            final Map<Class, InterfaceParser> customParsers,
+            final Map<Class, Generator> customGenerators,
             final ClassDefinitions classDefinitions) {
-        this.customParsers = customParsers;
+        this.customGenerators = customGenerators;
         this.classDefinitions = classDefinitions;
-        this.parserClass = new ParserClass(this);
-        this.parserMap = new ParserMap(this);
-        this.parserArray = new ParserArray(this);
-        this.parserSet = new ParserSet(this);
-        this.parserCollection = new ParserCollection(this);
-        this.parserEnum = new ParserEnum();
+        this.generatorClass = new GeneratorClass(this);
+        this.generatorMap = new GeneratorMap(this);
+        this.generatorArray = new GeneratorArray(this);
+        this.generatorSet = new GeneratorSet(this);
+        this.generatorCollection = new GeneratorCollection(this);
+        this.generatorEnum = new GeneratorEnum();
         addSimples(autoRangeNumbers);
     }
 
@@ -52,23 +52,23 @@ public class Parsers {
     }
 
     public Set<JsonSchemaField> getAllowedSchemaFields(final Class type) {
-        return getParser(type).getAllowedSchemaFields();
+        return getGenerator(type).getAllowedSchemaFields();
     }
 
     public String getDefType(final Class type) {
         return classDefinitions.getType(type);
     }
 
-    public InterfaceParser getParser(final Class type) {
-        InterfaceParser parser = getSimpleParser(type);
-        if (parser != null) {
-            return parser;
+    public Generator getGenerator(final Class type) {
+        Generator generator = getSimpleGenerator(type);
+        if (generator != null) {
+            return generator;
         }
-        parser = (InterfaceParser) getCollectionParser(type);
-        if (parser != null) {
-            return parser;
+        generator = (Generator) getCollectionGenerator(type);
+        if (generator != null) {
+            return generator;
         }
-        return getAdvancedParser(type);
+        return getAdvancedGenerator(type);
     }
 
     private ObjectNode parseClass(final Class type, final Field field) {
@@ -78,61 +78,61 @@ public class Parsers {
         }
 
         //Dont use references / definiitions for simple or collection types.
-        final InterfaceParser simpleParser = getSimpleParser(type);
-        if (simpleParser != null) {
-            return simpleParser.parseClass(type);
+        final Generator simpleGenerator = getSimpleGenerator(type);
+        if (simpleGenerator != null) {
+            return simpleGenerator.parseClass(type);
         }
 
-        final InterfaceParserCollection collectionParser = getCollectionParser(type);
-        if (collectionParser != null) {
+        final GeneratorCollectionInterface collectionGenerator = getCollectionGenerator(type);
+        if (collectionGenerator != null) {
             final Class valueType = field != null ? ReflectionUtil.getGenericValueType(field) : Object.class;
-            return collectionParser.parseCollectionClass(type, valueType);
+            return collectionGenerator.parseCollectionClass(type, valueType);
         }
 
-        final ObjectNode classNode = getAdvancedParser(type).parseClass(type);
+        final ObjectNode classNode = getAdvancedGenerator(type).parseClass(type);
         classDefinitions.add(type, classNode);
         return classDefinitions.getRef(type);
     }
 
-    private InterfaceParser getSimpleParser(final Class type) {
+    private Generator getSimpleGenerator(final Class type) {
         if (type.isArray()) {
-            return parserArray;
+            return generatorArray;
         }
-        if (simpleParsers.containsKey(type)) {
-            return simpleParsers.get(type);
+        if (simpleGenerators.containsKey(type)) {
+            return simpleGenerators.get(type);
         }
         if (!type.isEnum() && ReflectionUtil.hasMethod(type, JsonValue.class)) {
-            return new ParserJsonValue(this, type);
+            return new GeneratorJsonValue(this, type);
         }
         return null;
     }
 
-    private InterfaceParserCollection getCollectionParser(final Class type) {
+    private GeneratorCollectionInterface getCollectionGenerator(final Class type) {
         if (Map.class.isAssignableFrom(type)) {
-            return parserMap;
+            return generatorMap;
         }
         if (Set.class.isAssignableFrom(type)) {
-            return parserSet;
+            return generatorSet;
         }
         //Collection that is not map or set.
         if (Collection.class.isAssignableFrom(type)) {
-            return parserCollection;
+            return generatorCollection;
         }
         return null;
     }
 
-    private InterfaceParser getAdvancedParser(final Class type) {
-        if (customParsers.containsKey(type)) {
-            return customParsers.get(type);
+    private Generator getAdvancedGenerator(final Class type) {
+        if (customGenerators.containsKey(type)) {
+            return customGenerators.get(type);
         }
         if (type.isEnum()) {
-            return parserEnum;
+            return generatorEnum;
         }
-        return parserClass;
+        return generatorClass;
     }
 
     private void addSimples(final boolean autoRangeNumbers) {
-        addSimples(new ParserInteger(autoRangeNumbers), Arrays.asList(
+        addSimples(new GeneratorInteger(autoRangeNumbers), Arrays.asList(
                 byte.class,
                 Byte.class,
                 short.class,
@@ -143,32 +143,32 @@ public class Parsers {
                 Long.class,
                 BigInteger.class
         ));
-        addSimples(new ParserNumber(), Arrays.asList(
+        addSimples(new GeneratorNumber(), Arrays.asList(
                 float.class,
                 Float.class,
                 double.class,
                 Double.class,
                 BigDecimal.class
         ));
-        addSimples(new ParserBoolean(), Arrays.asList(
+        addSimples(new GeneratorBoolean(), Arrays.asList(
                 boolean.class,
                 Boolean.class
         ));
-        addSimples(new ParserChar(), Arrays.asList(
+        addSimples(new GeneratorChar(), Arrays.asList(
                 char.class,
                 Character.class
         ));
-        addSimples(new ParserString(), Arrays.asList(
+        addSimples(new GeneratorString(), Arrays.asList(
                 String.class,
                 CharSequence.class,
                 UUID.class
         ));
-        simpleParsers.put(Object.class, new ParserObject());
+        simpleGenerators.put(Object.class, new GeneratorObject());
     }
 
-    private void addSimples(final InterfaceParser parser, final List<Class> types) {
+    private void addSimples(final Generator generator, final List<Class> types) {
         types.stream().forEach(type -> {
-            simpleParsers.put(type, parser);
+            simpleGenerators.put(type, generator);
         });
     }
 

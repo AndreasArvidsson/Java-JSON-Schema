@@ -1,4 +1,4 @@
-package com.github.andreasarvidsson.jsonschema.generate.parsers;
+package com.github.andreasarvidsson.jsonschema.generate.generators;
 
 import com.github.andreasarvidsson.jsonschema.generate.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschema.generate.JsonType;
@@ -8,9 +8,9 @@ import java.util.Arrays;
  *
  * @author Andreas Arvidssonas Arvidsson
  */
-public class ParserString extends ParserBase {
+public class GeneratorString extends GeneratorBase {
 
-    public ParserString() {
+    public GeneratorString() {
         super(JsonType.STRING, Arrays.asList(
                 JsonSchemaField.TITLE,
                 JsonSchemaField.DESCRIPTION,
