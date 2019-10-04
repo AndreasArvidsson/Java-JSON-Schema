@@ -4,12 +4,9 @@ import com.github.andreasarvidsson.jsonschema.JsonSchema;
 import com.github.andreasarvidsson.jsonschema.validate.Error;
 import java.math.BigInteger;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import com.github.andreasarvidsson.jsonschema.generate.generators.Generator;
 
 /**
  *
@@ -26,8 +23,8 @@ public class Validators {
         validatorClass = new ValidatorClass(this);
     }
 
-    public void validate(final List<Error> violations, final String path, final Object instance) {
-        validatorClass.validate(violations, path, instance);
+    public void validate(final List<Error> errors, final String path, final Object instance) {
+        validatorClass.validate(errors, path, instance);
     }
 
     public void validate(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema) {
@@ -38,7 +35,9 @@ public class Validators {
             return;
         }
 
-        throw new RuntimeException(String.format("Unknown type %s", type.getTypeName()));
+        validatorClass.validate(errors, path, instance, jsonSchema);
+        
+//        throw new RuntimeException(String.format("Unknown type %s", type.getTypeName()));
 //
 ////        if (type.isArray()) {
 ////

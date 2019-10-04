@@ -23,6 +23,10 @@ public class ValidatorClass {
         validateClassFields(errors, path, instance, instance.getClass());
     }
 
+    public void validate(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema) {
+        validateClassFields(errors, path, instance, instance.getClass());
+    }
+
     private void validateClassFields(final List<Error> errors, final String path, final Object instance, final Class type) {
         //Validate super classes first.
         final Class superType = type.getSuperclass();
@@ -35,7 +39,7 @@ public class ValidatorClass {
             }
             final String fieldName = ReflectionUtil.getFieldName(field);
             final Object fieldValue = ReflectionUtil.getFieldValue(field, instance);
-            final String fieldPath = path + "/" + fieldName;
+            final String fieldPath = path + "." + fieldName;
             final JsonSchema[] jsonSchemas = field.getAnnotationsByType(JsonSchema.class);
             for (final JsonSchema jsonSchema : jsonSchemas) {
                 if (jsonSchema.combining() == JsonSchema.Combining.NONE) {
