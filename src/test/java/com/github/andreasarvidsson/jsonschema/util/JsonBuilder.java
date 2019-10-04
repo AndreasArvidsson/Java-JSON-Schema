@@ -20,6 +20,7 @@ public class JsonBuilder {
     private JsonNode items = null;
     private Boolean additionalProperties = null;
     private JsonType type;
+    private String ref;
 
     public JsonBuilder() {
         res = MAPPER.createObjectNode();
@@ -101,9 +102,17 @@ public class JsonBuilder {
         return this;
     }
 
+    public JsonBuilder setRef(final String ref) {
+        this.ref = ref;
+        return this;
+    }
+
     public ObjectNode build() {
         if (definitions.size() > 0) {
             res.set("definitions", definitions);
+        }
+        if (ref != null) {
+            res.put("$ref", String.format("#/definitions/%s", ref));
         }
         if (type != null) {
             res.put("type", type.toString());

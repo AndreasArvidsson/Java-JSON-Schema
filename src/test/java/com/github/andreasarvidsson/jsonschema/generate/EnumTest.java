@@ -75,11 +75,11 @@ public class EnumTest {
                 .setType(JsonType.OBJECT)
                 .setAdditionalProps(false)
                 .addProperty("value1", new JsonBuilder()
-                        .addField("$ref", String.format("#/definitions/%s", DescriptiveEnum.class.getSimpleName()))
+                        .setRef(DescriptiveEnum.class.getSimpleName())
                         .build()
                 )
                 .addProperty("value2", new JsonBuilder()
-                        .addField("$ref", String.format("#/definitions/%s", DescriptiveEnum.class.getSimpleName()))
+                        .setRef(DescriptiveEnum.class.getSimpleName())
                         .build()
                 )
                 .build(),
