@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.andreasarvidsson.jsonschema.generate.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschema.generate.JsonSchemaUtil;
 import com.github.andreasarvidsson.jsonschema.generate.JsonType;
-import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,7 +13,7 @@ import java.util.Set;
  *
  * @author Andreas Arvidsson
  */
-public abstract class ParserBase implements Parser {
+public abstract class ParserBase implements InterfaceParser {
 
     protected static final ObjectMapper MAPPER = new ObjectMapper();
 
@@ -36,11 +35,6 @@ public abstract class ParserBase implements Parser {
         addType(result);
         JsonSchemaUtil.addFields(type, result, schemaFields);
         return result;
-    }
-
-    @Override
-    public ObjectNode parseClassField(final Field field) {
-        return parseClass(field.getType());
     }
 
     @Override

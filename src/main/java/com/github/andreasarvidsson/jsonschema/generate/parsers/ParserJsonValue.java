@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.andreasarvidsson.jsonschema.ReflectionUtil;
 import com.github.andreasarvidsson.jsonschema.generate.JsonSchemaField;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Set;
 import javax.validation.constraints.Pattern;
@@ -15,9 +14,9 @@ import javax.validation.constraints.Pattern;
  *
  * @author Andreas Arvidsson
  */
-public class ParserJsonValue implements Parser {
+public class ParserJsonValue implements InterfaceParser {
 
-    private final Parser parser;
+    private final InterfaceParser parser;
 
     public ParserJsonValue(final Parsers parsers, final Class type) {
         final Method jsonValueMethod = ReflectionUtil.getFirstMethod(type, JsonValue.class);
@@ -33,11 +32,6 @@ public class ParserJsonValue implements Parser {
             result.put("pattern", pattern);
         }
         return result;
-    }
-
-    @Override
-    public ObjectNode parseClassField(final Field field) {
-        return parseClass(field.getType());
     }
 
     @Override

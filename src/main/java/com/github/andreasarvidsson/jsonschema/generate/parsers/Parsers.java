@@ -22,15 +22,15 @@ import java.util.UUID;
  */
 public class Parsers {
 
-    private final Map<Class, Parser> simpleParsers = new IdentityHashMap();
-    private final Map<Class, Parser> customParsers;
-    private final Parser parserClass, parserMap, parserArray, parserSet,
-            parserEnum, parserCollection;
+    private final Map<Class, InterfaceParser> simpleParsers = new IdentityHashMap();
+    private final Map<Class, InterfaceParser> customParsers;
+    private final InterfaceParser parserClass, parserArray, parserEnum;
+    private final InterfaceParserCollection parserMap, parserSet, parserCollection;
     private final ClassDefinitions classDefinitions;
 
     public Parsers(
             final boolean autoRangeNumbers,
-            final Map<Class, Parser> customParsers,
+            final Map<Class, InterfaceParser> customParsers,
             final ClassDefinitions classDefinitions) {
         this.customParsers = customParsers;
         this.classDefinitions = classDefinitions;
@@ -44,20 +44,11 @@ public class Parsers {
     }
 
     public ObjectNode parseClass(final Class type) {
-        final Parser simpleParser = getSimpleParser(type);
-        if (simpleParser != null) {
-            return simpleParser.parseClass(type);
-        }
-        //Dont use references / definiitions for simple types.
-        if (!classDefinitions.has(type)) {
-            final ObjectNode classNode = createClassNode(type);
-            classDefinitions.add(type, classNode);
-        }
-        return classDefinitions.getRef(type);
+        return parseClass(type, null);
     }
 
     public ObjectNode parseClassField(final Field field) {
-        return getParser(field.getType()).parseClassField(field);
+        return parseClass(field.getType(), field);
     }
 
     public Set<JsonSchemaField> getAllowedSchemaFields(final Class type) {
@@ -68,48 +59,76 @@ public class Parsers {
         return classDefinitions.getType(type);
     }
 
-    public Parser getParser(final Class type) {
-        final Parser simpleParser = getSimpleParser(type);
-        if (simpleParser != null) {
-            return simpleParser;
+    public InterfaceParser getParser(final Class type) {
+        InterfaceParser parser = getSimpleParser(type);
+        if (parser != null) {
+            return parser;
         }
-        if (customParsers.containsKey(type)) {
-            return customParsers.get(type);
+        parser = (InterfaceParser) getCollectionParser(type);
+        if (parser != null) {
+            return parser;
         }
-        return parserClass;
+        return getAdvancedParser(type);
     }
 
-    private Parser getSimpleParser(final Class type) {
-        if (simpleParsers.containsKey(type)) {
-            return simpleParsers.get(type);
+    private ObjectNode parseClass(final Class type, final Field field) {
+        //First check if we already parsed this class;
+        if (classDefinitions.has(type)) {
+            return classDefinitions.getRef(type);
         }
-        if (type.isEnum()) {
-            return parserEnum;
+
+        //Dont use references / definiitions for simple or collection types.
+        final InterfaceParser simpleParser = getSimpleParser(type);
+        if (simpleParser != null) {
+            return simpleParser.parseClass(type);
         }
+
+        final InterfaceParserCollection collectionParser = getCollectionParser(type);
+        if (collectionParser != null) {
+            final Class valueType = field != null ? ReflectionUtil.getGenericValueType(field) : Object.class;
+            return collectionParser.parseCollectionClass(type, valueType);
+        }
+
+        final ObjectNode classNode = getAdvancedParser(type).parseClass(type);
+        classDefinitions.add(type, classNode);
+        return classDefinitions.getRef(type);
+    }
+
+    private InterfaceParser getSimpleParser(final Class type) {
         if (type.isArray()) {
             return parserArray;
         }
+        if (simpleParsers.containsKey(type)) {
+            return simpleParsers.get(type);
+        }
+        if (!type.isEnum() && ReflectionUtil.hasMethod(type, JsonValue.class)) {
+            return new ParserJsonValue(this, type);
+        }
+        return null;
+    }
+
+    private InterfaceParserCollection getCollectionParser(final Class type) {
         if (Map.class.isAssignableFrom(type)) {
             return parserMap;
         }
         if (Set.class.isAssignableFrom(type)) {
             return parserSet;
         }
-        //Collection that is not map or set. IE should be a list.
+        //Collection that is not map or set.
         if (Collection.class.isAssignableFrom(type)) {
             return parserCollection;
-        }
-        if (ReflectionUtil.hasMethod(type, JsonValue.class)) {
-            return new ParserJsonValue(this, type);
         }
         return null;
     }
 
-    private ObjectNode createClassNode(final Class type) {
+    private InterfaceParser getAdvancedParser(final Class type) {
         if (customParsers.containsKey(type)) {
-            return customParsers.get(type).parseClass(type);
+            return customParsers.get(type);
         }
-        return parserClass.parseClass(type);
+        if (type.isEnum()) {
+            return parserEnum;
+        }
+        return parserClass;
     }
 
     private void addSimples(final boolean autoRangeNumbers) {
@@ -147,7 +166,7 @@ public class Parsers {
         simpleParsers.put(Object.class, new ParserObject());
     }
 
-    private void addSimples(final Parser parser, final List<Class> types) {
+    private void addSimples(final InterfaceParser parser, final List<Class> types) {
         types.stream().forEach(type -> {
             simpleParsers.put(type, parser);
         });

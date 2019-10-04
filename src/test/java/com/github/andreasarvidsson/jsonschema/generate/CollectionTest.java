@@ -50,12 +50,12 @@ public class CollectionTest {
     public void testArrayListRoot() {
         AssertJson.assertEquals(
                 new JsonBuilder()
-                .setType(JsonType.ARRAY)
-                .build(),
+                        .setType(JsonType.ARRAY)
+                        .setItems(new JsonBuilder().build())
+                        .build(),
                 new JsonSchemaGenerator().hideSchemaField().create(ArrayList.class)
         );
     }
-
 
     private JsonNode getExpected(final JsonNode items) {
         return new JsonBuilder()

@@ -68,6 +68,25 @@ public class EnumTest {
         );
     }
 
+    @Test
+    public void testDoubleEnumClass() {
+        AssertJson.assertEquals(new JsonBuilder()
+                .addDefinition(DescriptiveEnum.class.getSimpleName(), getDescriptiveExpected())
+                .setType(JsonType.OBJECT)
+                .setAdditionalProps(false)
+                .addProperty("value1", new JsonBuilder()
+                        .addField("$ref", String.format("#/definitions/%s", DescriptiveEnum.class.getSimpleName()))
+                        .build()
+                )
+                .addProperty("value2", new JsonBuilder()
+                        .addField("$ref", String.format("#/definitions/%s", DescriptiveEnum.class.getSimpleName()))
+                        .build()
+                )
+                .build(),
+                gen.create(DoubleEnumClass.class)
+        );
+    }
+
     private JsonNode getSimpleExpected() {
         return new JsonBuilder()
                 .addField(JsonSchemaField.TITLE, title)
@@ -152,6 +171,12 @@ public class EnumTest {
     class DescriptiveEnumClass {
 
         DescriptiveEnum value;
+    }
+
+    class DoubleEnumClass {
+
+        DescriptiveEnum value1;
+        DescriptiveEnum value2;
     }
 
 }

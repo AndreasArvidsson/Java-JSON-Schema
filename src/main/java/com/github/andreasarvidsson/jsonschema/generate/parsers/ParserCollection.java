@@ -1,17 +1,15 @@
 package com.github.andreasarvidsson.jsonschema.generate.parsers;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.andreasarvidsson.jsonschema.ReflectionUtil;
 import com.github.andreasarvidsson.jsonschema.generate.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschema.generate.JsonType;
-import java.lang.reflect.Field;
 import java.util.Arrays;
 
 /**
  *
  * @author Andreas Arvidsson
  */
-public class ParserCollection extends ParserBase {
+public class ParserCollection extends ParserBase implements InterfaceParserCollection {
 
     private final Parsers parsers;
 
@@ -26,11 +24,15 @@ public class ParserCollection extends ParserBase {
     }
 
     @Override
-    public ObjectNode parseClassField(final Field field) {
-        final ObjectNode result = super.parseClass(field.getType());
-        final Class valueType = ReflectionUtil.getGenericValueType(field);
+    public ObjectNode parseCollectionClass(final Class type, final Class valueType) {
+        final ObjectNode result = super.parseClass(type);
         result.set("items", parsers.parseClass(valueType));
         return result;
+    }
+
+    @Override
+    public ObjectNode parseClass(final Class type) {
+        return parseCollectionClass(type, Object.class);
     }
 
 }

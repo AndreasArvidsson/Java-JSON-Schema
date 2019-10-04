@@ -15,14 +15,16 @@ import java.util.Collection;
 public class JsonBuilder {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private final ObjectNode res, properties, patternProperties, dependencies;
+    private final ObjectNode res, definitions, properties, patternProperties, dependencies;
     private final ArrayNode required, enums, oneOf;
     private JsonNode items = null;
     private Boolean additionalProperties = null;
+    private JsonType type;
 
     public JsonBuilder() {
         res = MAPPER.createObjectNode();
         properties = MAPPER.createObjectNode();
+        definitions = MAPPER.createObjectNode();
         patternProperties = MAPPER.createObjectNode();
         dependencies = MAPPER.createObjectNode();
         required = MAPPER.createArrayNode();
@@ -31,7 +33,7 @@ public class JsonBuilder {
     }
 
     public JsonBuilder setType(final JsonType type) {
-        res.put("type", type.toString());
+        this.type = type;
         return this;
     }
 
@@ -65,6 +67,11 @@ public class JsonBuilder {
         return this;
     }
 
+    public JsonBuilder addDefinition(final String field, final JsonNode value) {
+        definitions.set(field, value);
+        return this;
+    }
+
     public JsonBuilder setItems(final JsonNode items) {
         this.items = items;
         return this;
@@ -95,6 +102,12 @@ public class JsonBuilder {
     }
 
     public ObjectNode build() {
+        if (definitions.size() > 0) {
+            res.set("definitions", definitions);
+        }
+        if (type != null) {
+            res.put("type", type.toString());
+        }
         if (additionalProperties != null) {
             res.put("additionalProperties", additionalProperties);
         }

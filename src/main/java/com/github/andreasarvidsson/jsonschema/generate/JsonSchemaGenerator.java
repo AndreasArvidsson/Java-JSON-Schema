@@ -3,11 +3,11 @@ package com.github.andreasarvidsson.jsonschema.generate;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.andreasarvidsson.jsonschema.generate.parsers.Parser;
 import com.github.andreasarvidsson.jsonschema.generate.parsers.Parsers;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import com.github.andreasarvidsson.jsonschema.generate.parsers.InterfaceParser;
 
 /**
  *
@@ -19,7 +19,7 @@ public class JsonSchemaGenerator {
 
     private URI schemaField = URI.create("http://json-schema.org/draft-06/schema#");
     private boolean autoRangeNumbes = true;
-    private final Map<Class, Parser> customParsers = new HashMap();
+    private final Map<Class, InterfaceParser> customParsers = new HashMap();
 
     public JsonSchemaGenerator hideSchemaField() {
         schemaField = null;
@@ -36,7 +36,7 @@ public class JsonSchemaGenerator {
         return this;
     }
 
-    public JsonSchemaGenerator addCustomParser(final Class type, final Parser parser) {
+    public JsonSchemaGenerator addCustomParser(final Class type, final InterfaceParser parser) {
         customParsers.put(type, parser);
         return this;
     }

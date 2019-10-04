@@ -17,9 +17,9 @@ public class MiscTest {
     public void testWithSchema() {
         AssertJson.assertEquals(
                 new JsonBuilder()
-                .addField("$schema", "http://json-schema.org/draft-06/schema#")
-                .setType(JsonType.STRING)
-                .build(),
+                        .addField("$schema", "http://json-schema.org/draft-06/schema#")
+                        .setType(JsonType.STRING)
+                        .build(),
                 new JsonSchemaGenerator().create(String.class)
         );
     }
@@ -30,9 +30,9 @@ public class MiscTest {
             final URI newURI = new URI("http://json-schema.org/draft-06/newSchema#");
             AssertJson.assertEquals(
                     new JsonBuilder()
-                    .addField("$schema", newURI.toString())
-                    .setType(JsonType.STRING)
-                    .build(),
+                            .addField("$schema", newURI.toString())
+                            .setType(JsonType.STRING)
+                            .build(),
                     new JsonSchemaGenerator().setSchemaField(newURI).create(String.class)
             );
         }
@@ -45,9 +45,17 @@ public class MiscTest {
     public void testWithoutSchema() {
         AssertJson.assertEquals(
                 new JsonBuilder()
-                .setType(JsonType.STRING)
-                .build(),
+                        .setType(JsonType.STRING)
+                        .build(),
                 new JsonSchemaGenerator().hideSchemaField().create(String.class)
+        );
+    }
+
+    @Test
+    public void testObjectRoot() {
+        AssertJson.assertEquals(
+                new JsonBuilder().build(),
+                new JsonSchemaGenerator().hideSchemaField().create(Object.class)
         );
     }
 
