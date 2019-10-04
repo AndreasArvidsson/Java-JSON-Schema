@@ -1,5 +1,6 @@
 package com.github.andreasarvidsson.jsonschema.generate;
 
+import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.andreasarvidsson.jsonschema.JsonSchema;
@@ -102,19 +103,19 @@ public class EnumTest {
                 .addField(JsonSchemaField.TITLE, title)
                 .addField(JsonSchemaField.DESCRIPTION, desc)
                 .addOneOf(new JsonBuilder()
-                        .addField("const", "A")
+                        .addField(JsonSchemaField.Disabled.CONST, "A")
                         .addField(JsonSchemaField.TITLE, "a")
                         .addField(JsonSchemaField.DESCRIPTION, "A_desc")
                         .build()
                 )
                 .addOneOf(new JsonBuilder()
-                        .addField("const", "B")
+                        .addField(JsonSchemaField.Disabled.CONST, "B")
                         .addField(JsonSchemaField.TITLE, "b")
                         .addField(JsonSchemaField.DESCRIPTION, "B_desc")
                         .build()
                 )
                 .addOneOf(new JsonBuilder()
-                        .addField("const", "C")
+                        .addField(JsonSchemaField.Disabled.CONST, "C")
                         .addField(JsonSchemaField.TITLE, "c")
                         .addField(JsonSchemaField.DESCRIPTION, "C_desc")
                         .build()

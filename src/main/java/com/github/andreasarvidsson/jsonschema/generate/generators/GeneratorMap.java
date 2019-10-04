@@ -1,7 +1,7 @@
 package com.github.andreasarvidsson.jsonschema.generate.generators;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.andreasarvidsson.jsonschema.generate.JsonSchemaField;
+import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschema.generate.JsonType;
 import java.util.Arrays;
 
@@ -11,24 +11,24 @@ import java.util.Arrays;
  */
 public class GeneratorMap extends GeneratorBase implements GeneratorCollectionInterface {
 
-    private final Generators parsers;
+    private final Generators generators;
 
-    public GeneratorMap(final Generators parsers) {
+    public GeneratorMap(final Generators generators) {
         super(JsonType.OBJECT, Arrays.asList(
                 JsonSchemaField.TITLE,
                 JsonSchemaField.DESCRIPTION,
                 JsonSchemaField.MIN_PROPERTIES,
                 JsonSchemaField.MAX_PROPERTIES
         ));
-        this.parsers = parsers;
+        this.generators = generators;
     }
 
     @Override
     public ObjectNode parseCollectionClass(final Class type, final Class valueType) {
         final ObjectNode result = super.parseClass(type);
         final ObjectNode patternProperties = MAPPER.createObjectNode();
-        patternProperties.set("^.*$", parsers.parseClass(valueType));
-        result.set("patternProperties", patternProperties);
+        patternProperties.set("^.*$", generators.parseClass(valueType));
+        result.set(JsonSchemaField.Disabled.PATTERN_PROPERTIES.toString(), patternProperties);
         return result;
     }
 

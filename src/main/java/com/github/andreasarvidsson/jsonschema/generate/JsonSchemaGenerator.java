@@ -3,6 +3,7 @@ package com.github.andreasarvidsson.jsonschema.generate;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschema.generate.generators.Generators;
 import java.net.URI;
 import java.util.HashMap;
@@ -47,7 +48,7 @@ public class JsonSchemaGenerator {
         final Generators generators = new Generators(autoRangeNumbes, customGenerators, classDefinitions);
 
         if (schemaField != null) {
-            schemaNode.put("$schema", schemaField.toString());
+            schemaNode.put(JsonSchemaField.Disabled.SCHEMA.toString(), schemaField.toString());
         }
 
         //Generate root class

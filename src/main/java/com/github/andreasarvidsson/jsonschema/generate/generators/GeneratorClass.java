@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.andreasarvidsson.jsonschema.JsonSchema;
 import com.github.andreasarvidsson.jsonschema.JsonSchema.Combining;
 import com.github.andreasarvidsson.jsonschema.ReflectionUtil;
-import com.github.andreasarvidsson.jsonschema.generate.JsonSchemaField;
-import com.github.andreasarvidsson.jsonschema.generate.JsonSchemaUtil;
+import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
+import com.github.andreasarvidsson.jsonschema.JsonSchemaUtil;
 import com.github.andreasarvidsson.jsonschema.generate.JsonType;
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -36,19 +36,19 @@ public class GeneratorClass extends GeneratorBase {
     @Override
     public ObjectNode parseClass(final Class type) {
         final ObjectNode classNode = super.parseClass(type);
-        classNode.put("additionalProperties", ReflectionUtil.hasAnyGetterAndAnySetter(type));
+        classNode.put(JsonSchemaField.Disabled.ADDITIONAL_PROPERTIES.toString(), ReflectionUtil.hasAnyGetterAndAnySetter(type));
 
         final GeneratorClassResultWrapper wrapper = new GeneratorClassResultWrapper();
         parseClassFields(type, wrapper);
 
         if (wrapper.required.size() > 0) {
-            classNode.set("required", wrapper.required);
+            classNode.set(JsonSchemaField.Disabled.REQUIRED.toString(), wrapper.required);
         }
         if (wrapper.properties.size() > 0) {
-            classNode.set("properties", wrapper.properties);
+            classNode.set(JsonSchemaField.Disabled.PROPERTIES.toString(), wrapper.properties);
         }
         if (wrapper.dependencies.size() > 0) {
-            classNode.set("dependencies", wrapper.dependencies);
+            classNode.set(JsonSchemaField.Disabled.DEPENDENCIES.toString(), wrapper.dependencies);
         }
 
         addCombinations(classNode, Combining.ANY_OF, wrapper.getMap(Combining.ANY_OF).values());
@@ -209,7 +209,7 @@ public class GeneratorClass extends GeneratorBase {
     private void addToProperty(
             final ObjectNode classNode, final String fieldName,
             final Combining combining, final ArrayNode combinationArray) {
-        ((ObjectNode) classNode.get("properties").get(fieldName))
+        ((ObjectNode) classNode.get(JsonSchemaField.Disabled.PROPERTIES.toString()).get(fieldName))
                 .set(combining.toString(), combinationArray);
     }
 
@@ -223,17 +223,17 @@ public class GeneratorClass extends GeneratorBase {
     }
 
     private void addRequired(final ObjectNode target, final String value) {
-        if (!target.has("required")) {
-            target.set("required", MAPPER.createArrayNode());
+        if (!target.has(JsonSchemaField.Disabled.REQUIRED.toString())) {
+            target.set(JsonSchemaField.Disabled.REQUIRED.toString(), MAPPER.createArrayNode());
         }
-        ((ArrayNode) target.get("required")).add(value);
+        ((ArrayNode) target.get(JsonSchemaField.Disabled.REQUIRED.toString())).add(value);
     }
 
     private void addDependencies(final ObjectNode target, final String fieldName, final String[] values) {
-        ObjectNode dependencies = (ObjectNode) target.get("dependencies");
+        ObjectNode dependencies = (ObjectNode) target.get(JsonSchemaField.Disabled.DEPENDENCIES.toString());
         if (dependencies == null) {
             dependencies = MAPPER.createObjectNode();
-            target.set("dependencies", dependencies);
+            target.set(JsonSchemaField.Disabled.DEPENDENCIES.toString(), dependencies);
         }
         dependencies.putPOJO(fieldName, values);
     }
@@ -245,10 +245,10 @@ public class GeneratorClass extends GeneratorBase {
             target.setAll(node);
         }
         else {
-            ObjectNode propertiesNode = (ObjectNode) target.get("properties");
+            ObjectNode propertiesNode = (ObjectNode) target.get(JsonSchemaField.Disabled.PROPERTIES.toString());
             if (propertiesNode == null) {
                 propertiesNode = MAPPER.createObjectNode();
-                target.set("properties", propertiesNode);
+                target.set(JsonSchemaField.Disabled.PROPERTIES.toString(), propertiesNode);
             }
             ObjectNode fieldNode = (ObjectNode) propertiesNode.get(fieldName);
             if (fieldNode == null) {

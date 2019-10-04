@@ -2,8 +2,8 @@ package com.github.andreasarvidsson.jsonschema.generate.generators;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.andreasarvidsson.jsonschema.generate.JsonSchemaField;
-import com.github.andreasarvidsson.jsonschema.generate.JsonSchemaUtil;
+import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
+import com.github.andreasarvidsson.jsonschema.JsonSchemaUtil;
 import com.github.andreasarvidsson.jsonschema.generate.JsonType;
 import java.util.Collection;
 import java.util.HashSet;
@@ -44,7 +44,7 @@ public abstract class GeneratorBase implements Generator {
 
     private void addType(final ObjectNode node) {
         if (jsonType != null) {
-            node.put("type", jsonType.toString());
+            node.put(JsonSchemaField.Disabled.TYPE.toString(), jsonType.toString());
         }
     }
 

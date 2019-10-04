@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.andreasarvidsson.jsonschema.JsonSchemaEnum;
 import com.github.andreasarvidsson.jsonschema.ReflectionUtil;
-import com.github.andreasarvidsson.jsonschema.generate.JsonSchemaField;
+import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -60,12 +60,12 @@ public class GeneratorEnum extends GeneratorBase {
         for (final Enum e : enumValues) {
             enumNode.addPOJO(getEnumValue(e, jsonValueMethod));
         }
-        result.set("enum", enumNode);
+        result.set(JsonSchemaField.Disabled.ENUM.toString(), enumNode);
     }
 
     private JsonNode createDesc(final Object value, final String title, final String description) {
         final ObjectNode result = MAPPER.createObjectNode();
-        result.putPOJO("const", value);
+        result.putPOJO(JsonSchemaField.Disabled.CONST.toString(), value);
         if (title != null) {
             result.put(JsonSchemaField.TITLE.toString(), title);
         }

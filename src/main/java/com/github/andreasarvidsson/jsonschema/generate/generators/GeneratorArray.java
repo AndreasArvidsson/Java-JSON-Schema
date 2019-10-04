@@ -1,7 +1,7 @@
 package com.github.andreasarvidsson.jsonschema.generate.generators;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.andreasarvidsson.jsonschema.generate.JsonSchemaField;
+import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschema.generate.JsonType;
 import java.util.Arrays;
 
@@ -27,7 +27,7 @@ public class GeneratorArray extends GeneratorBase {
     public ObjectNode parseClass(final Class type) {
         final ObjectNode result = super.parseClass(type);
         final Class valueType = type.getComponentType();
-        result.set("items", parsers.parseClass(valueType));
+        result.set(JsonSchemaField.Disabled.ITEMS.toString(), parsers.parseClass(valueType));
         return result;
     }
 

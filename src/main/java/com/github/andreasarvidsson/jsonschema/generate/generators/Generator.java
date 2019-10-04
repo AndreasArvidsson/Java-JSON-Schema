@@ -1,7 +1,7 @@
 package com.github.andreasarvidsson.jsonschema.generate.generators;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.andreasarvidsson.jsonschema.generate.JsonSchemaField;
+import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import java.util.Set;
 
 /**

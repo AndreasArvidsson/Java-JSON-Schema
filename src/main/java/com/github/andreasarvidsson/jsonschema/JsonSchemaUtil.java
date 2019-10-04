@@ -1,9 +1,11 @@
-package com.github.andreasarvidsson.jsonschema.generate;
+package com.github.andreasarvidsson.jsonschema;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.andreasarvidsson.jsonschema.JsonSchema;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -81,6 +83,33 @@ public abstract class JsonSchemaUtil {
                 JsonSchemaField.EXCLUSIVE_MAXIMUM, jsonSchema.exclusiveMaximum(), Long.MIN_VALUE, Long.MAX_VALUE
         );
         set(type, allowed, target, JsonSchemaField.MULTIPLE_OF, jsonSchema.multipleOf());
+    }
+
+    public static Map<String, Object> toMap(final JsonSchema jsonSchema) {
+        final Map<String, Object> res = new LinkedHashMap();
+        for (final Method method : JsonSchema.class.getDeclaredMethods()) {
+            final Object value = getValue(method, jsonSchema);
+            if (value.getClass().isArray()) {
+                if (((Object[]) value).length > 0) {
+                    res.put(method.getName(), value);
+                }
+            }
+            else {
+                if (!Objects.equals(value, method.getDefaultValue())) {
+                    res.put(method.getName(), value);
+                }
+            }
+        }
+        return res;
+    }
+
+    private static Object getValue(final Method method, final JsonSchema jsonSchema) {
+        try {
+            return method.invoke(jsonSchema);
+        }
+        catch (final IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     private static void set(

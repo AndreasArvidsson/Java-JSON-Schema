@@ -4,7 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.andreasarvidsson.jsonschema.generate.JsonSchemaField;
+import com.github.andreasarvidsson.jsonschema.JsonSchema;
+import com.github.andreasarvidsson.jsonschema.JsonSchema.Combining;
+import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschema.generate.JsonType;
 import java.util.Collection;
 
@@ -49,6 +51,11 @@ public class JsonBuilder {
     }
 
     public JsonBuilder addField(final JsonSchemaField field, final Object value) {
+        addField(field.toString(), value);
+        return this;
+    }
+
+    public JsonBuilder addField(final JsonSchemaField.Disabled field, final Object value) {
         addField(field.toString(), value);
         return this;
     }
@@ -109,37 +116,39 @@ public class JsonBuilder {
 
     public ObjectNode build() {
         if (definitions.size() > 0) {
-            res.set("definitions", definitions);
+            res.set(JsonSchemaField.Disabled.DEFINITIONS.toString(), definitions);
         }
         if (ref != null) {
-            res.put("$ref", String.format("#/definitions/%s", ref));
+            res.put(JsonSchemaField.Disabled.REF.toString(), String.format(
+                    "#/%s/%s", JsonSchemaField.Disabled.DEFINITIONS.toString(), ref
+            ));
         }
         if (type != null) {
-            res.put("type", type.toString());
+            res.put(JsonSchemaField.Disabled.TYPE.toString(), type.toString());
         }
         if (additionalProperties != null) {
-            res.put("additionalProperties", additionalProperties);
+            res.put(JsonSchemaField.Disabled.ADDITIONAL_PROPERTIES.toString(), additionalProperties);
         }
         if (required.size() > 0) {
-            res.set("required", required);
+            res.set(JsonSchemaField.Disabled.REQUIRED.toString(), required);
         }
         if (dependencies.size() > 0) {
-            res.set("dependencies", dependencies);
+            res.set(JsonSchemaField.Disabled.DEPENDENCIES.toString(), dependencies);
         }
         if (properties.size() > 0) {
-            res.set("properties", properties);
+            res.set(JsonSchemaField.Disabled.PROPERTIES.toString(), properties);
         }
         if (patternProperties.size() > 0) {
-            res.set("patternProperties", patternProperties);
+            res.set(JsonSchemaField.Disabled.PATTERN_PROPERTIES.toString(), patternProperties);
         }
         if (enums.size() > 0) {
-            res.set("enum", enums);
+            res.set(JsonSchemaField.Disabled.ENUM.toString(), enums);
         }
         if (oneOf.size() > 0) {
-            res.set("oneOf", oneOf);
+            res.set(Combining.ONE_OF.toString(), oneOf);
         }
         if (items != null) {
-            res.set("items", items);
+            res.set(JsonSchemaField.Disabled.ITEMS.toString(), items);
         }
         return res;
     }

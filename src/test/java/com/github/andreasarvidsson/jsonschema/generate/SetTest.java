@@ -1,5 +1,6 @@
 package com.github.andreasarvidsson.jsonschema.generate;
 
+import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.andreasarvidsson.jsonschema.JsonSchema;
 import com.github.andreasarvidsson.jsonschema.util.AssertJson;
@@ -51,7 +52,7 @@ public class SetTest {
                 .setAdditionalProps(false)
                 .addProperty("value", new JsonBuilder()
                         .setType(JsonType.ARRAY)
-                        .addField("uniqueItems", true)
+                        .addField(JsonSchemaField.Disabled.UNIQUE_ITEMS, true)
                         .addField(JsonSchemaField.TITLE, title)
                         .addField(JsonSchemaField.DESCRIPTION, desc)
                         .addField(JsonSchemaField.MIN_ITEMS, min)

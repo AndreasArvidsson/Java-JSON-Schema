@@ -12,30 +12,29 @@ public class BaseTest {
 
     private final JsonSchemaValidator validator = new JsonSchemaValidator();
 
-//    @Test
-//    public void testArrayBoolPrim() {
-//        final ArrayBoolPrim instance = new ArrayBoolPrim();
-//        final ValidationReport report = validator.validate(instance);
-//        Assertions.assertTrue(report.isSuccess(), report.toString());
-//    }
+    @Test
+    public void testRequiredOk() {
+        final RequiredInt instance = new RequiredInt();
+        instance.value = 5;
+        final ValidationReport report = validator.validate(instance);
+        Assertions.assertTrue(report.isSuccess(), report.toString());
+    }
 
-    class ArrayBoolPrim {
+    @Test
+    public void testRequiredFail() {
+        final RequiredInt instance = new RequiredInt();
+        final ValidationReport report = validator.validate(instance);
+        Assertions.assertFalse(report.isSuccess());
+        System.out.println(report.toString());
+    }
+
+    public static class RequiredInt {
 
         @JsonSchema(
-                minimum = 5,
                 required = true
         )
-        Integer value;
-
-        public ArrayBoolPrim(int value) {
-            this.value = value;
-        }
-
-        public ArrayBoolPrim() {
-            this.value = null;
-        }
+        public Integer value;
 
     }
-    
 
 }

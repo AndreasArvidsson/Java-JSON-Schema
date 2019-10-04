@@ -1,5 +1,6 @@
 package com.github.andreasarvidsson.jsonschema.generate;
 
+import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -39,9 +40,9 @@ public class ObjectTest {
         valueOuter.put(JsonSchemaField.DESCRIPTION.toString(), descOuter);
         final ObjectNode expected = new JsonBuilder()
                 .setType(JsonType.OBJECT)
+                .setAdditionalProps(false)
                 .addField(JsonSchemaField.TITLE, classTitle)
                 .addField(JsonSchemaField.DESCRIPTION, classDesc)
-                .addField("additionalProperties", false)
                 .addRequired("valueOuter")
                 .addProperty("valueOuter", valueOuter)
                 .build();
@@ -56,7 +57,7 @@ public class ObjectTest {
     public void testAnyGetterSetter() {
         final ObjectNode expected = new JsonBuilder()
                 .setType(JsonType.OBJECT)
-                .addField("additionalProperties", true)
+                .setAdditionalProps(true)
                 .addProperty("value", new JsonBuilder()
                         .setType(JsonType.STRING)
                         .build()
@@ -72,7 +73,7 @@ public class ObjectTest {
     public void testDependencyClass() {
         final ObjectNode expected = new JsonBuilder()
                 .setType(JsonType.OBJECT)
-                .addField("additionalProperties", false)
+                .setAdditionalProps(false)
                 .addDependencies("value", new String[]{dependency})
                 .addProperty("value", new JsonBuilder()
                         .setType(JsonType.STRING)
@@ -94,7 +95,7 @@ public class ObjectTest {
                 .setType(JsonType.OBJECT)
                 .addField(JsonSchemaField.TITLE, classTitle)
                 .addField(JsonSchemaField.DESCRIPTION, classDesc)
-                .addField("additionalProperties", false)
+                .setAdditionalProps(false)
                 .addProperty("value", new JsonBuilder()
                         .setType(JsonType.STRING)
                         .addField(JsonSchemaField.TITLE, fieldTitle)

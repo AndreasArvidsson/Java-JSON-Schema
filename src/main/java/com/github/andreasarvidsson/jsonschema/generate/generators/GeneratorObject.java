@@ -1,6 +1,6 @@
 package com.github.andreasarvidsson.jsonschema.generate.generators;
 
-import com.github.andreasarvidsson.jsonschema.generate.JsonSchemaField;
+import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import java.util.Arrays;
 
 /**

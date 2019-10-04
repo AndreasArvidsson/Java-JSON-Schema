@@ -1,5 +1,6 @@
 package com.github.andreasarvidsson.jsonschema.generate;
 
+import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschema.util.AssertJson;
 import com.github.andreasarvidsson.jsonschema.util.JsonBuilder;
 import java.net.URI;
@@ -17,7 +18,7 @@ public class MiscTest {
     public void testWithSchema() {
         AssertJson.assertEquals(
                 new JsonBuilder()
-                        .addField("$schema", "http://json-schema.org/draft-06/schema#")
+                        .addField(JsonSchemaField.Disabled.SCHEMA, "http://json-schema.org/draft-06/schema#")
                         .setType(JsonType.STRING)
                         .build(),
                 new JsonSchemaGenerator().create(String.class)
@@ -30,7 +31,7 @@ public class MiscTest {
             final URI newURI = new URI("http://json-schema.org/draft-06/newSchema#");
             AssertJson.assertEquals(
                     new JsonBuilder()
-                            .addField("$schema", newURI.toString())
+                            .addField(JsonSchemaField.Disabled.SCHEMA, newURI.toString())
                             .setType(JsonType.STRING)
                             .build(),
                     new JsonSchemaGenerator().setSchemaField(newURI).create(String.class)

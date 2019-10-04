@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.andreasarvidsson.jsonschema.ReflectionUtil;
-import com.github.andreasarvidsson.jsonschema.generate.JsonSchemaField;
+import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Set;
@@ -29,7 +29,7 @@ public class GeneratorJsonValue implements Generator {
         final ObjectNode result = parser.parseClass(type);
         final String pattern = getPattern(type);
         if (pattern != null) {
-            result.put("pattern", pattern);
+            result.put(JsonSchemaField.PATTERN.toString(), pattern);
         }
         return result;
     }

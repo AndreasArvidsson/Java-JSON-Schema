@@ -1,5 +1,6 @@
 package com.github.andreasarvidsson.jsonschema.generate;
 
+import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.github.andreasarvidsson.jsonschema.util.AssertJson;

@@ -1,9 +1,9 @@
 package com.github.andreasarvidsson.jsonschema.validate.validators;
 
 import com.github.andreasarvidsson.jsonschema.JsonSchema;
+import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschema.ReflectionUtil;
 import com.github.andreasarvidsson.jsonschema.validate.Error;
-import com.github.andreasarvidsson.jsonschema.validate.Error.Name;
 import java.lang.reflect.Field;
 import java.util.List;
 
@@ -40,7 +40,7 @@ public class ValidatorClass {
             for (final JsonSchema jsonSchema : jsonSchemas) {
                 if (jsonSchema.combining() == JsonSchema.Combining.NONE) {
                     if (fieldValue == null) {
-                        validateIsRequired(errors, path, fieldName, jsonSchema);
+                        validateIsRequired(errors, path, instance, fieldName, jsonSchema);
                     }
                     else {
                         validators.validate(errors, fieldPath, fieldValue, jsonSchema);
@@ -50,15 +50,15 @@ public class ValidatorClass {
         }
     }
 
-    private void validateIsRequired(final List<Error> errors, final String path, final String fieldName, final JsonSchema jsonSchema) {
+    private void validateIsRequired(final List<Error> errors, final String path, final Object instance, final String fieldName, final JsonSchema jsonSchema) {
         if (jsonSchema.required()) {
             errors.add(new Error(
                     path,
-                    Name.REQUIRED,
+                    JsonSchemaField.Disabled.REQUIRED.toString(),
                     fieldName,
                     String.format("Requires property '%s'", fieldName),
                     jsonSchema,
-                    null
+                    instance
             ));
         }
     }

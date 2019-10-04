@@ -3,6 +3,8 @@ package com.github.andreasarvidsson.jsonschema.validate;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import java.util.List;
 
 /**
@@ -12,7 +14,9 @@ import java.util.List;
 @JsonPropertyOrder({"success", "propertyPath", "errors"})
 public class ValidationReport {
 
-    private final static ObjectMapper MAPPER = new ObjectMapper();
+    private final static ObjectMapper MAPPER = new ObjectMapper()
+            .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+    private final static ObjectWriter WRITER = MAPPER.writerWithDefaultPrettyPrinter();
     private List<Error> errors = null;
     public final String propertyPath = "instance";
 
@@ -31,10 +35,10 @@ public class ValidationReport {
     @Override
     public String toString() {
         try {
-            return MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(this);
+            return WRITER.writeValueAsString(this);
         }
         catch (JsonProcessingException ex) {
-            return null;
+            throw new RuntimeException(ex);
         }
     }
 
