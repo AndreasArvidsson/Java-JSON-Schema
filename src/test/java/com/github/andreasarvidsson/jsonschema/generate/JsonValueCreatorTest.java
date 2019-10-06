@@ -20,13 +20,13 @@ public class JsonValueCreatorTest {
     public void testNormalClass() {
         AssertJson.assertEquals(
                 new JsonBuilder()
-                .setType(JsonType.OBJECT)
-                .setAdditionalProps(false)
-                .addProperty("value", new JsonBuilder()
-                        .setType(JsonType.STRING)
-                        .build()
-                )
-                .build(),
+                        .setType(JsonType.OBJECT)
+                        .setAdditionalProps(false)
+                        .addProperty("value", new JsonBuilder()
+                                .setType(JsonType.STRING)
+                                .build()
+                        )
+                        .build(),
                 gen.create(NormalClass.class)
         );
     }
@@ -35,8 +35,8 @@ public class JsonValueCreatorTest {
     public void testJsonValueClass() {
         AssertJson.assertEquals(
                 new JsonBuilder()
-                .setType(JsonType.STRING)
-                .build(),
+                        .setType(JsonType.STRING)
+                        .build(),
                 gen.create(JsonValueClass.class)
         );
     }
@@ -45,22 +45,22 @@ public class JsonValueCreatorTest {
     public void testJsonCreatorClass() {
         AssertJson.assertEquals(
                 new JsonBuilder()
-                .setType(JsonType.STRING)
-                .addField(JsonSchemaField.PATTERN, "\\s")
-                .build(),
+                        .setType(JsonType.STRING)
+                        .addField(JsonSchemaField.PATTERN, "\\s")
+                        .build(),
                 gen.create(JsonCreatorClass.class)
         );
     }
 
     class NormalClass {
 
-        String value;
+        public String value;
 
     }
 
     class JsonValueClass {
 
-        String value;
+        public String value;
 
         @JsonValue
         public String getValue() {
@@ -71,7 +71,7 @@ public class JsonValueCreatorTest {
 
     class JsonCreatorClass {
 
-        String value;
+        public String value;
 
         @JsonCreator
         @Pattern(regexp = "\\s")

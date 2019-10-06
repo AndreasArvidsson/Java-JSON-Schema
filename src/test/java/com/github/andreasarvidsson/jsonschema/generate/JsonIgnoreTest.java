@@ -30,10 +30,10 @@ public class JsonIgnoreTest {
 
     class JsonIgnoreClass {
 
-        String value1;
+        public String value1;
 
         @JsonIgnore
-        String value2;
+        public String value2;
 
     }
 

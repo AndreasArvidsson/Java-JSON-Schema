@@ -57,7 +57,7 @@ public class BoolTest {
                 title = title,
                 description = desc
         )
-        Boolean value;
+        public Boolean value;
     }
 
 }

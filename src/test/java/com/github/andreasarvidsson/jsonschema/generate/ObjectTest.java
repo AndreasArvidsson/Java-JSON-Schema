@@ -117,7 +117,7 @@ public class ObjectTest {
                 description = fieldDesc,
                 minLength = 1
         )
-        String value;
+        public String value;
 
     }
 
@@ -132,13 +132,13 @@ public class ObjectTest {
                 description = descOuter,
                 required = true
         )
-        MyClass valueOuter;
+        public MyClass valueOuter;
 
     }
 
     class AnyGetterSetterClass {
 
-        String value;
+        public String value;
         private Map<String, String> properties;
 
         @JsonAnySetter
@@ -158,9 +158,9 @@ public class ObjectTest {
         @JsonSchema(
                 dependencies = {dependency}
         )
-        String value;
+        public String value;
 
-        String anoterValue;
+        public String anoterValue;
 
     }
 

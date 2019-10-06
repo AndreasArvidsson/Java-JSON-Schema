@@ -71,7 +71,7 @@ public class SetTest {
                 minItems = min,
                 maxItems = max
         )
-        Set<Boolean> value;
+        public Set<Boolean> value;
 
     }
 
@@ -83,7 +83,7 @@ public class SetTest {
                 minItems = min,
                 maxItems = max
         )
-        Set<Object> value;
+        public Set<Object> value;
 
     }
 
@@ -95,7 +95,7 @@ public class SetTest {
                 minItems = min,
                 maxItems = max
         )
-        Set value;
+        public Set value;
 
     }
 

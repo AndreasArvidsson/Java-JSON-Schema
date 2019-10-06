@@ -44,7 +44,7 @@ public class CustomGeneratorTest {
 
     class CustomClass {
 
-        String value;
+        public String value;
 
     }
 

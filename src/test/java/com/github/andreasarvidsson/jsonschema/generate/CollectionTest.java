@@ -82,7 +82,7 @@ public class CollectionTest {
                 minItems = min,
                 maxItems = max
         )
-        List<Boolean> value;
+        public List<Boolean> value;
 
     }
 
@@ -94,7 +94,7 @@ public class CollectionTest {
                 minItems = min,
                 maxItems = max
         )
-        List<Object> value;
+        public List<Object> value;
 
     }
 
@@ -106,7 +106,7 @@ public class CollectionTest {
                 minItems = min,
                 maxItems = max
         )
-        List value;
+        public List value;
 
     }
 

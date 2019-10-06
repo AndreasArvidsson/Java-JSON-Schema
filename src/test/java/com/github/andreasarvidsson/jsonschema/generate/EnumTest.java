@@ -158,7 +158,7 @@ public class EnumTest {
 
     class SimpleEnumClass {
 
-        SimpleEnum value;
+        public SimpleEnum value;
     }
 
     class SimpleEnumRequiredClass {
@@ -166,18 +166,18 @@ public class EnumTest {
         @JsonSchema(
                 required = true
         )
-        SimpleEnum value;
+        public SimpleEnum value;
     }
 
     class DescriptiveEnumClass {
 
-        DescriptiveEnum value;
+        public DescriptiveEnum value;
     }
 
     class DoubleEnumClass {
 
-        DescriptiveEnum value1;
-        DescriptiveEnum value2;
+        public DescriptiveEnum value1;
+        public DescriptiveEnum value2;
     }
 
 }

@@ -70,7 +70,7 @@ public class MapTest {
                 minProperties = min,
                 maxProperties = max
         )
-        Map<String, Boolean> value;
+        public Map<String, Boolean> value;
 
     }
 
@@ -82,7 +82,7 @@ public class MapTest {
                 minProperties = min,
                 maxProperties = max
         )
-        Map<String, Object> value;
+        public Map<String, Object> value;
 
     }
 
@@ -94,7 +94,7 @@ public class MapTest {
                 minProperties = min,
                 maxProperties = max
         )
-        Map value;
+        public Map value;
 
     }
 

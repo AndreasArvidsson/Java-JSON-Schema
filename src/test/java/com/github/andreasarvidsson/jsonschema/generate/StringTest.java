@@ -108,7 +108,7 @@ public class StringTest {
                 pattern = pattern,
                 format = format
         )
-        String value;
+        public String value;
     }
 
 }

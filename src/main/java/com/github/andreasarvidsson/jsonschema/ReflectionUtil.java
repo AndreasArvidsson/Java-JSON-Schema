@@ -20,11 +20,11 @@ public abstract class ReflectionUtil {
 
     public static boolean ignoreField(final Field field) {
         //Ignore private fields.
-        if (Modifier.isPrivate(field.getModifiers())) {
+        if (!Modifier.isPublic(field.getModifiers())) {
             return true;
         }
         //Inner class with reference to outer class.
-        if (field.getName().equals("this$0")) {
+        if (field.isSynthetic()) {
             return true;
         }
         //Ignore fields with @JsonIgnore annotation

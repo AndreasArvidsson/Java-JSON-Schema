@@ -53,8 +53,7 @@ public class NumberTest {
         final JsonNode exp = new JsonBuilder()
                 .setType(JsonType.OBJECT)
                 .setAdditionalProps(false)
-                .addProperty("value",
-                        new JsonBuilder()
+                .addProperty("value", new JsonBuilder()
                         .setType(JsonType.NUMBER)
                         .addField(JsonSchemaField.TITLE, title)
                         .addField(JsonSchemaField.DESCRIPTION, desc)
@@ -84,7 +83,7 @@ public class NumberTest {
                 exclusiveMaximum = maxEx,
                 multipleOf = mult
         )
-        Double value;
+        public Double value;
     }
 
 }

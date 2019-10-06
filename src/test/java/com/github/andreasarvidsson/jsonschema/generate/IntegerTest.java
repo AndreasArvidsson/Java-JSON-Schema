@@ -91,8 +91,8 @@ public class IntegerTest {
     public void testBigInteger() {
         AssertJson.assertEquals(
                 new JsonBuilder()
-                .setType(JsonType.INTEGER)
-                .build(),
+                        .setType(JsonType.INTEGER)
+                        .build(),
                 gen.create(BigInteger.class)
         );
     }
@@ -102,10 +102,10 @@ public class IntegerTest {
 
         AssertJson.assertEquals(
                 new JsonBuilder()
-                .setType(JsonType.INTEGER)
-                .build(),
+                        .setType(JsonType.INTEGER)
+                        .build(),
                 new JsonSchemaGenerator().hideSchemaField().disableAutoRangeNumbers()
-                .create(int.class)
+                        .create(int.class)
         );
     }
 
@@ -115,15 +115,15 @@ public class IntegerTest {
                 .setAdditionalProps(false)
                 .addProperty("value",
                         new JsonBuilder()
-                        .setType(JsonType.INTEGER)
-                        .addField(JsonSchemaField.TITLE, title)
-                        .addField(JsonSchemaField.DESCRIPTION, desc)
-                        .addField(JsonSchemaField.MINIMUM, min)
-                        .addField(JsonSchemaField.MAXIMUM, max)
-                        .addField(JsonSchemaField.EXCLUSIVE_MINIMUM, minEx)
-                        .addField(JsonSchemaField.EXCLUSIVE_MAXIMUM, maxEx)
-                        .addField(JsonSchemaField.MULTIPLE_OF, mult)
-                        .build()
+                                .setType(JsonType.INTEGER)
+                                .addField(JsonSchemaField.TITLE, title)
+                                .addField(JsonSchemaField.DESCRIPTION, desc)
+                                .addField(JsonSchemaField.MINIMUM, min)
+                                .addField(JsonSchemaField.MAXIMUM, max)
+                                .addField(JsonSchemaField.EXCLUSIVE_MINIMUM, minEx)
+                                .addField(JsonSchemaField.EXCLUSIVE_MAXIMUM, maxEx)
+                                .addField(JsonSchemaField.MULTIPLE_OF, mult)
+                                .build()
                 )
                 .build();
         final JsonNode actual = new JsonSchemaGenerator()
@@ -152,7 +152,7 @@ public class IntegerTest {
                 exclusiveMaximum = maxEx,
                 multipleOf = mult
         )
-        Integer value;
+        public Integer value;
     }
 
 }

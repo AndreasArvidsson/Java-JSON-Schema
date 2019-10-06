@@ -214,19 +214,19 @@ public class CombiningTest {
                 combining = Combining.ONE_OF,
                 required = true
         )
-        String value1;
+        public String value1;
 
         @JsonSchema(
                 combining = Combining.ONE_OF,
                 required = true
         )
-        String value2;
+        public String value2;
 
         @JsonSchema(
                 combining = Combining.ONE_OF,
                 required = true
         )
-        String value3;
+        public String value3;
 
     }
 
@@ -237,20 +237,20 @@ public class CombiningTest {
                 combiningGroup = 1,
                 required = true
         )
-        String value1;
+        public String value1;
 
         @JsonSchema(
                 combining = Combining.ONE_OF,
                 combiningGroup = 1,
                 required = true
         )
-        String value2;
+        public String value2;
 
         @JsonSchema(
                 combining = Combining.ONE_OF,
                 required = true
         )
-        String value3;
+        public String value3;
 
     }
 
@@ -266,7 +266,7 @@ public class CombiningTest {
                 combiningGroup = 2,
                 pattern = "\\d"
         )
-        String value1;
+        public String value1;
 
         @JsonSchema(
                 combining = Combining.ONE_OF,
@@ -278,7 +278,7 @@ public class CombiningTest {
                 combiningGroup = 2,
                 minLength = 5
         )
-        String value2;
+        public String value2;
     }
 
     class CombiningWithDependencies {
@@ -287,13 +287,13 @@ public class CombiningTest {
                 combining = Combining.ONE_OF,
                 dependencies = {"value2"}
         )
-        String value1;
+        public String value1;
 
         @JsonSchema(
                 combining = Combining.ONE_OF,
                 dependencies = {"value1"}
         )
-        String value2;
+        public String value2;
     }
 
     class CombiningSingleField {
@@ -306,7 +306,7 @@ public class CombiningTest {
                 combining = Combining.ONE_OF,
                 minLength = 5
         )
-        String value1;
+        public String value1;
 
     }
 
@@ -322,7 +322,7 @@ public class CombiningTest {
                 combiningGroup = 0,
                 minLength = 5
         )
-        String value1;
+        public String value1;
 
         @JsonSchema(
                 combining = Combining.ONE_OF,
@@ -334,7 +334,7 @@ public class CombiningTest {
                 combiningGroup = 0,
                 minLength = 2
         )
-        String value2;
+        public String value2;
 
     }
 

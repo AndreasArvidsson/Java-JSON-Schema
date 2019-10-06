@@ -67,39 +67,46 @@ public class JsonPropertyOrderTest {
     }
 
     class NormalBaseClass {
+
         public String valueB1;
         public String valueB2;
     }
 
     @JsonPropertyOrder({"valueB2", "valueB1"})
     class OrderedBaseClass {
+
         public String valueB1;
         public String valueB2;
     }
 
     class NormalExtendingNormal extends NormalBaseClass {
+
         public String value1;
         public String value2;
     }
 
     class NormalExtendingOrdered extends OrderedBaseClass {
+
         public String value1;
         public String value2;
     }
 
     class OrderedExtendingNormal extends NormalBaseClass {
+
         public String value1;
         public String value2;
     }
 
     @JsonPropertyOrder({"value2", "value1"})
     class OrderedExtendingOrdered extends OrderedBaseClass {
+
         public String value1;
         public String value2;
     }
 
     @JsonPropertyOrder(alphabetic = true)
     class Alphabetically {
+
         public String g;
         public String a;
         public String b;
@@ -109,6 +116,7 @@ public class JsonPropertyOrderTest {
 
     @JsonPropertyOrder(alphabetic = true, value = {"b", "c22"})
     class AlphabeticallyAndValue {
+
         public String g;
         public String a;
         public String b;

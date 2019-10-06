@@ -84,7 +84,7 @@ public class ArrayTest {
                 minItems = min,
                 maxItems = max
         )
-        boolean[] value;
+        public boolean[] value;
 
     }
 
@@ -96,7 +96,7 @@ public class ArrayTest {
                 minItems = min,
                 maxItems = max
         )
-        Boolean[] value;
+        public Boolean[] value;
 
     }
 
@@ -108,7 +108,7 @@ public class ArrayTest {
                 minItems = min,
                 maxItems = max
         )
-        Object[] value;
+        public Object[] value;
 
     }
 
