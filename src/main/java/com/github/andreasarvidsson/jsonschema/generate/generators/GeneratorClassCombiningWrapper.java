@@ -5,7 +5,7 @@ import com.github.andreasarvidsson.jsonschema.JsonSchema;
 
 /**
  *
- * @author Andreas Arvidssonas Arvidsson
+ * @author Andreas Arvidsson
  */
 public class GeneratorClassCombiningWrapper {
 

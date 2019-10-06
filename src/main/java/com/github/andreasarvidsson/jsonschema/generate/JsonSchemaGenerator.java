@@ -12,7 +12,7 @@ import com.github.andreasarvidsson.jsonschema.generate.generators.Generator;
 
 /**
  *
- * @author Andreas Arvidssonas Arvidsson
+ * @author Andreas Arvidsson
  */
 public class JsonSchemaGenerator {
 

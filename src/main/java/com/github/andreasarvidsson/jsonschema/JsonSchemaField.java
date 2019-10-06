@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  *
- * @author Andreas Arvidssonas Arvidsson
+ * @author Andreas Arvidsson
  */
 public enum JsonSchemaField {
     //General
@@ -73,7 +73,8 @@ public enum JsonSchemaField {
         TYPE,
         DEFINITIONS,
         REF("$ref"),
-        SCHEMA("$schema");
+        SCHEMA("$schema"),
+        ANY_MATCH("^.*$");
 
         private final String value;
         

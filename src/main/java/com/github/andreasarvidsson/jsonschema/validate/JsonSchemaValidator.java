@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 /**
  *
- * @author Andreas Arvidssonas Arvidsson
+ * @author Andreas Arvidsson
  */
 public class JsonSchemaValidator {
 

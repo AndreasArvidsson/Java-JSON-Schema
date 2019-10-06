@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  *
- * @author Andreas Arvidssonas Arvidsson
+ * @author Andreas Arvidsson
  */
 @JsonPropertyOrder({"success", "propertyPath", "errors"})
 public class ValidationReport {

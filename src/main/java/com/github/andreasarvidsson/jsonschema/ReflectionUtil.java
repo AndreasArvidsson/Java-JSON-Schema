@@ -14,7 +14,7 @@ import java.lang.reflect.Type;
 
 /**
  *
- * @author Andreas Arvidssonas Arvidsson
+ * @author Andreas Arvidsson
  */
 public abstract class ReflectionUtil {
 

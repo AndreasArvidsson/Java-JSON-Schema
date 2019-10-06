@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  *
- * @author Andreas Arvidssonas Arvidsson
+ * @author Andreas Arvidsson
  */
 public interface GeneratorCollectionInterface extends Generator {
 

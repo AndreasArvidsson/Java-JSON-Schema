@@ -11,7 +11,7 @@ import java.util.Set;
 
 /**
  *
- * @author Andreas Arvidssonas Arvidsson
+ * @author Andreas Arvidsson
  */
 public abstract class GeneratorBase implements Generator {
 

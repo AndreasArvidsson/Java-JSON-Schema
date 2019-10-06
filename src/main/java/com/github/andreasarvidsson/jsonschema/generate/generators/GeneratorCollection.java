@@ -1,33 +1,20 @@
 package com.github.andreasarvidsson.jsonschema.generate.generators;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
-import com.github.andreasarvidsson.jsonschema.generate.JsonType;
-import java.util.Arrays;
 
 /**
  *
- * @author Andreas Arvidssonas Arvidsson
+ * @author Andreas Arvidsson
  */
-public class GeneratorCollection extends GeneratorBase implements GeneratorCollectionInterface {
-
-    private final Generators generators;
+public class GeneratorCollection extends GeneratorArrayBase implements GeneratorCollectionInterface {
 
     public GeneratorCollection(final Generators generators) {
-        super(JsonType.ARRAY, Arrays.asList(
-                JsonSchemaField.TITLE,
-                JsonSchemaField.DESCRIPTION,
-                JsonSchemaField.MIN_ITEMS,
-                JsonSchemaField.MAX_ITEMS
-        ));
-        this.generators = generators;
+        super(generators);
     }
 
     @Override
     public ObjectNode parseCollectionClass(final Class type, final Class valueType) {
-        final ObjectNode result = super.parseClass(type);
-        result.set(JsonSchemaField.Disabled.ITEMS.toString(), generators.parseClass(valueType));
-        return result;
+        return super.parseArrayClass(type, valueType);
     }
 
     @Override

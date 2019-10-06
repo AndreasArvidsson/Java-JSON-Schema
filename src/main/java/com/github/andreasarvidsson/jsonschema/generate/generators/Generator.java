@@ -6,7 +6,7 @@ import java.util.Set;
 
 /**
  *
- * @author Andreas Arvidssonas Arvidsson
+ * @author Andreas Arvidsson
  */
 public interface Generator {
 

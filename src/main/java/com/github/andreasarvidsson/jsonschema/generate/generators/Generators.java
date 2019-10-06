@@ -18,7 +18,7 @@ import java.util.UUID;
 
 /**
  *
- * @author Andreas Arvidssonas Arvidsson
+ * @author Andreas Arvidsson
  */
 public class Generators {
 
@@ -114,7 +114,7 @@ public class Generators {
         if (Set.class.isAssignableFrom(type)) {
             return generatorSet;
         }
-        //Collection that is not map or set.
+        //Collection that is not set.
         if (Collection.class.isAssignableFrom(type)) {
             return generatorCollection;
         }

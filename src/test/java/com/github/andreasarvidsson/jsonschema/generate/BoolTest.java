@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  *
- * @author Andreas Arvidssonas Arvidsson
+ * @author Andreas Arvidsson
  */
 public class BoolTest {
 

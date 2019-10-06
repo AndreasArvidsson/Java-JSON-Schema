@@ -13,7 +13,7 @@ import java.util.Arrays;
 
 /**
  *
- * @author Andreas Arvidssonas Arvidsson
+ * @author Andreas Arvidsson
  */
 public class GeneratorEnum extends GeneratorBase {
 

@@ -2,7 +2,7 @@ package com.github.andreasarvidsson.jsonschema;
 
 /**
  *
- * @author Andreas Arvidssonas Arvidsson
+ * @author Andreas Arvidsson
  */
 public interface JsonSchemaEnum {
 

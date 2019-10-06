@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 /**
  *
- * @author Andreas Arvidssonas Arvidsson
+ * @author Andreas Arvidsson
  */
 public class GeneratorMap extends GeneratorBase implements GeneratorCollectionInterface {
 
@@ -27,7 +27,7 @@ public class GeneratorMap extends GeneratorBase implements GeneratorCollectionIn
     public ObjectNode parseCollectionClass(final Class type, final Class valueType) {
         final ObjectNode result = super.parseClass(type);
         final ObjectNode patternProperties = MAPPER.createObjectNode();
-        patternProperties.set("^.*$", generators.parseClass(valueType));
+        patternProperties.set(JsonSchemaField.Disabled.ANY_MATCH.toString(), generators.parseClass(valueType));
         result.set(JsonSchemaField.Disabled.PATTERN_PROPERTIES.toString(), patternProperties);
         return result;
     }

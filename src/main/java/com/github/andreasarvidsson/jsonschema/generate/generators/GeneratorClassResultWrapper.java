@@ -14,7 +14,7 @@ import java.util.Set;
 
 /**
  *
- * @author Andreas Arvidssonas Arvidsson
+ * @author Andreas Arvidsson
  */
 public class GeneratorClassResultWrapper {
 

@@ -12,7 +12,7 @@ import javax.validation.constraints.Pattern;
 
 /**
  *
- * @author Andreas Arvidssonas Arvidsson
+ * @author Andreas Arvidsson
  */
 public class GeneratorJsonValue implements Generator {
 
