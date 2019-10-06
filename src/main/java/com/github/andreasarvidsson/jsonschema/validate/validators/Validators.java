@@ -66,13 +66,7 @@ public class Validators {
 
     private void addDefaults() {
         addDefaults(new ValidatorInteger(), TypeCategories.INTEGERS);
-//        addSimples(new ParserNumber(), Arrays.asList(
-//                float.class,
-//                Float.class,
-//                double.class,
-//                Double.class,
-//                BigDecimal.class
-//        ));
+        addDefaults(new ValidatorInteger(), TypeCategories.NUMBERS);
 //        addSimples(new ParserBoolean(), Arrays.asList(
 //                boolean.class,
 //                Boolean.class
