@@ -26,7 +26,7 @@ public class MapTest {
                 getExpected(new JsonBuilder()
                         .setType(JsonType.BOOLEAN)
                         .build()),
-                gen.create(MapBoolClass.class)
+                gen.generate(MapBoolClass.class)
         );
     }
 
@@ -34,7 +34,7 @@ public class MapTest {
     public void testMapObject() {
         AssertJson.assertEquals(
                 getExpected(new JsonBuilder().build()),
-                gen.create(MapObjectClass.class)
+                gen.generate(MapObjectClass.class)
         );
     }
 
@@ -42,7 +42,7 @@ public class MapTest {
     public void testMapDefault() {
         AssertJson.assertEquals(
                 getExpected(new JsonBuilder().build()),
-                gen.create(MapDefaultClass.class)
+                gen.generate(MapDefaultClass.class)
         );
     }
 

@@ -14,17 +14,17 @@ import java.util.Objects;
 public class ValidatorInteger implements Validator {
 
     @Override
-    public void validate(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema) {
+    public void validateClass(final List<Error> errors, final String path, final Object instance) {
+    }
+
+    @Override
+    public void validateSchema(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema) {
         final long value = ((Number) instance).longValue();
         validateMinimum(errors, path, instance, jsonSchema, value);
         validateMaximum(errors, path, instance, jsonSchema, value);
         validateExclusiveMinimum(errors, path, instance, jsonSchema, value);
         validateExclusiveMaximum(errors, path, instance, jsonSchema, value);
         //    long multipleOf() default 0;
-    }
-
-    @Override
-    public void validate(final List<Error> errors, final String path, final Object instance) {
     }
 
     private void validateMinimum(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema, final long value) {

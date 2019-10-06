@@ -24,7 +24,7 @@ public class JsonIgnoreTest {
                                 .build()
                 )
                 .build(),
-                gen.create(JsonIgnoreClass.class)
+                gen.generate(JsonIgnoreClass.class)
         );
     }
 

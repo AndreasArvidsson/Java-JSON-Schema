@@ -5,16 +5,12 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.andreasarvidsson.jsonschema.ReflectionUtil;
 import com.github.andreasarvidsson.jsonschema.generate.ClassDefinitions;
 import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
+import com.github.andreasarvidsson.jsonschema.TypeCategories;
 import java.lang.reflect.Field;
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.IdentityHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  *
@@ -22,7 +18,7 @@ import java.util.UUID;
  */
 public class Generators {
 
-    private final Map<Class, Generator> simpleGenerators = new IdentityHashMap();
+    private final Map<Class, Generator> defaultGenerators = new IdentityHashMap();
     private final Map<Class, Generator> customGenerators;
     private final Generator generatorClass, generatorArray, generatorEnum;
     private final GeneratorCollectionInterface generatorMap, generatorSet, generatorCollection;
@@ -40,7 +36,7 @@ public class Generators {
         this.generatorSet = new GeneratorSet(this);
         this.generatorCollection = new GeneratorCollection(this);
         this.generatorEnum = new GeneratorEnum();
-        addSimples(autoRangeNumbers);
+        addDefaults(autoRangeNumbers);
     }
 
     public ObjectNode parseClass(final Class type) {
@@ -98,8 +94,8 @@ public class Generators {
         if (type.isArray()) {
             return generatorArray;
         }
-        if (simpleGenerators.containsKey(type)) {
-            return simpleGenerators.get(type);
+        if (defaultGenerators.containsKey(type)) {
+            return defaultGenerators.get(type);
         }
         if (!type.isEnum() && ReflectionUtil.hasMethod(type, JsonValue.class)) {
             return new GeneratorJsonValue(this, type);
@@ -131,44 +127,18 @@ public class Generators {
         return generatorClass;
     }
 
-    private void addSimples(final boolean autoRangeNumbers) {
-        addSimples(new GeneratorInteger(autoRangeNumbers), Arrays.asList(
-                byte.class,
-                Byte.class,
-                short.class,
-                Short.class,
-                int.class,
-                Integer.class,
-                long.class,
-                Long.class,
-                BigInteger.class
-        ));
-        addSimples(new GeneratorNumber(), Arrays.asList(
-                float.class,
-                Float.class,
-                double.class,
-                Double.class,
-                BigDecimal.class
-        ));
-        addSimples(new GeneratorBoolean(), Arrays.asList(
-                boolean.class,
-                Boolean.class
-        ));
-        addSimples(new GeneratorChar(), Arrays.asList(
-                char.class,
-                Character.class
-        ));
-        addSimples(new GeneratorString(), Arrays.asList(
-                String.class,
-                CharSequence.class,
-                UUID.class
-        ));
-        simpleGenerators.put(Object.class, new GeneratorObject());
+    private void addDefaults(final boolean autoRangeNumbers) {
+        addDefaults(new GeneratorInteger(autoRangeNumbers), TypeCategories.INTEGERS);
+        addDefaults(new GeneratorNumber(), TypeCategories.NUMBERS);
+        addDefaults(new GeneratorBoolean(), TypeCategories.BOOLEANS);
+        addDefaults(new GeneratorChar(), TypeCategories.CHARACTERS);
+        addDefaults(new GeneratorString(), TypeCategories.STRINGS);
+        defaultGenerators.put(Object.class, new GeneratorObject());
     }
 
-    private void addSimples(final Generator generator, final List<Class> types) {
+    private void addDefaults(final Generator generator, final Collection<Class> types) {
         types.stream().forEach(type -> {
-            simpleGenerators.put(type, generator);
+            defaultGenerators.put(type, generator);
         });
     }
 

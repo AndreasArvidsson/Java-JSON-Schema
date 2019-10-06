@@ -21,7 +21,7 @@ public class MiscTest {
                         .addField(JsonSchemaField.Disabled.SCHEMA, "http://json-schema.org/draft-06/schema#")
                         .setType(JsonType.STRING)
                         .build(),
-                new JsonSchemaGenerator().create(String.class)
+                new JsonSchemaGenerator().generate(String.class)
         );
     }
 
@@ -34,7 +34,7 @@ public class MiscTest {
                             .addField(JsonSchemaField.Disabled.SCHEMA, newURI.toString())
                             .setType(JsonType.STRING)
                             .build(),
-                    new JsonSchemaGenerator().setSchemaField(newURI).create(String.class)
+                    new JsonSchemaGenerator().setSchemaField(newURI).generate(String.class)
             );
         }
         catch (final URISyntaxException ex) {
@@ -48,7 +48,7 @@ public class MiscTest {
                 new JsonBuilder()
                         .setType(JsonType.STRING)
                         .build(),
-                new JsonSchemaGenerator().hideSchemaField().create(String.class)
+                new JsonSchemaGenerator().hideSchemaField().generate(String.class)
         );
     }
 
@@ -56,7 +56,7 @@ public class MiscTest {
     public void testObjectRoot() {
         AssertJson.assertEquals(
                 new JsonBuilder().build(),
-                new JsonSchemaGenerator().hideSchemaField().create(Object.class)
+                new JsonSchemaGenerator().hideSchemaField().generate(Object.class)
         );
     }
 

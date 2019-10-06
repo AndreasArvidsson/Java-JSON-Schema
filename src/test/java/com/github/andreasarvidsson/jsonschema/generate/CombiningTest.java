@@ -47,7 +47,7 @@ public class CombiningTest {
                                 .build()
                         )
                         .build(),
-                gen.create(CombiningWithoutGroup.class)
+                gen.generate(CombiningWithoutGroup.class)
         );
     }
 
@@ -78,7 +78,7 @@ public class CombiningTest {
                                 .build()
                         )
                         .build(),
-                gen.create(CombiningWithGroup.class)
+                gen.generate(CombiningWithGroup.class)
         );
     }
 
@@ -119,7 +119,7 @@ public class CombiningTest {
                                 .build()
                         )
                         .build(),
-                gen.create(CombiningWithGroupAndMultiple.class)
+                gen.generate(CombiningWithGroupAndMultiple.class)
         );
     }
 
@@ -146,7 +146,7 @@ public class CombiningTest {
                                 .build()
                         )
                         .build(),
-                gen.create(CombiningWithDependencies.class)
+                gen.generate(CombiningWithDependencies.class)
         );
     }
 
@@ -169,7 +169,7 @@ public class CombiningTest {
                                 .build()
                         )
                         .build(),
-                gen.create(CombiningSingleField.class)
+                gen.generate(CombiningSingleField.class)
         );
     }
 
@@ -204,7 +204,7 @@ public class CombiningTest {
                                 .build()
                         )
                         .build(),
-                gen.create(CombiningGroupZero.class)
+                gen.generate(CombiningGroupZero.class)
         );
     }
 

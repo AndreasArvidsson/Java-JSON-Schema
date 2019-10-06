@@ -26,7 +26,7 @@ public class StringTest {
     public void testString() {
         AssertJson.assertEquals(
                 getStringExpected(),
-                gen.create(String.class)
+                gen.generate(String.class)
         );
     }
 
@@ -34,7 +34,7 @@ public class StringTest {
     public void testCharSeq() {
         AssertJson.assertEquals(
                 getStringExpected(),
-                gen.create(CharSequence.class)
+                gen.generate(CharSequence.class)
         );
     }
 
@@ -42,7 +42,7 @@ public class StringTest {
     public void testChar() {
         AssertJson.assertEquals(
                 getCharExpected(),
-                gen.create(char.class)
+                gen.generate(char.class)
         );
     }
 
@@ -50,7 +50,7 @@ public class StringTest {
     public void testCharacter() {
         AssertJson.assertEquals(
                 getCharExpected(),
-                gen.create(Character.class)
+                gen.generate(Character.class)
         );
     }
 
@@ -72,7 +72,7 @@ public class StringTest {
                 .build();
         AssertJson.assertEquals(
                 expected,
-                gen.create(StringClass.class)
+                gen.generate(StringClass.class)
         );
     }
 
@@ -80,7 +80,7 @@ public class StringTest {
     public void testUUID() {
         AssertJson.assertEquals(
                 getStringExpected(),
-                gen.create(UUID.class)
+                gen.generate(UUID.class)
         );
     }
 

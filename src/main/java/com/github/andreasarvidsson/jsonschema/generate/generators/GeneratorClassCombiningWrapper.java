@@ -15,11 +15,11 @@ public class GeneratorClassCombiningWrapper {
     public final boolean ownProperty;
 
     public GeneratorClassCombiningWrapper(
-            final String fieldName, final ObjectNode constraintNode,
-            final JsonSchema constraintType, final boolean ownProperty) {
+            final String fieldName, final ObjectNode node,
+            final JsonSchema jsonSchema ,final boolean ownProperty) {
         this.fieldName = fieldName;
-        this.node = constraintNode;
-        this.jsonSchema = constraintType;
+        this.node = node;
+        this.jsonSchema = jsonSchema;
         this.ownProperty = ownProperty;
     }
 

@@ -21,20 +21,25 @@ public class ValidatorClass implements Validator {
     }
 
     @Override
-    public void validate(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema) {
-        validateClassFields(errors, path, instance, instance.getClass());
+    public void validateClass(final List<Error> errors, final String path, final Object instance) {
+        final ValidatorClassResultWrapper wrapper = new ValidatorClassResultWrapper();
+        validateClassFields(errors, path, instance, instance.getClass(), wrapper);
+        //TODO        
+        //Validate dependencies
+        //Validate combinations
     }
 
     @Override
-    public void validate(final List<Error> errors, final String path, final Object instance) {
-        validateClassFields(errors, path, instance, instance.getClass());
+    public void validateSchema(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema) {
     }
 
-    private void validateClassFields(final List<Error> errors, final String path, final Object instance, final Class type) {
+    private void validateClassFields(
+            final List<Error> errors, final String path, final Object instance,
+            final Class type, final ValidatorClassResultWrapper wrapper) {
         //Validate super classes first.
         final Class superType = type.getSuperclass();
         if (superType != null) {
-            validateClassFields(errors, path, instance, superType);
+            validateClassFields(errors, path, instance, superType, wrapper);
         }
         for (final Field field : type.getDeclaredFields()) {
             if (ReflectionUtil.ignoreField(field)) {
@@ -43,17 +48,32 @@ public class ValidatorClass implements Validator {
             final String fieldName = ReflectionUtil.getFieldName(field);
             final Object fieldValue = ReflectionUtil.getFieldValue(field, instance);
             final String fieldPath = PropertyPath.append(path, fieldName);
+
             final JsonSchema[] jsonSchemas = field.getAnnotationsByType(JsonSchema.class);
             for (final JsonSchema jsonSchema : jsonSchemas) {
-                if (jsonSchema.combining() == JsonSchema.Combining.NONE) {
-                    if (fieldValue == null) {
-                        validateIsRequired(errors, path, instance, fieldName, jsonSchema);
-                    }
-                    else {
-                        validators.validate(errors, fieldPath, fieldValue, jsonSchema);
-                    }
-                }
+                addSchema(errors, path, instance, fieldPath, fieldName, fieldValue, wrapper, jsonSchema);
             }
+
+            if (fieldValue != null) {
+                wrapper.fieldNames.add(fieldName);
+                validators.validateClass(errors, fieldPath, fieldValue);
+            }
+        }
+    }
+
+    private void addSchema(
+            final List<Error> errors, final String path, final Object instance, final String fieldPath, final String fieldName, final Object fieldInstance,
+            final ValidatorClassResultWrapper wrapper, final JsonSchema jsonSchema) {
+        if (jsonSchema.combining() == JsonSchema.Combining.NONE) {
+            if (fieldInstance == null) {
+                validateIsRequired(errors, path, instance, fieldName, jsonSchema);
+            }
+            else {
+                validators.validateSchema(errors, fieldPath, fieldInstance, jsonSchema);
+            }
+        }
+        else {
+            wrapper.addCombining(fieldPath, jsonSchema);
         }
     }
 

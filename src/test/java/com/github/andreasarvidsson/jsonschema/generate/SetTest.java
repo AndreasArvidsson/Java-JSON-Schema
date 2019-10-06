@@ -26,7 +26,7 @@ public class SetTest {
                 getExpected(new JsonBuilder()
                         .setType(JsonType.BOOLEAN)
                         .build()),
-                gen.create(SetBool.class)
+                gen.generate(SetBool.class)
         );
     }
 
@@ -34,7 +34,7 @@ public class SetTest {
     public void testSetObject() {
         AssertJson.assertEquals(
                 getExpected(new JsonBuilder().build()),
-                gen.create(SetObject.class)
+                gen.generate(SetObject.class)
         );
     }
 
@@ -42,7 +42,7 @@ public class SetTest {
     public void testSetDefault() {
         AssertJson.assertEquals(
                 getExpected(new JsonBuilder().build()),
-                gen.create(SetDefault.class)
+                gen.generate(SetDefault.class)
         );
     }
 

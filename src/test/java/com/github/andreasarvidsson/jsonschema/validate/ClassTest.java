@@ -59,7 +59,7 @@ public class ClassTest {
         );
     }
 
-    public static class RequiredInt {
+    class RequiredInt {
 
         @JsonSchema(
                 required = true
@@ -68,7 +68,7 @@ public class ClassTest {
 
     }
 
-    public static class RequiredSubInt {
+    class RequiredSubInt {
 
         @JsonSchema(
                 required = true

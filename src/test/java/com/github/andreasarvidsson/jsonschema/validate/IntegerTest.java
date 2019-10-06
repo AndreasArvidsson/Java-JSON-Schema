@@ -15,22 +15,35 @@ public class IntegerTest {
 
     private final JsonSchemaValidator validator = new JsonSchemaValidator();
 
-//    @Test
-//    public void testIntegerMinFailed() {
-//        final IntegerMinClass instance = new IntegerMinClass();
-//        instance.value = 1;
-//        final ValidationReport report = validator.validate(instance);
-//        System.out.println(report.toString());
-//        Assertions.assertFalse(report.isSuccess());
-//        AssertError.assertError(
-//                report.getErrors().get(0),
-//                PropertyPath.append(report.propertyPath, "values"),
-//                JsonSchemaField.MAX_ITEMS.toString(),
-//                5L
-//        );
-//    }
+    @Test
+    public void testIntegerMinFailed() {
+        final IntegerMinClass instance = new IntegerMinClass();
+        instance.value = 1;
+        final ValidationReport report = validator.validate(instance);
+        Assertions.assertFalse(report.isSuccess(), report.toString());
+        AssertError.assertError(
+                report.getErrors().get(0),
+                PropertyPath.append(report.propertyPath, "value"),
+                JsonSchemaField.MINIMUM.toString(),
+                2L
+        );
+    }
 
-    public static class IntegerMinClass {
+    @Test
+    public void testIntegerMaxFailed() {
+        final IntegerMaxClass instance = new IntegerMaxClass();
+        instance.value = 3;
+        final ValidationReport report = validator.validate(instance);
+        Assertions.assertFalse(report.isSuccess(), report.toString());
+        AssertError.assertError(
+                report.getErrors().get(0),
+                PropertyPath.append(report.propertyPath, "value"),
+                JsonSchemaField.MAXIMUM.toString(),
+                2L
+        );
+    }
+
+    class IntegerMinClass {
 
         @JsonSchema(
                 minimum = 2
@@ -39,7 +52,7 @@ public class IntegerTest {
 
     }
 
-    public static class IntegerMaxClass {
+    class IntegerMaxClass {
 
         @JsonSchema(
                 maximum = 2

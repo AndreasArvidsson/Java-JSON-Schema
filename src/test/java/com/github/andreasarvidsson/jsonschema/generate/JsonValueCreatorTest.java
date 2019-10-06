@@ -27,7 +27,7 @@ public class JsonValueCreatorTest {
                                 .build()
                         )
                         .build(),
-                gen.create(NormalClass.class)
+                gen.generate(NormalClass.class)
         );
     }
 
@@ -37,7 +37,7 @@ public class JsonValueCreatorTest {
                 new JsonBuilder()
                         .setType(JsonType.STRING)
                         .build(),
-                gen.create(JsonValueClass.class)
+                gen.generate(JsonValueClass.class)
         );
     }
 
@@ -48,7 +48,7 @@ public class JsonValueCreatorTest {
                         .setType(JsonType.STRING)
                         .addField(JsonSchemaField.PATTERN, "\\s")
                         .build(),
-                gen.create(JsonCreatorClass.class)
+                gen.generate(JsonCreatorClass.class)
         );
     }
 

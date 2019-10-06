@@ -42,7 +42,7 @@ public class JsonSchemaGenerator {
         return this;
     }
 
-    public JsonNode create(final Class type) {
+    public JsonNode generate(final Class type) {
         final ObjectNode schemaNode = MAPPER.createObjectNode();
         final ClassDefinitions classDefinitions = new ClassDefinitions();
         final Generators generators = new Generators(autoRangeNumbes, customGenerators, classDefinitions);

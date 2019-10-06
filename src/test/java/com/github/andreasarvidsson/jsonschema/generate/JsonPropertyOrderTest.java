@@ -22,7 +22,7 @@ public class JsonPropertyOrderTest {
     public void testNormalExtendingNormal() {
         AssertJson.assertEqualsWithOrder(
                 getExpected(new NormalExtendingNormal()),
-                gen.create(NormalExtendingNormal.class)
+                gen.generate(NormalExtendingNormal.class)
         );
     }
 
@@ -30,7 +30,7 @@ public class JsonPropertyOrderTest {
     public void testNormalExtendingOrdered() {
         AssertJson.assertEqualsWithOrder(
                 getExpected(new NormalExtendingOrdered()),
-                gen.create(NormalExtendingOrdered.class)
+                gen.generate(NormalExtendingOrdered.class)
         );
     }
 
@@ -38,7 +38,7 @@ public class JsonPropertyOrderTest {
     public void testOrderedExtendingNormal() {
         AssertJson.assertEqualsWithOrder(
                 getExpected(new OrderedExtendingNormal()),
-                gen.create(OrderedExtendingNormal.class)
+                gen.generate(OrderedExtendingNormal.class)
         );
     }
 
@@ -46,7 +46,7 @@ public class JsonPropertyOrderTest {
     public void testOrderedExtendingOrdered() {
         AssertJson.assertEqualsWithOrder(
                 getExpected(new OrderedExtendingOrdered()),
-                gen.create(OrderedExtendingOrdered.class)
+                gen.generate(OrderedExtendingOrdered.class)
         );
     }
 
@@ -54,7 +54,7 @@ public class JsonPropertyOrderTest {
     public void testAlphabetically() {
         AssertJson.assertEqualsWithOrder(
                 getExpected(new Alphabetically()),
-                gen.create(Alphabetically.class)
+                gen.generate(Alphabetically.class)
         );
     }
 
@@ -62,7 +62,7 @@ public class JsonPropertyOrderTest {
     public void testAlphabeticallyAndValue() {
         AssertJson.assertEqualsWithOrder(
                 getExpected(new AlphabeticallyAndValue()),
-                gen.create(AlphabeticallyAndValue.class)
+                gen.generate(AlphabeticallyAndValue.class)
         );
     }
 
@@ -91,6 +91,7 @@ public class JsonPropertyOrderTest {
         public String value2;
     }
 
+    @JsonPropertyOrder({"value2", "value1"})
     class OrderedExtendingNormal extends NormalBaseClass {
 
         public String value1;

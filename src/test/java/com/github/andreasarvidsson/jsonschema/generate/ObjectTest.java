@@ -29,7 +29,7 @@ public class ObjectTest {
     public void testObj() {
         AssertJson.assertEquals(
                 getExpected(),
-                gen.create(MyClass.class)
+                gen.generate(MyClass.class)
         );
     }
 
@@ -49,7 +49,7 @@ public class ObjectTest {
 
         AssertJson.assertEquals(
                 expected,
-                gen.create(MyClass2.class)
+                gen.generate(MyClass2.class)
         );
     }
 
@@ -65,7 +65,7 @@ public class ObjectTest {
                 .build();
         AssertJson.assertEquals(
                 expected,
-                gen.create(AnyGetterSetterClass.class)
+                gen.generate(AnyGetterSetterClass.class)
         );
     }
 
@@ -86,7 +86,7 @@ public class ObjectTest {
                 .build();
         AssertJson.assertEquals(
                 expected,
-                gen.create(DependencyClass.class)
+                gen.generate(DependencyClass.class)
         );
     }
 

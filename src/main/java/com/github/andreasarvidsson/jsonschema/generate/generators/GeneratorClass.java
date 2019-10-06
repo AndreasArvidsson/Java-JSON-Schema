@@ -143,7 +143,6 @@ public class GeneratorClass extends GeneratorBase {
             final Set<JsonSchemaField> allowedFields, final GeneratorClassResultWrapper wrapper,
             ObjectNode fieldNode, final Class type,
             final String fieldName, final JsonSchema jsonSchema) {
-
         final boolean isCombining = jsonSchema.combining() != Combining.NONE;
         boolean addCombining = false;
 

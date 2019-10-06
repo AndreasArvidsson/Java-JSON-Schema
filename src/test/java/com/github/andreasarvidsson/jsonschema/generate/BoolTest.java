@@ -21,7 +21,7 @@ public class BoolTest {
     public void testBoolPrim() {
         AssertJson.assertEquals(
                 new JsonBuilder().setType(JsonType.BOOLEAN).build(),
-                gen.create(boolean.class)
+                gen.generate(boolean.class)
         );
     }
 
@@ -29,7 +29,7 @@ public class BoolTest {
     public void testBoolClass() {
         AssertJson.assertEquals(
                 new JsonBuilder().setType(JsonType.BOOLEAN).build(),
-                gen.create(Boolean.class)
+                gen.generate(Boolean.class)
         );
     }
 
@@ -47,7 +47,7 @@ public class BoolTest {
                 .build();
         AssertJson.assertEquals(
                 expected,
-                gen.create(BoolClass.class)
+                gen.generate(BoolClass.class)
         );
     }
 

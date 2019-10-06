@@ -27,7 +27,7 @@ public class CollectionTest {
                 getExpected(new JsonBuilder()
                         .setType(JsonType.BOOLEAN)
                         .build()),
-                gen.create(ListBool.class)
+                gen.generate(ListBool.class)
         );
     }
 
@@ -35,7 +35,7 @@ public class CollectionTest {
     public void testListObject() {
         AssertJson.assertEquals(
                 getExpected(new JsonBuilder().build()),
-                gen.create(ListObject.class)
+                gen.generate(ListObject.class)
         );
     }
 
@@ -43,7 +43,7 @@ public class CollectionTest {
     public void testListDefault() {
         AssertJson.assertEquals(
                 getExpected(new JsonBuilder().build()),
-                gen.create(ListDefault.class)
+                gen.generate(ListDefault.class)
         );
     }
 
@@ -54,7 +54,7 @@ public class CollectionTest {
                         .setType(JsonType.ARRAY)
                         .setItems(new JsonBuilder().build())
                         .build(),
-                new JsonSchemaGenerator().hideSchemaField().create(ArrayList.class)
+                new JsonSchemaGenerator().hideSchemaField().generate(ArrayList.class)
         );
     }
 

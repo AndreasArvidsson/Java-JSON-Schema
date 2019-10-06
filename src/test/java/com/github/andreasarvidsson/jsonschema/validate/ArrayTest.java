@@ -19,7 +19,7 @@ public class ArrayTest {
     public void testMinItemsFailed() {
         final ArrayMinItems instance = new ArrayMinItems();
         final ValidationReport report = validator.validate(instance);
-        Assertions.assertFalse(report.isSuccess());
+        Assertions.assertFalse(report.isSuccess(), report.toString());
         AssertError.assertError(
                 report.getErrors().get(0),
                 PropertyPath.append(report.propertyPath, "values"),
@@ -32,7 +32,7 @@ public class ArrayTest {
     public void testMaxItemsFailed() {
         final ArrayMaxItems instance = new ArrayMaxItems();
         final ValidationReport report = validator.validate(instance);
-        Assertions.assertFalse(report.isSuccess());
+        Assertions.assertFalse(report.isSuccess(), report.toString());
         AssertError.assertError(
                 report.getErrors().get(0),
                 PropertyPath.append(report.propertyPath, "values"),
@@ -41,7 +41,7 @@ public class ArrayTest {
         );
     }
 
-    public static class ArrayMinItems {
+    class ArrayMinItems {
 
         @JsonSchema(
                 minItems = 2
@@ -50,7 +50,7 @@ public class ArrayTest {
 
     }
 
-    public static class ArrayMaxItems {
+    class ArrayMaxItems {
 
         @JsonSchema(
                 maxItems = 5

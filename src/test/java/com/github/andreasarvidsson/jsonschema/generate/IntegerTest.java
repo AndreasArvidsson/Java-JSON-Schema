@@ -27,7 +27,7 @@ public class IntegerTest {
     public void testBytePrim() {
         AssertJson.assertEquals(
                 getExcpected(Byte.MIN_VALUE, Byte.MAX_VALUE),
-                gen.create(byte.class)
+                gen.generate(byte.class)
         );
     }
 
@@ -35,7 +35,7 @@ public class IntegerTest {
     public void testByteClass() {
         AssertJson.assertEquals(
                 getExcpected(Byte.MIN_VALUE, Byte.MAX_VALUE),
-                gen.create(Byte.class)
+                gen.generate(Byte.class)
         );
     }
 
@@ -43,7 +43,7 @@ public class IntegerTest {
     public void testShortPrim() {
         AssertJson.assertEquals(
                 getExcpected(Short.MIN_VALUE, Short.MAX_VALUE),
-                gen.create(short.class)
+                gen.generate(short.class)
         );
     }
 
@@ -51,7 +51,7 @@ public class IntegerTest {
     public void testShortClass() {
         AssertJson.assertEquals(
                 getExcpected(Short.MIN_VALUE, Short.MAX_VALUE),
-                gen.create(Short.class)
+                gen.generate(Short.class)
         );
     }
 
@@ -59,7 +59,7 @@ public class IntegerTest {
     public void testIntPrim() {
         AssertJson.assertEquals(
                 getExcpected(Integer.MIN_VALUE, Integer.MAX_VALUE),
-                gen.create(int.class)
+                gen.generate(int.class)
         );
     }
 
@@ -67,7 +67,7 @@ public class IntegerTest {
     public void testIntClass() {
         AssertJson.assertEquals(
                 getExcpected(Integer.MIN_VALUE, Integer.MAX_VALUE),
-                gen.create(Integer.class)
+                gen.generate(Integer.class)
         );
     }
 
@@ -75,7 +75,7 @@ public class IntegerTest {
     public void testLongPrim() {
         AssertJson.assertEquals(
                 getExcpected(Long.MIN_VALUE, Long.MAX_VALUE),
-                gen.create(long.class)
+                gen.generate(long.class)
         );
     }
 
@@ -83,7 +83,7 @@ public class IntegerTest {
     public void testLongClass() {
         AssertJson.assertEquals(
                 getExcpected(Long.MIN_VALUE, Long.MAX_VALUE),
-                gen.create(Long.class)
+                gen.generate(Long.class)
         );
     }
 
@@ -93,7 +93,7 @@ public class IntegerTest {
                 new JsonBuilder()
                         .setType(JsonType.INTEGER)
                         .build(),
-                gen.create(BigInteger.class)
+                gen.generate(BigInteger.class)
         );
     }
 
@@ -105,7 +105,7 @@ public class IntegerTest {
                         .setType(JsonType.INTEGER)
                         .build(),
                 new JsonSchemaGenerator().hideSchemaField().disableAutoRangeNumbers()
-                        .create(int.class)
+                        .generate(int.class)
         );
     }
 
@@ -129,7 +129,7 @@ public class IntegerTest {
         final JsonNode actual = new JsonSchemaGenerator()
                 .hideSchemaField()
                 .disableAutoRangeNumbers()
-                .create(IntClass.class);
+                .generate(IntClass.class);
         AssertJson.assertEquals(expected, actual);
     }
 

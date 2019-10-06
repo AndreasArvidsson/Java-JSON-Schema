@@ -26,27 +26,27 @@ public class NumberTest {
 
     @Test
     public void testFloatPrim() {
-        AssertJson.assertEquals(expected, gen.create(float.class));
+        AssertJson.assertEquals(expected, gen.generate(float.class));
     }
 
     @Test
     public void testFloatClass() {
-        AssertJson.assertEquals(expected, gen.create(Float.class));
+        AssertJson.assertEquals(expected, gen.generate(Float.class));
     }
 
     @Test
     public void testDoublePrim() {
-        AssertJson.assertEquals(expected, gen.create(double.class));
+        AssertJson.assertEquals(expected, gen.generate(double.class));
     }
 
     @Test
     public void testDoubleClass() {
-        AssertJson.assertEquals(expected, gen.create(Double.class));
+        AssertJson.assertEquals(expected, gen.generate(Double.class));
     }
 
     @Test
     public void testBigDecimal() {
-        AssertJson.assertEquals(expected, gen.create(BigDecimal.class));
+        AssertJson.assertEquals(expected, gen.generate(BigDecimal.class));
     }
 
     public void testNumberAnotations() {
@@ -68,7 +68,7 @@ public class NumberTest {
         final JsonNode actual = new JsonSchemaGenerator()
                 .hideSchemaField()
                 .disableAutoRangeNumbers()
-                .create(NumberClass.class);
+                .generate(NumberClass.class);
         AssertJson.assertEquals(exp, actual);
     }
 

@@ -23,7 +23,7 @@ public class EnumTest {
     public void testSimpleEnum() {
         AssertJson.assertEquals(
                 getSimpleExpected(),
-                gen.create(SimpleEnum.class)
+                gen.generate(SimpleEnum.class)
         );
     }
 
@@ -34,7 +34,7 @@ public class EnumTest {
                 .setAdditionalProps(false)
                 .addProperty("value", getSimpleExpected())
                 .build(),
-                gen.create(SimpleEnumClass.class)
+                gen.generate(SimpleEnumClass.class)
         );
     }
 
@@ -46,7 +46,7 @@ public class EnumTest {
                 .addRequired("value")
                 .addProperty("value", getSimpleExpected())
                 .build(),
-                gen.create(SimpleEnumRequiredClass.class)
+                gen.generate(SimpleEnumRequiredClass.class)
         );
     }
 
@@ -54,7 +54,7 @@ public class EnumTest {
     public void testDescriptiveEnum() {
         AssertJson.assertEquals(
                 getDescriptiveExpected(),
-                gen.create(DescriptiveEnum.class)
+                gen.generate(DescriptiveEnum.class)
         );
     }
 
@@ -65,7 +65,7 @@ public class EnumTest {
                 .setAdditionalProps(false)
                 .addProperty("value", getDescriptiveExpected())
                 .build(),
-                gen.create(DescriptiveEnumClass.class)
+                gen.generate(DescriptiveEnumClass.class)
         );
     }
 
@@ -84,7 +84,7 @@ public class EnumTest {
                         .build()
                 )
                 .build(),
-                gen.create(DoubleEnumClass.class)
+                gen.generate(DoubleEnumClass.class)
         );
     }
 

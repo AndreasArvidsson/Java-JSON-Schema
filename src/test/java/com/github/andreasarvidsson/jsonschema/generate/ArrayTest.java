@@ -25,7 +25,7 @@ public class ArrayTest {
                 getExpected(new JsonBuilder()
                         .setType(JsonType.BOOLEAN)
                         .build()),
-                gen.create(ArrayBoolPrim.class)
+                gen.generate(ArrayBoolPrim.class)
         );
     }
 
@@ -35,7 +35,7 @@ public class ArrayTest {
                 getExpected(new JsonBuilder()
                         .setType(JsonType.BOOLEAN)
                         .build()),
-                gen.create(ArrayBoolClass.class)
+                gen.generate(ArrayBoolClass.class)
         );
     }
 
@@ -43,7 +43,7 @@ public class ArrayTest {
     public void testArrayObject() {
         AssertJson.assertEquals(
                 getExpected(new JsonBuilder().build()),
-                gen.create(ArrayObject.class)
+                gen.generate(ArrayObject.class)
         );
     }
 
@@ -56,7 +56,7 @@ public class ArrayTest {
                         .build()
                 )
                 .build(),
-                gen.create(Boolean[].class)
+                gen.generate(Boolean[].class)
         );
     }
 
