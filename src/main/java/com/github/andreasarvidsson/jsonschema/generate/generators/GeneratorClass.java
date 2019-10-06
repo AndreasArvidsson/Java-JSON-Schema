@@ -1,5 +1,6 @@
 package com.github.andreasarvidsson.jsonschema.generate.generators;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.andreasarvidsson.jsonschema.JsonSchema;
@@ -9,6 +10,7 @@ import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschema.JsonSchemaUtil;
 import com.github.andreasarvidsson.jsonschema.generate.JsonType;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -61,15 +63,14 @@ public class GeneratorClass extends GeneratorBase {
     }
 
     private void parseClassFields(final Class type, final GeneratorClassResultWrapper wrapper) {
-        //Parse super classes first.
-        final Class superType = type.getSuperclass();
-        if (superType != null) {
-            parseClassFields(superType, wrapper);
+        final List<Field> fields = new ArrayList();
+        getFields(fields, type);
+        final JsonPropertyOrder order = ReflectionUtil.getFirstAnotation(type, JsonPropertyOrder.class);
+        if (order != null) {
+            sortFields(fields, order);
         }
-        for (final Field field : type.getDeclaredFields()) {
-            if (ReflectionUtil.ignoreField(field)) {
-                continue;
-            }
+
+        for (final Field field : fields) {
             final String fieldName = ReflectionUtil.getFieldName(field);
             wrapper.fieldNames.add(fieldName);
 
@@ -82,6 +83,44 @@ public class GeneratorClass extends GeneratorBase {
             addSchemas(allowedFields, wrapper, fieldNode, fieldName, field);
 
             wrapper.properties.set(fieldName, fieldNode);
+        }
+    }
+
+    private void sortFields(final List<Field> fields, final JsonPropertyOrder order) {
+        final Map<String, Integer> orderMap = new HashMap();
+        for (final String fieldName : order.value()) {
+            orderMap.put(fieldName, orderMap.size());
+        }
+        fields.sort((final Field o1, final Field o2) -> {
+            final String n1 = ReflectionUtil.getFieldName(o1);
+            final String n2 = ReflectionUtil.getFieldName(o2);
+            final Integer i1 = orderMap.get(n1);
+            final Integer i2 = orderMap.get(n2);
+            if (i1 != null && i2 != null) {
+                return i1 - i2;
+            }
+            if (i1 != null) {
+                return -1;
+            }
+            if (i2 != null) {
+                return 1;
+            }
+            if (order.alphabetic()) {
+                return n1.compareTo(n2);
+            }
+            return 0;
+        });
+    }
+
+    private void getFields(final List<Field> result, final Class type) {
+        //Parse super classes first.
+        if (type.getSuperclass() != null) {
+            getFields(result, type.getSuperclass());
+        }
+        for (final Field field : type.getDeclaredFields()) {
+            if (!ReflectionUtil.ignoreField(field)) {
+                result.add(field);
+            }
         }
     }
 

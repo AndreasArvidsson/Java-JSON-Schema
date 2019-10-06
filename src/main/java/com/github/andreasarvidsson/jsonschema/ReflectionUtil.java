@@ -87,4 +87,15 @@ public abstract class ReflectionUtil {
         return Object.class;
     }
 
+    public static <T extends Annotation> T getFirstAnotation(Class classType, Class<T> anotType) {
+        while (classType != null) {
+            final T anot = (T) classType.getAnnotation(anotType);
+            if (anot != null) {
+                return anot;
+            }
+            classType = classType.getSuperclass();
+        }
+        return null;
+    }
+
 }
