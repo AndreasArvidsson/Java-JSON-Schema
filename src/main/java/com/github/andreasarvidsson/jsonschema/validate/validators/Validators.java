@@ -66,11 +66,7 @@ public class Validators {
     private void addDefaults() {
         addDefaults(new ValidatorInteger(), TypeCategories.INTEGERS);
         addDefaults(new ValidatorNumber(), TypeCategories.NUMBERS);
-//        addSimples(new ParserString(), Arrays.asList(
-//                String.class,
-//                CharSequence.class,
-//                UUID.class
-//        ));
+        addDefaults(new ValidatorString(), TypeCategories.STRINGS);
         defaultValidators.put(Object.class, validatorNothing);
     }
 

@@ -7,13 +7,13 @@ package com.github.andreasarvidsson.jsonschema.validate.validators;
 public class ValidatorInteger extends ValidatorNumberBase {
 
     @Override
-    protected int compareTo(final Object instance, final String value) {
-        return Long.compare(((Number) instance).longValue(), Long.parseLong(value));
+    protected int compareTo(final Number instance, final String value) {
+        return Long.compare(instance.longValue(), Long.parseLong(value));
     }
 
     @Override
-    protected boolean multipleOf(final Object instance, final String value) {
-        return ((Number) instance).longValue() % Long.parseLong(value) == 0;
+    protected boolean multipleOf(final Number instance, final String value) {
+        return instance.longValue() % Long.parseLong(value) == 0;
     }
 
     @Override

@@ -4,7 +4,6 @@ import com.github.andreasarvidsson.jsonschema.JsonSchema;
 import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschema.PropertyPath;
 import com.github.andreasarvidsson.jsonschema.util.AssertError;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -19,9 +18,8 @@ public class ArrayTest {
     public void testMinItemsFailed() {
         final ArrayMinItems instance = new ArrayMinItems();
         final ValidationReport report = validator.validate(instance);
-        Assertions.assertFalse(report.isSuccess(), report.toString());
         AssertError.assertError(
-                report.getErrors().get(0),
+                report,
                 PropertyPath.append(report.propertyPath, "values"),
                 JsonSchemaField.MIN_ITEMS.toString(),
                 2L
@@ -32,9 +30,8 @@ public class ArrayTest {
     public void testMaxItemsFailed() {
         final ArrayMaxItems instance = new ArrayMaxItems();
         final ValidationReport report = validator.validate(instance);
-        Assertions.assertFalse(report.isSuccess(), report.toString());
         AssertError.assertError(
-                report.getErrors().get(0),
+                report,
                 PropertyPath.append(report.propertyPath, "values"),
                 JsonSchemaField.MAX_ITEMS.toString(),
                 5L

@@ -36,9 +36,8 @@ public class ClassTest {
     public void testRequiredFail() {
         final RequiredInt instance = new RequiredInt();
         final ValidationReport report = validator.validate(instance);
-        Assertions.assertFalse(report.isSuccess());
         AssertError.assertError(
-                report.getErrors().get(0),
+                report,
                 report.propertyPath,
                 JsonSchemaField.Disabled.REQUIRED.toString(),
                 "value"
@@ -52,7 +51,7 @@ public class ClassTest {
         final ValidationReport report = validator.validate(instance);
         Assertions.assertFalse(report.isSuccess());
         AssertError.assertError(
-                report.getErrors().get(0),
+                report,
                 PropertyPath.append(report.propertyPath, "wrapper"),
                 JsonSchemaField.Disabled.REQUIRED.toString(),
                 "value"
