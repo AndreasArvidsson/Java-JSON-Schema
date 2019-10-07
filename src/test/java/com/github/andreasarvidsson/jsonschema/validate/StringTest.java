@@ -4,7 +4,6 @@ import com.github.andreasarvidsson.jsonschema.JsonSchema;
 import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschema.PropertyPath;
 import com.github.andreasarvidsson.jsonschema.util.AssertError;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -14,6 +13,8 @@ import org.junit.jupiter.api.Test;
 public class StringTest {
 
     private final JsonSchemaValidator validator = new JsonSchemaValidator();
+    private final String pattern = "\\d+";
+    private final long minMaxLength = 5;
 
     @Test
     public void testStringMinFailed() {
@@ -24,7 +25,7 @@ public class StringTest {
                 report,
                 PropertyPath.append(report.propertyPath, "valueMin"),
                 JsonSchemaField.MIN_LENGTH.toString(),
-                5L
+                minMaxLength
         );
     }
 
@@ -37,11 +38,11 @@ public class StringTest {
                 report,
                 PropertyPath.append(report.propertyPath, "valueMax"),
                 JsonSchemaField.MAX_LENGTH.toString(),
-                5L
+                minMaxLength
         );
     }
-    
-        @Test
+
+    @Test
     public void testStringPatternFailed() {
         final StringClass instance = new StringClass();
         instance.valuePattern = "a5";
@@ -50,24 +51,24 @@ public class StringTest {
                 report,
                 PropertyPath.append(report.propertyPath, "valuePattern"),
                 JsonSchemaField.PATTERN.toString(),
-                "\\d+"
+                pattern
         );
     }
 
     class StringClass {
 
         @JsonSchema(
-                minLength = 5
+                minLength = minMaxLength
         )
         public String valueMin = "hello";
 
         @JsonSchema(
-                maxLength = 5
+                maxLength = minMaxLength
         )
         public String valueMax = "hello";
 
         @JsonSchema(
-                pattern = "\\d+"
+                pattern = pattern
         )
         public String valuePattern = "3";
 

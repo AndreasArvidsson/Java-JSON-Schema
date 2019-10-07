@@ -24,9 +24,8 @@ public class ValidatorClass implements Validator {
     public void validateClass(final List<Error> errors, final String path, final Object instance) {
         final ValidatorClassResultWrapper wrapper = new ValidatorClassResultWrapper();
         validateClassFields(errors, path, instance, instance.getClass(), wrapper);
-        //TODO        
-        //Validate dependencies
-        //Validate combinations
+        validateDependencies(errors, path, instance, wrapper);
+        //TODO Validate combinations
     }
 
     @Override
@@ -69,6 +68,9 @@ public class ValidatorClass implements Validator {
                 validateIsRequired(errors, path, instance, fieldName, jsonSchema);
             }
             else {
+                if (jsonSchema.dependencies().length > 0) {
+                    wrapper.dependencies.add(new ValidatorClassDependency(fieldPath, fieldName, jsonSchema));
+                }
                 validators.validateSchema(errors, fieldPath, fieldInstance, jsonSchema);
             }
         }
@@ -88,6 +90,23 @@ public class ValidatorClass implements Validator {
                     instance
             ));
         }
+    }
+
+    private void validateDependencies(final List<Error> errors, final String path, final Object instance, final ValidatorClassResultWrapper wrapper) {
+        wrapper.dependencies.forEach(dep -> {
+            for (final String depFieldName : dep.jsonSchema.dependencies()) {
+                if (!wrapper.fieldNames.contains(depFieldName)) {
+                    errors.add(new Error(
+                            path,
+                            JsonSchemaField.Disabled.DEPENDENCIES.toString(),
+                            depFieldName,
+                            String.format("Property %s not found, required by %s", depFieldName, dep.path),
+                            dep.jsonSchema,
+                            instance
+                    ));
+                }
+            }
+        });
     }
 
 }

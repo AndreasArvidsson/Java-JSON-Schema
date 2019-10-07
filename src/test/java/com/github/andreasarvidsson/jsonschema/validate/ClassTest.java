@@ -49,12 +49,42 @@ public class ClassTest {
         final RequiredSubInt instance = new RequiredSubInt();
         instance.wrapper = new RequiredInt();
         final ValidationReport report = validator.validate(instance);
-        Assertions.assertFalse(report.isSuccess());
         AssertError.assertError(
                 report,
                 PropertyPath.append(report.propertyPath, "wrapper"),
                 JsonSchemaField.Disabled.REQUIRED.toString(),
                 "value"
+        );
+    }
+
+    @Test
+    public void testDependencyNullOk() {
+        final Dependency instance = new Dependency();
+        instance.value1 = null;
+        instance.value2 = null;
+        final ValidationReport report = validator.validate(instance);
+        Assertions.assertTrue(report.isSuccess(), report.toString());
+    }
+
+    @Test
+    public void testDependencyOk() {
+        final Dependency instance = new Dependency();
+        instance.value1 = 1;
+        instance.value2 = 1;
+        final ValidationReport report = validator.validate(instance);
+        Assertions.assertTrue(report.isSuccess(), report.toString());
+    }
+
+    @Test
+    public void testDependencyFail() {
+        final Dependency instance = new Dependency();
+        instance.value1 = 1;
+        final ValidationReport report = validator.validate(instance);
+        AssertError.assertError(
+                report,
+                report.propertyPath,
+                JsonSchemaField.Disabled.DEPENDENCIES.toString(),
+                "value2"
         );
     }
 
@@ -73,6 +103,17 @@ public class ClassTest {
                 required = true
         )
         public RequiredInt wrapper;
+
+    }
+
+    class Dependency {
+
+        @JsonSchema(
+                dependencies = {"value2"}
+        )
+        public Integer value1;
+
+        public Integer value2;
 
     }
 

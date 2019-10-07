@@ -1,8 +1,5 @@
 package com.github.andreasarvidsson.jsonschema.validate.validators;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.andreasarvidsson.jsonschema.JsonSchema;
 import com.github.andreasarvidsson.jsonschema.JsonSchema.Combining;
 import java.util.ArrayList;
@@ -18,13 +15,9 @@ import java.util.Set;
  */
 public class ValidatorClassResultWrapper {
 
-    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     final Set<String> fieldNames = new HashSet();
-    final Set<String> dependencyFieldNames = new HashSet();
-    final ObjectNode properties = MAPPER.createObjectNode();
-    final ArrayNode required = MAPPER.createArrayNode();
-    final ObjectNode dependencies = MAPPER.createObjectNode();
+    final List<ValidatorClassDependency> dependencies = new ArrayList();
     final Map<Long, List<ValidatorClassCombiningWrapper>> oneOfs = new LinkedHashMap();
     final Map<Long, List<ValidatorClassCombiningWrapper>> anyOfs = new LinkedHashMap();
     final Map<Long, List<ValidatorClassCombiningWrapper>> allOfs = new LinkedHashMap();

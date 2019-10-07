@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Test;
 public class ArrayTest {
 
     private final JsonSchemaValidator validator = new JsonSchemaValidator();
+    private final long minItems = 2;
+    private final long maxItems = 5;
 
     @Test
     public void testMinItemsFailed() {
@@ -22,7 +24,7 @@ public class ArrayTest {
                 report,
                 PropertyPath.append(report.propertyPath, "values"),
                 JsonSchemaField.MIN_ITEMS.toString(),
-                2L
+                minItems
         );
     }
 
@@ -34,14 +36,14 @@ public class ArrayTest {
                 report,
                 PropertyPath.append(report.propertyPath, "values"),
                 JsonSchemaField.MAX_ITEMS.toString(),
-                5L
+                maxItems
         );
     }
 
     class ArrayMinItems {
 
         @JsonSchema(
-                minItems = 2
+                minItems = minItems
         )
         public int[] values = new int[1];
 
@@ -50,7 +52,7 @@ public class ArrayTest {
     class ArrayMaxItems {
 
         @JsonSchema(
-                maxItems = 5
+                maxItems = maxItems
         )
         public int[] values = new int[7];
 
