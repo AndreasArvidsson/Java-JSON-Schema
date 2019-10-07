@@ -2,12 +2,19 @@ package com.github.andreasarvidsson.jsonschema.util;
 
 import org.junit.jupiter.api.Assertions;
 import com.github.andreasarvidsson.jsonschema.validate.Error;
+import com.github.andreasarvidsson.jsonschema.validate.ValidationReport;
 
 /**
  *
  * @author Andreas Arvidsson
  */
 public abstract class AssertError {
+
+    public static void assertError(final ValidationReport report, final String property, final String name, final Object argument) {
+        Assertions.assertFalse(report.isSuccess(), report.toString());
+        Assertions.assertEquals(1, report.getErrors().size(), report.toString());
+        assertError(report.getErrors().get(0), property, name, argument);
+    }
 
     public static void assertError(final Error error, final String property, final String name, final Object argument) {
         Assertions.assertEquals(property, error.property, "Error.property");

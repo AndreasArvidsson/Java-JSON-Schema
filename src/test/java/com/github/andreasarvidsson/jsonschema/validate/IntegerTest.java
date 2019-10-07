@@ -20,9 +20,8 @@ public class IntegerTest {
         final IntegerClass instance = new IntegerClass();
         instance.valueMin = 1;
         final ValidationReport report = validator.validate(instance);
-        Assertions.assertFalse(report.isSuccess(), report.toString());
         AssertError.assertError(
-                report.getErrors().get(0),
+                report,
                 PropertyPath.append(report.propertyPath, "valueMin"),
                 JsonSchemaField.MINIMUM.toString(),
                 2L
@@ -34,9 +33,8 @@ public class IntegerTest {
         final IntegerClass instance = new IntegerClass();
         instance.valueMax = 3;
         final ValidationReport report = validator.validate(instance);
-        Assertions.assertFalse(report.isSuccess(), report.toString());
         AssertError.assertError(
-                report.getErrors().get(0),
+                report,
                 PropertyPath.append(report.propertyPath, "valueMax"),
                 JsonSchemaField.MAXIMUM.toString(),
                 2L
@@ -48,9 +46,8 @@ public class IntegerTest {
         final IntegerClass instance = new IntegerClass();
         instance.valueExMin = 2;
         final ValidationReport report = validator.validate(instance);
-        Assertions.assertFalse(report.isSuccess(), report.toString());
         AssertError.assertError(
-                report.getErrors().get(0),
+                report,
                 PropertyPath.append(report.propertyPath, "valueExMin"),
                 JsonSchemaField.EXCLUSIVE_MINIMUM.toString(),
                 2L
@@ -62,9 +59,8 @@ public class IntegerTest {
         final IntegerClass instance = new IntegerClass();
         instance.valueExMax = 2;
         final ValidationReport report = validator.validate(instance);
-        Assertions.assertFalse(report.isSuccess(), report.toString());
         AssertError.assertError(
-                report.getErrors().get(0),
+                report,
                 PropertyPath.append(report.propertyPath, "valueExMax"),
                 JsonSchemaField.EXCLUSIVE_MAXIMUM.toString(),
                 2L
@@ -78,7 +74,7 @@ public class IntegerTest {
         final ValidationReport report = validator.validate(instance);
         Assertions.assertFalse(report.isSuccess(), report.toString());
         AssertError.assertError(
-                report.getErrors().get(0),
+                report,
                 PropertyPath.append(report.propertyPath, "valueMultipleOf"),
                 JsonSchemaField.MULTIPLE_OF.toString(),
                 2L
