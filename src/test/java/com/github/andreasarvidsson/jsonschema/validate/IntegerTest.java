@@ -88,27 +88,27 @@ public class IntegerTest {
     class IntegerClass {
 
         @JsonSchema(
-                minimum = 2
+                minimum = "2"
         )
         public int valueMin = 2;
 
         @JsonSchema(
-                maximum = 2
+                maximum = "2"
         )
         public int valueMax = 2;
 
         @JsonSchema(
-                exclusiveMinimum = 2
+                exclusiveMinimum = "2"
         )
         public int valueExMin = 3;
 
         @JsonSchema(
-                exclusiveMaximum = 2
+                exclusiveMaximum = "2"
         )
         public int valueExMax = 1;
 
         @JsonSchema(
-                multipleOf = 2
+                multipleOf = "2"
         )
         public int valueMultipleOf = 2;
 

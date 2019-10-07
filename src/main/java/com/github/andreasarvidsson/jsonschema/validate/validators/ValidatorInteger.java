@@ -1,22 +1,24 @@
 package com.github.andreasarvidsson.jsonschema.validate.validators;
 
-import com.github.andreasarvidsson.jsonschema.JsonSchema;
-import com.github.andreasarvidsson.jsonschema.validate.Error;
-import java.util.List;
-
 /**
  *
  * @author Andreas Arvidsson
  */
-public class ValidatorInteger extends ValidatorNumber {
+public class ValidatorInteger extends ValidatorNumberBase {
 
     @Override
-    public void validateClass(final List<Error> errors, final String path, final Object instance) {
+    protected int compareTo(final Object instance, final String value) {
+        return Long.compare(((Number) instance).longValue(), Long.parseLong(value));
     }
 
     @Override
-    public void validateSchema(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema) {
-        super.validateNumber(errors, path, instance, jsonSchema);
+    protected boolean multipleOf(final Object instance, final String value) {
+        return ((Number) instance).longValue() % Long.parseLong(value) == 0;
+    }
+
+    @Override
+    protected Object getArgument(final String value) {
+        return Long.parseLong(value);
     }
 
 }

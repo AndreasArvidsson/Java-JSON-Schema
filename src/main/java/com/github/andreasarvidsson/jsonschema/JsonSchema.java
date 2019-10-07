@@ -36,11 +36,11 @@ public @interface JsonSchema {
     String format() default "";
     
     //Number / integer
-    long minimum() default Long.MIN_VALUE;
-    long maximum() default Long.MAX_VALUE;
-    long exclusiveMaximum() default Long.MIN_VALUE;
-    long exclusiveMinimum() default Long.MAX_VALUE;
-    long multipleOf() default 0;
+    String minimum() default "";
+    String maximum() default "";
+    String exclusiveMaximum() default "";
+    String exclusiveMinimum() default "";
+    String multipleOf() default "";
     
     Combining combining() default Combining.NONE;
     long combiningGroup() default Long.MIN_VALUE;

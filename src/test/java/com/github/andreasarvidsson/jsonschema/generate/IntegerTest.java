@@ -17,11 +17,11 @@ public class IntegerTest {
     private final JsonSchemaGenerator gen = new JsonSchemaGenerator().hideSchemaField();
     private final String title = "title";
     private final String desc = "desc";
-    private final int min = 2;
-    private final int max = 3;
-    private final int minEx = 1;
-    private final int maxEx = 4;
-    private final int mult = 2;
+    private final String min = "2";
+    private final String max = "3";
+    private final String minEx = "1";
+    private final String maxEx = "4";
+    private final String mult = "2";
 
     @Test
     public void testBytePrim() {

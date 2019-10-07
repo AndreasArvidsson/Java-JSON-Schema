@@ -78,14 +78,10 @@ public abstract class JsonSchemaUtil {
         set(type, allowed, target, JsonSchemaField.FORMAT, jsonSchema.format());
 
         //Number / integer
-        set(target, type, allowed,
-                JsonSchemaField.MINIMUM, jsonSchema.minimum(), Long.MIN_VALUE, Long.MAX_VALUE,
-                JsonSchemaField.MAXIMUM, jsonSchema.maximum(), Long.MIN_VALUE, Long.MAX_VALUE
-        );
-        set(target, type, allowed,
-                JsonSchemaField.EXCLUSIVE_MINIMUM, jsonSchema.exclusiveMinimum(), Long.MIN_VALUE, Long.MAX_VALUE,
-                JsonSchemaField.EXCLUSIVE_MAXIMUM, jsonSchema.exclusiveMaximum(), Long.MIN_VALUE, Long.MAX_VALUE
-        );
+        set(type, allowed, target, JsonSchemaField.MINIMUM, jsonSchema.minimum());
+        set(type, allowed, target, JsonSchemaField.MAXIMUM, jsonSchema.maximum());
+        set(type, allowed, target, JsonSchemaField.EXCLUSIVE_MINIMUM, jsonSchema.exclusiveMinimum());
+        set(type, allowed, target, JsonSchemaField.EXCLUSIVE_MAXIMUM, jsonSchema.exclusiveMaximum());
         set(type, allowed, target, JsonSchemaField.MULTIPLE_OF, jsonSchema.multipleOf());
     }
 
