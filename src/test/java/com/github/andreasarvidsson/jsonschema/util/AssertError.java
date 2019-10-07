@@ -1,8 +1,8 @@
 package com.github.andreasarvidsson.jsonschema.util;
 
-import org.junit.jupiter.api.Assertions;
 import com.github.andreasarvidsson.jsonschema.validate.Error;
 import com.github.andreasarvidsson.jsonschema.validate.ValidationReport;
+import org.junit.jupiter.api.Assertions;
 
 /**
  *

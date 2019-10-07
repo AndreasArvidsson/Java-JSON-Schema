@@ -1,9 +1,10 @@
 package com.github.andreasarvidsson.jsonschema.generate.generators;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.andreasarvidsson.jsonschema.JsonSchema;
 import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
+import com.github.andreasarvidsson.jsonschema.JsonSchemaUtil;
 import com.github.andreasarvidsson.jsonschema.generate.JsonType;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,15 +36,7 @@ public class GeneratorInteger extends GeneratorBase {
     private final boolean autoRangeNumbers;
 
     public GeneratorInteger(final boolean autoRangeNumbers) {
-        super(JsonType.INTEGER, Arrays.asList(
-                JsonSchemaField.TITLE,
-                JsonSchemaField.DESCRIPTION,
-                JsonSchemaField.MINIMUM,
-                JsonSchemaField.MAXIMUM,
-                JsonSchemaField.EXCLUSIVE_MINIMUM,
-                JsonSchemaField.EXCLUSIVE_MAXIMUM,
-                JsonSchemaField.MULTIPLE_OF
-        ));
+        super(JsonType.INTEGER, GeneratorNumber.FIELDS);
         this.autoRangeNumbers = autoRangeNumbers;
     }
 
@@ -55,6 +48,20 @@ public class GeneratorInteger extends GeneratorBase {
             result.put(JsonSchemaField.MAXIMUM.toString(), MAX_VALUES.get(type));
         }
         return result;
+    }
+
+    @Override
+    public void addFields(final Class type, final ObjectNode target, final JsonSchema jsonSchema) {
+        super.addFields(type, target, jsonSchema);
+        JsonSchemaUtil.setIntegers(type, target,
+                JsonSchemaField.MINIMUM, jsonSchema.minimum(), Long.MIN_VALUE, Long.MAX_VALUE,
+                JsonSchemaField.MAXIMUM, jsonSchema.maximum(), Long.MIN_VALUE, Long.MAX_VALUE
+        );
+        JsonSchemaUtil.setIntegers(type, target,
+                JsonSchemaField.EXCLUSIVE_MINIMUM, jsonSchema.exclusiveMinimum(), Long.MIN_VALUE, Long.MAX_VALUE,
+                JsonSchemaField.EXCLUSIVE_MAXIMUM, jsonSchema.exclusiveMaximum(), Long.MIN_VALUE, Long.MAX_VALUE
+        );
+        JsonSchemaUtil.setInteger(type, target, JsonSchemaField.MULTIPLE_OF, jsonSchema.multipleOf(), Long.MIN_VALUE, Long.MAX_VALUE);
     }
 
 }

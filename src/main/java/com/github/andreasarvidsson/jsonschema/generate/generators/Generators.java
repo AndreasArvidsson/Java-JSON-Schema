@@ -3,9 +3,8 @@ package com.github.andreasarvidsson.jsonschema.generate.generators;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.andreasarvidsson.jsonschema.ReflectionUtil;
-import com.github.andreasarvidsson.jsonschema.generate.ClassDefinitions;
-import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschema.TypeCategories;
+import com.github.andreasarvidsson.jsonschema.generate.ClassDefinitions;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.IdentityHashMap;
@@ -45,10 +44,6 @@ public class Generators {
 
     public ObjectNode parseClassField(final Field field) {
         return parseClass(field.getType(), field);
-    }
-
-    public Set<JsonSchemaField> getAllowedSchemaFields(final Class type) {
-        return getGenerator(type).getAllowedSchemaFields();
     }
 
     public String getDefType(final Class type) {

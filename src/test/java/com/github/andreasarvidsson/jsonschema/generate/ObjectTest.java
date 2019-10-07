@@ -1,10 +1,10 @@
 package com.github.andreasarvidsson.jsonschema.generate;
 
-import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.andreasarvidsson.jsonschema.JsonSchema;
+import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschema.util.AssertJson;
 import com.github.andreasarvidsson.jsonschema.util.JsonBuilder;
 import java.util.Map;

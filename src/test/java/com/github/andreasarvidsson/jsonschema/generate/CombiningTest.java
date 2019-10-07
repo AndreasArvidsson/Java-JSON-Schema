@@ -1,8 +1,8 @@
 package com.github.andreasarvidsson.jsonschema.generate;
 
-import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschema.JsonSchema;
 import com.github.andreasarvidsson.jsonschema.JsonSchema.Combining;
+import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschema.util.AssertJson;
 import com.github.andreasarvidsson.jsonschema.util.JsonBuilder;
 import java.util.Arrays;

@@ -3,8 +3,8 @@ package com.github.andreasarvidsson.jsonschema;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -17,72 +17,39 @@ import java.util.Set;
 public abstract class JsonSchemaUtil {
 
     private static final Map<JsonSchemaField, Object> DEFAULT_VALUES = new HashMap();
+    private static final Set<String> VALIDATE_FIELDS = new HashSet();
 
     static {
-        try {
-            for (final JsonSchemaField field : JsonSchemaField.values()) {
-                final Object defaultValue = JsonSchema.class
-                        .getDeclaredMethod(field.toString())
-                        .getDefaultValue();
-                DEFAULT_VALUES.put(field, defaultValue);
+        for (final JsonSchemaField field : JsonSchemaField.values()) {
+            try {
+                DEFAULT_VALUES.put(field, JsonSchema.class.getMethod(field.toString()).getDefaultValue());
+                VALIDATE_FIELDS.add(field.toString());
+            }
+            catch (final NoSuchMethodException | SecurityException ex) {
+                throw new RuntimeException(ex);
             }
         }
-        catch (final NoSuchMethodException | SecurityException ex) {
-            throw new RuntimeException(ex);
-        }
     }
 
-    public static Object getDefaultValue(final JsonSchemaField field) {
-        return DEFAULT_VALUES.get(field);
-    }
-
-    public static void addFields(
-            final Class type, final ObjectNode target,
-            final Set<JsonSchemaField> allowed) {
-        final JsonSchema[] anotations = (JsonSchema[]) type.getAnnotationsByType(JsonSchema.class);
-        for (final JsonSchema jsonSchema : anotations) {
-            if (jsonSchema.combining() != JsonSchema.Combining.NONE) {
-                throw new RuntimeException(String.format("Schema combinings(anyOf, oneOf, allOf) is not allowed on class level. '%s'", type.getTypeName()));
+    public static void validateAllowedFields(final Class type, final Set<String> allowed, final JsonSchema jsonSchema) {
+        for (final Method method : JsonSchema.class.getDeclaredMethods()) {
+            try {
+                if (!VALIDATE_FIELDS.contains(method.getName())) {
+                    continue;
+                }
+                //Not defualt vlaue and not allowed
+                if (!Objects.equals(method.getDefaultValue(), method.invoke(jsonSchema))
+                        && !allowed.contains(method.getName())) {
+                    throw new RuntimeException(
+                            String.format("Json schema field '%s' is not applicable for type '%s'",
+                                    method.getName(), type.getTypeName())
+                    );
+                }
             }
-            addFields(type, target, allowed, jsonSchema);
+            catch (final IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                throw new RuntimeException(ex);
+            }
         }
-    }
-
-    public static void addFields(
-            final Class type, final ObjectNode target,
-            final Set<JsonSchemaField> allowed, final JsonSchema jsonSchema) {
-        //General
-        set(type, allowed, target, JsonSchemaField.TITLE, jsonSchema.title());
-        set(type, allowed, target, JsonSchemaField.DESCRIPTION, jsonSchema.description());
-
-        //Object
-        set(target, type, allowed,
-                JsonSchemaField.MIN_PROPERTIES, jsonSchema.minProperties(), 0, Integer.MAX_VALUE,
-                JsonSchemaField.MAX_PROPERTIES, jsonSchema.maxProperties(), 1, Integer.MAX_VALUE
-        );
-        //required is a special case used by the class parser and not by each type parser.
-        //dependencies: Se above
-
-        //Array
-        set(target, type, allowed,
-                JsonSchemaField.MIN_ITEMS, jsonSchema.minItems(), 0, Integer.MAX_VALUE,
-                JsonSchemaField.MAX_ITEMS, jsonSchema.maxItems(), 1, Integer.MAX_VALUE
-        );
-
-        //String
-        set(target, type, allowed,
-                JsonSchemaField.MIN_LENGTH, jsonSchema.minLength(), 0, Integer.MAX_VALUE,
-                JsonSchemaField.MAX_LENGTH, jsonSchema.maxLength(), 1, Integer.MAX_VALUE
-        );
-        set(type, allowed, target, JsonSchemaField.PATTERN, jsonSchema.pattern());
-        set(type, allowed, target, JsonSchemaField.FORMAT, jsonSchema.format());
-
-        //Number / integer
-        set(type, allowed, target, JsonSchemaField.MINIMUM, jsonSchema.minimum());
-        set(type, allowed, target, JsonSchemaField.MAXIMUM, jsonSchema.maximum());
-        set(type, allowed, target, JsonSchemaField.EXCLUSIVE_MINIMUM, jsonSchema.exclusiveMinimum());
-        set(type, allowed, target, JsonSchemaField.EXCLUSIVE_MAXIMUM, jsonSchema.exclusiveMaximum());
-        set(type, allowed, target, JsonSchemaField.MULTIPLE_OF, jsonSchema.multipleOf());
     }
 
     public static Map<String, Object> toMap(final JsonSchema jsonSchema) {
@@ -103,55 +70,94 @@ public abstract class JsonSchemaUtil {
         return res;
     }
 
-    private static Object getValue(final Method method, final JsonSchema jsonSchema) {
-        try {
-            return method.invoke(jsonSchema);
-        }
-        catch (final IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-            throw new RuntimeException(ex);
+    public static void setString(
+            final Class type, final ObjectNode target,
+            final JsonSchemaField field, final String value) {
+        if (!value.isEmpty()) {
+            target.put(field.toString(), value);
         }
     }
 
-    private static void set(
-            final ObjectNode target, final Class type, final Collection<JsonSchemaField> allowed,
+    public static void setNumbers(
+            final Class type, final ObjectNode target,
+            final JsonSchemaField field1, final String value1,
+            final JsonSchemaField field2, final String value2) {
+        final boolean b1 = setNumberIfNotDefault(target, field1, value1);
+        final boolean b2 = setNumberIfNotDefault(target, field2, value2);
+        if (b1 && b2) {
+            validateMaxLargerThanMin(type, false,
+                    field1, Double.parseDouble(value1),
+                    field2, Double.parseDouble(value2)
+            );
+        }
+    }
+
+    public static void setNumber(
+            final Class type, final ObjectNode target,
+            final JsonSchemaField field, final String value) {
+        setNumberIfNotDefault(target, field, value);
+    }
+
+    public static void setIntegers(
+            final Class type, final ObjectNode target,
+            final JsonSchemaField field1, final String value1, final long min1, final long max1,
+            final JsonSchemaField field2, final String value2, final long min2, final long max2) {
+        final boolean b1 = setIntegerIfNotDefault(type, target, field1, value1, min1, max1);
+        final boolean b2 = setIntegerIfNotDefault(type, target, field2, value2, min2, max2);
+        if (b1 && b2) {
+            validateMaxLargerThanMin(type, true,
+                    field1, Long.parseLong(value1),
+                    field2, Long.parseLong(value2)
+            );
+        }
+    }
+
+    public static void setIntegers(
+            final Class type, final ObjectNode target,
             final JsonSchemaField field1, final long value1, final long min1, final long max1,
             final JsonSchemaField field2, final long value2, final long min2, final long max2) {
-        final boolean b1 = set(target, type, allowed, field1, value1, min1, max1);
-        final boolean b2 = set(target, type, allowed, field2, value2, min2, max2);
+        final boolean b1 = setIntegerIfNotDefault(type, target, field1, value1, min1, max1);
+        final boolean b2 = setIntegerIfNotDefault(type, target, field2, value2, min2, max2);
         if (b1 && b2) {
-            validateMaxLargerThanMin(type, field1, field2, value1, value2);
+            validateMaxLargerThanMin(type, true, field1, value1, field2, value2);
         }
     }
 
-    private static boolean set(
-            final ObjectNode target, final Class type, final Collection<JsonSchemaField> allowed,
-            final JsonSchemaField field, final long value, final long min, final long max) {
+    public static void setInteger(
+            final Class type, final ObjectNode target,
+            final JsonSchemaField field, final String value, final long min, final long max) {
+        setIntegerIfNotDefault(type, target, field, value, min, max);
+    }
+
+    private static boolean setNumberIfNotDefault(final ObjectNode target, final JsonSchemaField field, final String value) {
         //If still default value. Just stop/return.
-        if (Objects.equals(DEFAULT_VALUES.get(field), value)) {
+        if (value.isEmpty()) {
             return false;
         }
-        validateAllowed(type, allowed, field);
-        validateRange(type, field, value, min, max);
-        target.putPOJO(field.toString(), value);
+        target.put(field.toString(), Double.parseDouble(value));
         return true;
     }
 
-    private static void set(
-            final Class type, final Collection<JsonSchemaField> allowed,
-            final ObjectNode target, final JsonSchemaField field, final Object value) {
+    private static boolean setIntegerIfNotDefault(
+            final Class type, final ObjectNode target,
+            final JsonSchemaField field, final String value, final long min, final long max) {
         //If still default value. Just stop/return.
-        if (Objects.equals(DEFAULT_VALUES.get(field), value)) {
-            return;
+        if (value.isEmpty()) {
+            return false;
         }
-        validateAllowed(type, allowed, field);
-        target.putPOJO(field.toString(), value);
+        return setIntegerIfNotDefault(type, target, field, Long.parseLong(value), min, max);
     }
 
-    private static void validateAllowed(final Class type, final Collection<JsonSchemaField> allowed, final JsonSchemaField field) {
-        //New value. Check if valid for this node.
-        if (!allowed.contains(field)) {
-            throw new RuntimeException(String.format("Json schema field %s is not applicable for type '%s'", field.toString(), type.getTypeName()));
+    private static boolean setIntegerIfNotDefault(
+            final Class type, final ObjectNode target,
+            final JsonSchemaField field, final long value, final long min, final long max) {
+        //If still default value. Just stop/return.
+        if (value == Long.MIN_VALUE) {
+            return false;
         }
+        validateRange(type, field, value, min, max);
+        target.put(field.toString(), value);
+        return true;
     }
 
     private static void validateRange(final Class type, final JsonSchemaField field, final long value, final long min, final long max) {
@@ -164,13 +170,34 @@ public abstract class JsonSchemaUtil {
     }
 
     private static void validateMaxLargerThanMin(
-            final Class type, final JsonSchemaField fieldMin, final JsonSchemaField fieldMax,
-            final long valueMin, final long valueMax) {
-        if (valueMin >= valueMax) {
+            final Class type, final boolean isInteger,
+            final JsonSchemaField fieldMin, final Number valueMin,
+            final JsonSchemaField fieldMax, final Number valueMax) {
+        boolean isInvalid;
+        if (isInteger) {
+            isInvalid = valueMin.longValue() >= valueMax.longValue();
+        }
+        else {
+            isInvalid = valueMin.doubleValue() >= valueMax.doubleValue();
+        }
+        if (isInvalid) {
             throw new RuntimeException(String.format(
                     "Json schema field %s=%d is larger or equals to %s=%d for type '%s'",
                     fieldMin.toString(), valueMin, fieldMax.toString(), valueMax, type.getTypeName())
             );
+        }
+    }
+
+    private static Number toNumber(final String value, final boolean isInteger) {
+        return isInteger ? Long.parseLong(value) : Double.parseDouble(value);
+    }
+
+    private static Object getValue(final Method method, final JsonSchema jsonSchema) {
+        try {
+            return method.invoke(jsonSchema);
+        }
+        catch (final IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            throw new RuntimeException(ex);
         }
     }
 

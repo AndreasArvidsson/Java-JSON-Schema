@@ -1,11 +1,10 @@
 package com.github.andreasarvidsson.jsonschema.generate;
 
-import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import com.github.andreasarvidsson.jsonschema.JsonSchema;
+import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschema.util.AssertJson;
 import com.github.andreasarvidsson.jsonschema.util.JsonBuilder;
-import javax.validation.constraints.Pattern;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -32,7 +31,7 @@ public class JsonValueCreatorTest {
     }
 
     @Test
-    public void testJsonValueClass() {
+    public void testJsonValue() {
         AssertJson.assertEquals(
                 new JsonBuilder()
                         .setType(JsonType.STRING)
@@ -42,13 +41,13 @@ public class JsonValueCreatorTest {
     }
 
     @Test
-    public void testJsonCreatorClass() {
+    public void testJsonValueWithPattern() {
         AssertJson.assertEquals(
                 new JsonBuilder()
                         .setType(JsonType.STRING)
                         .addField(JsonSchemaField.PATTERN, "\\s")
                         .build(),
-                gen.generate(JsonCreatorClass.class)
+                gen.generate(PatternClass.class)
         );
     }
 
@@ -69,19 +68,16 @@ public class JsonValueCreatorTest {
 
     }
 
-    class JsonCreatorClass {
+    @JsonSchema(
+            pattern = PatternClass.PATTERN
+    )
+    class PatternClass {
 
-        public String value;
-
-        @JsonCreator
-        @Pattern(regexp = "\\s")
-        public JsonCreatorClass(String value) {
-            this.value = value;
-        }
+        private final static String PATTERN = "\\s";
 
         @JsonValue
         public String getValue() {
-            return value;
+            return "";
         }
 
     }

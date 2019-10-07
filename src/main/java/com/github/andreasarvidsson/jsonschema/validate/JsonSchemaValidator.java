@@ -1,14 +1,14 @@
 package com.github.andreasarvidsson.jsonschema.validate;
 
-import com.github.andreasarvidsson.jsonschema.validate.validators.Validators;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.andreasarvidsson.jsonschema.validate.validators.Validator;
+import com.github.andreasarvidsson.jsonschema.validate.validators.Validators;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**

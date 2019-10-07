@@ -1,14 +1,10 @@
 package com.github.andreasarvidsson.jsonschema.generate.generators;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.andreasarvidsson.jsonschema.JsonSchema;
 import com.github.andreasarvidsson.jsonschema.ReflectionUtil;
-import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.Set;
-import javax.validation.constraints.Pattern;
 
 /**
  *
@@ -26,30 +22,17 @@ public class GeneratorJsonValue implements Generator {
 
     @Override
     public ObjectNode parseClass(final Class type) {
-        final ObjectNode result = parser.parseClass(type);
-        final String pattern = getPattern(type);
-        if (pattern != null) {
-            result.put(JsonSchemaField.PATTERN.toString(), pattern);
-        }
-        return result;
+        return parser.parseClass(type);
     }
 
     @Override
-    public Set<JsonSchemaField> getAllowedSchemaFields() {
-        return parser.getAllowedSchemaFields();
+    public void addFields(final Class type, final ObjectNode target) {
+        parser.addFields(type, target);
     }
 
-    private String getPattern(final Class classType) {
-        final Constructor cons = ReflectionUtil.getFirstConstructor(classType, JsonCreator.class);
-        if (cons != null) {
-            if (cons.isAnnotationPresent(Pattern.class)) {
-                if (parser.getAllowedSchemaFields().contains(JsonSchemaField.PATTERN)) {
-                    final Pattern patternAnot = (Pattern) cons.getAnnotation(Pattern.class);
-                    return patternAnot.regexp();
-                }
-            }
-        }
-        return null;
+    @Override
+    public void addFields(final Class type, final ObjectNode target, final JsonSchema jsonSchema) {
+        parser.addFields(type, target, jsonSchema);
     }
 
 }

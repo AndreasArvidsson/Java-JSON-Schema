@@ -1,8 +1,8 @@
 package com.github.andreasarvidsson.jsonschema.generate;
 
-import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.andreasarvidsson.jsonschema.JsonSchema;
+import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschema.util.AssertJson;
 import com.github.andreasarvidsson.jsonschema.util.JsonBuilder;
 import java.math.BigInteger;
@@ -109,6 +109,24 @@ public class IntegerTest {
         );
     }
 
+    public void testAutoRangeAndAnot() {
+        final JsonNode expected = new JsonBuilder()
+                .setType(JsonType.OBJECT)
+                .setAdditionalProps(false)
+                .addProperty("value",
+                        new JsonBuilder()
+                                .setType(JsonType.INTEGER)
+                                .addField(JsonSchemaField.MINIMUM, Long.parseLong(min))
+                                .addField(JsonSchemaField.MAXIMUM, Integer.MAX_VALUE)
+                                .build()
+                )
+                .build();
+        final JsonNode actual = new JsonSchemaGenerator()
+                .hideSchemaField()
+                .generate(IntMinClass.class);
+        AssertJson.assertEquals(expected, actual);
+    }
+
     public void testIntAnotations() {
         final JsonNode expected = new JsonBuilder()
                 .setType(JsonType.OBJECT)
@@ -118,11 +136,11 @@ public class IntegerTest {
                                 .setType(JsonType.INTEGER)
                                 .addField(JsonSchemaField.TITLE, title)
                                 .addField(JsonSchemaField.DESCRIPTION, desc)
-                                .addField(JsonSchemaField.MINIMUM, min)
-                                .addField(JsonSchemaField.MAXIMUM, max)
-                                .addField(JsonSchemaField.EXCLUSIVE_MINIMUM, minEx)
-                                .addField(JsonSchemaField.EXCLUSIVE_MAXIMUM, maxEx)
-                                .addField(JsonSchemaField.MULTIPLE_OF, mult)
+                                .addField(JsonSchemaField.MINIMUM, Long.parseLong(min))
+                                .addField(JsonSchemaField.MAXIMUM, Long.parseLong(max))
+                                .addField(JsonSchemaField.EXCLUSIVE_MINIMUM, Long.parseLong(minEx))
+                                .addField(JsonSchemaField.EXCLUSIVE_MAXIMUM, Long.parseLong(maxEx))
+                                .addField(JsonSchemaField.MULTIPLE_OF, Long.parseLong(mult))
                                 .build()
                 )
                 .build();
@@ -151,6 +169,14 @@ public class IntegerTest {
                 exclusiveMinimum = minEx,
                 exclusiveMaximum = maxEx,
                 multipleOf = mult
+        )
+        public Integer value;
+    }
+
+    class IntMinClass {
+
+        @JsonSchema(
+                minimum = min
         )
         public Integer value;
     }

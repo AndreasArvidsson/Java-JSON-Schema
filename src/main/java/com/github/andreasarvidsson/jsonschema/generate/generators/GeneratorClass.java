@@ -5,9 +5,8 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.andreasarvidsson.jsonschema.JsonSchema;
 import com.github.andreasarvidsson.jsonschema.JsonSchema.Combining;
-import com.github.andreasarvidsson.jsonschema.ReflectionUtil;
 import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
-import com.github.andreasarvidsson.jsonschema.JsonSchemaUtil;
+import com.github.andreasarvidsson.jsonschema.ReflectionUtil;
 import com.github.andreasarvidsson.jsonschema.generate.JsonType;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -77,10 +76,10 @@ public class GeneratorClass extends GeneratorBase {
             final ObjectNode fieldNode = generators.parseClassField(field);
 
             //Add field anotations
-            final Set<JsonSchemaField> allowedFields = generators.getAllowedSchemaFields(field.getType());
+            final Generator generator = generators.getGenerator(field.getType());
 
             //Add schema anotations
-            addSchemas(allowedFields, wrapper, fieldNode, fieldName, field);
+            addSchemas(generator, wrapper, fieldNode, fieldName, field);
 
             wrapper.properties.set(fieldName, fieldNode);
         }
@@ -125,13 +124,13 @@ public class GeneratorClass extends GeneratorBase {
     }
 
     private void addSchemas(
-            final Set<JsonSchemaField> allowedFields, final GeneratorClassResultWrapper wrapper,
+            final Generator generator, final GeneratorClassResultWrapper wrapper,
             final ObjectNode fieldNode, final String fieldName, final Field field) {
         final Class type = field.getType();
         final JsonSchema[] jsonSchemas = field.getAnnotationsByType(JsonSchema.class);
         final int requiredSize = wrapper.required.size();
         for (final JsonSchema jsonSchema : jsonSchemas) {
-            addSchema(allowedFields, wrapper, fieldNode, type, fieldName, jsonSchema);
+            addSchema(generator, wrapper, fieldNode, type, fieldName, jsonSchema);
         }
         //This field is a primitive and it had no required anot.
         if (type.isPrimitive() && wrapper.required.size() == requiredSize) {
@@ -140,7 +139,7 @@ public class GeneratorClass extends GeneratorBase {
     }
 
     private void addSchema(
-            final Set<JsonSchemaField> allowedFields, final GeneratorClassResultWrapper wrapper,
+            final Generator generator, final GeneratorClassResultWrapper wrapper,
             ObjectNode fieldNode, final Class type,
             final String fieldName, final JsonSchema jsonSchema) {
         final boolean isCombining = jsonSchema.combining() != Combining.NONE;
@@ -184,7 +183,7 @@ public class GeneratorClass extends GeneratorBase {
         }
 
         //Add other fields to node.
-        JsonSchemaUtil.addFields(type, fieldNode, allowedFields, jsonSchema);
+        generator.addFields(type, fieldNode, jsonSchema);
 
         //Only add crossfield node if it contains any data.
         if (isCombining && (fieldNode.size() > 0 || addCombining)) {

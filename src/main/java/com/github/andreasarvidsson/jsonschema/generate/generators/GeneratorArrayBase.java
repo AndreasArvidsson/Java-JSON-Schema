@@ -1,7 +1,9 @@
 package com.github.andreasarvidsson.jsonschema.generate.generators;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.andreasarvidsson.jsonschema.JsonSchema;
 import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
+import com.github.andreasarvidsson.jsonschema.JsonSchemaUtil;
 import com.github.andreasarvidsson.jsonschema.generate.JsonType;
 import java.util.Arrays;
 
@@ -21,6 +23,15 @@ public abstract class GeneratorArrayBase extends GeneratorBase {
                 JsonSchemaField.MAX_ITEMS
         ));
         this.generators = generators;
+    }
+
+    @Override
+    public void addFields(final Class type, final ObjectNode target, final JsonSchema jsonSchema) {
+        super.addFields(type, target, jsonSchema);
+        JsonSchemaUtil.setIntegers(type, target,
+                JsonSchemaField.MIN_ITEMS, jsonSchema.minItems(), 0, Integer.MAX_VALUE,
+                JsonSchemaField.MAX_ITEMS, jsonSchema.maxItems(), 1, Integer.MAX_VALUE
+        );
     }
 
     private ObjectNode parseArrayClass(final Class type, final Class valueType, final boolean isUnique) {

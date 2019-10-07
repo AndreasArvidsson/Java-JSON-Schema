@@ -1,8 +1,8 @@
 package com.github.andreasarvidsson.jsonschema.generate;
 
-import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.andreasarvidsson.jsonschema.JsonSchema;
+import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschema.util.AssertJson;
 import com.github.andreasarvidsson.jsonschema.util.JsonBuilder;
 import java.math.BigDecimal;
@@ -57,11 +57,11 @@ public class NumberTest {
                         .setType(JsonType.NUMBER)
                         .addField(JsonSchemaField.TITLE, title)
                         .addField(JsonSchemaField.DESCRIPTION, desc)
-                        .addField(JsonSchemaField.MINIMUM, min)
-                        .addField(JsonSchemaField.MAXIMUM, max)
-                        .addField(JsonSchemaField.EXCLUSIVE_MINIMUM, minEx)
-                        .addField(JsonSchemaField.EXCLUSIVE_MAXIMUM, maxEx)
-                        .addField(JsonSchemaField.MULTIPLE_OF, mult)
+                        .addField(JsonSchemaField.MINIMUM, Double.parseDouble(min))
+                        .addField(JsonSchemaField.MAXIMUM, Double.parseDouble(max))
+                        .addField(JsonSchemaField.EXCLUSIVE_MINIMUM, Double.parseDouble(minEx))
+                        .addField(JsonSchemaField.EXCLUSIVE_MAXIMUM, Double.parseDouble(maxEx))
+                        .addField(JsonSchemaField.MULTIPLE_OF, Double.parseDouble(mult))
                         .build()
                 )
                 .build();

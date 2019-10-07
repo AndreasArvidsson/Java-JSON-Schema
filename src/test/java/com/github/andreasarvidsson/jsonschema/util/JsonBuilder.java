@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.andreasarvidsson.jsonschema.JsonSchema;
 import com.github.andreasarvidsson.jsonschema.JsonSchema.Combining;
 import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschema.generate.JsonType;
@@ -17,7 +16,7 @@ import java.util.Collection;
 public class JsonBuilder {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private final ObjectNode res, definitions, properties, patternProperties, dependencies;
+    private final ObjectNode definitions, properties, patternProperties, dependencies, fields;
     private final ArrayNode required, enums, oneOf;
     private JsonNode items = null;
     private Boolean additionalProperties = null;
@@ -25,11 +24,11 @@ public class JsonBuilder {
     private String ref;
 
     public JsonBuilder() {
-        res = MAPPER.createObjectNode();
         properties = MAPPER.createObjectNode();
         definitions = MAPPER.createObjectNode();
         patternProperties = MAPPER.createObjectNode();
         dependencies = MAPPER.createObjectNode();
+        fields = MAPPER.createObjectNode();
         required = MAPPER.createArrayNode();
         enums = MAPPER.createArrayNode();
         oneOf = MAPPER.createArrayNode();
@@ -46,7 +45,7 @@ public class JsonBuilder {
     }
 
     public JsonBuilder addField(final String field, final Object value) {
-        res.putPOJO(field, value);
+        fields.putPOJO(field, value);
         return this;
     }
 
@@ -115,6 +114,7 @@ public class JsonBuilder {
     }
 
     public ObjectNode build() {
+        final ObjectNode res = MAPPER.createObjectNode();
         if (definitions.size() > 0) {
             res.set(JsonSchemaField.Disabled.DEFINITIONS.toString(), definitions);
         }
@@ -125,6 +125,9 @@ public class JsonBuilder {
         }
         if (type != null) {
             res.put(JsonSchemaField.Disabled.TYPE.toString(), type.toString());
+        }
+        if (fields.size() > 0) {
+            res.setAll(fields);
         }
         if (additionalProperties != null) {
             res.put(JsonSchemaField.Disabled.ADDITIONAL_PROPERTIES.toString(), additionalProperties);
