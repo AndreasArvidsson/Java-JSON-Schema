@@ -60,8 +60,6 @@ public class ClassTest {
     @Test
     public void testDependencyNullOk() {
         final Dependency instance = new Dependency();
-        instance.value1 = null;
-        instance.value2 = null;
         final ValidationReport report = validator.validate(instance);
         Assertions.assertTrue(report.isSuccess(), report.toString());
     }

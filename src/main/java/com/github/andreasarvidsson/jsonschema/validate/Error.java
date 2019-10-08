@@ -1,15 +1,18 @@
 package com.github.andreasarvidsson.jsonschema.validate;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.github.andreasarvidsson.jsonschema.JsonSchema;
 import com.github.andreasarvidsson.jsonschema.JsonSchemaUtil;
 import java.util.Map;
 
+@JsonInclude(Include.NON_NULL)
 public class Error {
 
+    public final String message;
     public final String property;
     public final String name;
     public final Object argument;
-    public final String message;
     private final JsonSchema schema;
     public final Object instance;
 
@@ -24,8 +27,14 @@ public class Error {
         this.instance = instance;
     }
 
+    public Error(
+            final String property, final String name, final Object argument,
+            final String message) {
+        this(property, name, argument, message, null, null);
+    }
+
     public Map<String, Object> getSchema() {
-        return JsonSchemaUtil.toMap(schema);
+        return schema != null ? JsonSchemaUtil.toMap(schema) : null;
     }
 
 }

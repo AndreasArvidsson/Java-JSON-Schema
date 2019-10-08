@@ -1,6 +1,7 @@
 package com.github.andreasarvidsson.jsonschema.validate.validators;
 
 import com.github.andreasarvidsson.jsonschema.JsonSchema;
+import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschema.PropertyPath;
 import com.github.andreasarvidsson.jsonschema.validate.Error;
 import java.util.List;
@@ -27,7 +28,34 @@ public class ValidatorMap implements Validator {
 
     @Override
     public void validateSchema(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema) {
-        //TODO
+        validateMinProperties(errors, path, instance, jsonSchema, ((Map) instance).size());
+        validateMaxProperties(errors, path, instance, jsonSchema, ((Map) instance).size());
+    }
+
+    private void validateMinProperties(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema, final int length) {
+        if (jsonSchema.minProperties() != Long.MIN_VALUE && length < jsonSchema.minProperties()) {
+            errors.add(new Error(
+                    path,
+                    JsonSchemaField.MIN_PROPERTIES.toString(),
+                    jsonSchema.minProperties(),
+                    String.format("Does not meet minimum length of %d", jsonSchema.minProperties()),
+                    jsonSchema,
+                    instance
+            ));
+        }
+    }
+
+    private void validateMaxProperties(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema, final int length) {
+        if (jsonSchema.maxProperties() != Long.MIN_VALUE && length > jsonSchema.maxProperties()) {
+            errors.add(new Error(
+                    path,
+                    JsonSchemaField.MAX_PROPERTIES.toString(),
+                    jsonSchema.maxProperties(),
+                    String.format("Does not meet maximum length of %d", jsonSchema.maxProperties()),
+                    jsonSchema,
+                    instance
+            ));
+        }
     }
 
 }

@@ -17,8 +17,10 @@ public class ValidationReport {
     private final static ObjectMapper MAPPER = new ObjectMapper()
             .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
     private final static ObjectWriter WRITER = MAPPER.writerWithDefaultPrettyPrinter();
-    private List<Error> errors = null;
+
     public final String propertyPath = "instance";
+
+    private List<Error> errors = null;
 
     ValidationReport(final List<Error> errors) {
         this.errors = errors;

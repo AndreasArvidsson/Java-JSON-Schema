@@ -1,5 +1,6 @@
 package com.github.andreasarvidsson.jsonschema;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Repeatable;
 import java.lang.annotation.Retention;
@@ -52,6 +53,7 @@ public @interface JsonSchema {
         ALL_OF;
 
         @Override
+        @JsonValue
         public String toString() {
             switch (this) {
                 case ANY_OF:

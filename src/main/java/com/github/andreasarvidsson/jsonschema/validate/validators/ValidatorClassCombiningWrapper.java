@@ -8,16 +8,18 @@ import com.github.andreasarvidsson.jsonschema.JsonSchema;
  */
 public class ValidatorClassCombiningWrapper {
 
-    public final String fieldName;
+    public final String path, fieldName;
+    public final Object instance;
     public final JsonSchema jsonSchema;
-    public final boolean ownProperty;
 
     public ValidatorClassCombiningWrapper(
+            final String path,
             final String fieldName,
-            final JsonSchema constraintType, final boolean ownProperty) {
+            final Object instance, final JsonSchema constraintType) {
+        this.path = path;
         this.fieldName = fieldName;
+        this.instance = instance;
         this.jsonSchema = constraintType;
-        this.ownProperty = ownProperty;
     }
 
 }

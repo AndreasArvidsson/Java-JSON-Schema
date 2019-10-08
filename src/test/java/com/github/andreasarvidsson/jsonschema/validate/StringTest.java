@@ -4,6 +4,8 @@ import com.github.andreasarvidsson.jsonschema.JsonSchema;
 import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschema.PropertyPath;
 import com.github.andreasarvidsson.jsonschema.util.AssertError;
+import java.util.Map;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -14,38 +16,62 @@ public class StringTest {
 
     private final JsonSchemaValidator validator = new JsonSchemaValidator();
     private final String pattern = "\\d+";
-    private final long minMaxLength = 5;
+    private final long length = 5;
 
     @Test
-    public void testStringMinFailed() {
+    public void testStringMinLengthOk() {
         final StringClass instance = new StringClass();
-        instance.valueMin = "h";
+        instance.valueMin = get(length);
+        final ValidationReport report = validator.validate(instance);
+        Assertions.assertTrue(report.isSuccess(), report.toString());
+    }
+
+    @Test
+    public void testStringMinLengthFailed() {
+        final StringClass instance = new StringClass();
+        instance.valueMin = get(length - 1);
         final ValidationReport report = validator.validate(instance);
         AssertError.assertError(
                 report,
                 PropertyPath.append(report.propertyPath, "valueMin"),
                 JsonSchemaField.MIN_LENGTH.toString(),
-                minMaxLength
+                length
         );
     }
 
     @Test
-    public void testStringMaxFailed() {
+    public void testStringMaxLengthOk() {
         final StringClass instance = new StringClass();
-        instance.valueMax = "hello world";
+        instance.valueMax = get(length);
+        final ValidationReport report = validator.validate(instance);
+        Assertions.assertTrue(report.isSuccess(), report.toString());
+    }
+
+    @Test
+    public void testStringMaxLengthFailed() {
+        final StringClass instance = new StringClass();
+        instance.valueMax = get(length + 1);
         final ValidationReport report = validator.validate(instance);
         AssertError.assertError(
                 report,
                 PropertyPath.append(report.propertyPath, "valueMax"),
                 JsonSchemaField.MAX_LENGTH.toString(),
-                minMaxLength
+                length
         );
+    }
+
+    @Test
+    public void testStringPatternOk() {
+        final StringClass instance = new StringClass();
+        instance.valuePattern = "5";
+        final ValidationReport report = validator.validate(instance);
+        Assertions.assertTrue(report.isSuccess(), report.toString());
     }
 
     @Test
     public void testStringPatternFailed() {
         final StringClass instance = new StringClass();
-        instance.valuePattern = "a5";
+        instance.valuePattern = "5a";
         final ValidationReport report = validator.validate(instance);
         AssertError.assertError(
                 report,
@@ -55,22 +81,30 @@ public class StringTest {
         );
     }
 
+    private String get(final long size) {
+        final StringBuilder sb = new StringBuilder();
+        for (long i = 0; i < size; ++i) {
+            sb.append((char) ('A' + i));
+        }
+        return sb.toString();
+    }
+
     class StringClass {
 
         @JsonSchema(
-                minLength = minMaxLength
+                minLength = length
         )
-        public String valueMin = "hello";
+        public String valueMin;
 
         @JsonSchema(
-                maxLength = minMaxLength
+                maxLength = length
         )
-        public String valueMax = "hello";
+        public String valueMax;
 
         @JsonSchema(
                 pattern = pattern
         )
-        public String valuePattern = "3";
+        public String valuePattern;
 
     }
 

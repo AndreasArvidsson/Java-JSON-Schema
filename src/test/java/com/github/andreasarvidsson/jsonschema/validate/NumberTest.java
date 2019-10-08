@@ -14,99 +14,101 @@ import org.junit.jupiter.api.Test;
 public class NumberTest {
 
     private final JsonSchemaValidator validator = new JsonSchemaValidator();
+    private final String valueStr = "2";
+    private final float value = 2;
 
     @Test
     public void testIntegerMinFailed() {
         final NumberClass instance = new NumberClass();
-        instance.valueMin = 1.9f;
+        instance.valueMin = value - 0.1f;
         final ValidationReport report = validator.validate(instance);
         AssertError.assertError(
                 report,
                 PropertyPath.append(report.propertyPath, "valueMin"),
                 JsonSchemaField.MINIMUM.toString(),
-                2.0
+                (double) value
         );
     }
 
     @Test
     public void testIntegerMaxFailed() {
         final NumberClass instance = new NumberClass();
-        instance.valueMax = 2.1f;
+        instance.valueMax = value + 0.1f;
         final ValidationReport report = validator.validate(instance);
         AssertError.assertError(
                 report,
                 PropertyPath.append(report.propertyPath, "valueMax"),
                 JsonSchemaField.MAXIMUM.toString(),
-                2.0
+                (double) value
         );
     }
 
     @Test
     public void testIntegerExMinFailed() {
         final NumberClass instance = new NumberClass();
-        instance.valueExMin = 2.0f;
+        instance.valueExMin = value;
         final ValidationReport report = validator.validate(instance);
         AssertError.assertError(
                 report,
                 PropertyPath.append(report.propertyPath, "valueExMin"),
                 JsonSchemaField.EXCLUSIVE_MINIMUM.toString(),
-                2.0
+                (double) value
         );
     }
 
     @Test
     public void testIntegerExMaxFailed() {
         final NumberClass instance = new NumberClass();
-        instance.valueExMax = 2.0f;
+        instance.valueExMax = value;
         final ValidationReport report = validator.validate(instance);
         AssertError.assertError(
                 report,
                 PropertyPath.append(report.propertyPath, "valueExMax"),
                 JsonSchemaField.EXCLUSIVE_MAXIMUM.toString(),
-                2.0
+                (double) value
         );
     }
 
     @Test
     public void testIntegerMultipleOfFailed() {
         final NumberClass instance = new NumberClass();
-        instance.valueMultipleOf = 1.0f;
+        instance.valueMultipleOf = value + 0.1f;
         final ValidationReport report = validator.validate(instance);
         Assertions.assertFalse(report.isSuccess(), report.toString());
         AssertError.assertError(
                 report,
                 PropertyPath.append(report.propertyPath, "valueMultipleOf"),
                 JsonSchemaField.MULTIPLE_OF.toString(),
-                2.0
+                (double) value
         );
     }
 
     class NumberClass {
 
         @JsonSchema(
-                minimum = "2"
+                minimum = valueStr
         )
-        public float valueMin = 2;
+        public float valueMin = value;
 
         @JsonSchema(
-                maximum = "2"
+                maximum = valueStr
         )
-        public float valueMax = 2;
+        public float valueMax = value;
 
         @JsonSchema(
-                exclusiveMinimum = "2"
+                exclusiveMinimum = valueStr
         )
-        public float valueExMin = 3;
+        public float valueExMin = value + 1;
 
         @JsonSchema(
-                exclusiveMaximum = "2"
+                exclusiveMaximum = valueStr
         )
-        public float valueExMax = 1;
+        public float valueExMax = value - 1;
 
         @JsonSchema(
-                multipleOf = "2"
+                multipleOf = valueStr
         )
-        public float valueMultipleOf = 2;
+        public float valueMultipleOf = value;
 
     }
 

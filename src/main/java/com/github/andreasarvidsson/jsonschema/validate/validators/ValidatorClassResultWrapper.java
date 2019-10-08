@@ -3,6 +3,7 @@ package com.github.andreasarvidsson.jsonschema.validate.validators;
 import com.github.andreasarvidsson.jsonschema.JsonSchema;
 import com.github.andreasarvidsson.jsonschema.JsonSchema.Combining;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -15,37 +16,40 @@ import java.util.Set;
  */
 public class ValidatorClassResultWrapper {
 
-
     final Set<String> fieldNames = new HashSet();
-    final List<ValidatorClassDependency> dependencies = new ArrayList();
-    final Map<Long, List<ValidatorClassCombiningWrapper>> oneOfs = new LinkedHashMap();
-    final Map<Long, List<ValidatorClassCombiningWrapper>> anyOfs = new LinkedHashMap();
-    final Map<Long, List<ValidatorClassCombiningWrapper>> allOfs = new LinkedHashMap();
+    final Map<String, JsonSchema> dependencies = new HashMap();
+    final Map<Combining, Map<Long, List<ValidatorClassCombiningWrapper>>> combinations = new HashMap();
+    final Map<String, Map<Combining, List<ValidatorClassCombiningWrapper>>> ownProperty = new LinkedHashMap();
 
-    public void addCombining(final String fieldName, final JsonSchema jsonSchema) {
+    public void addCombining(
+            final String path, final String fieldName,
+            final JsonSchema jsonSchema, final Object instance) {
         final long combiningGroup = getCombiningGroup(jsonSchema);
-        add(
-                jsonSchema.combining(),
-                combiningGroup,
-                new ValidatorClassCombiningWrapper(fieldName, jsonSchema, combiningGroup == 0)
+        final ValidatorClassCombiningWrapper wrapper = new ValidatorClassCombiningWrapper(
+                path, fieldName, instance, jsonSchema
         );
-    }
-
-    public int size(final Combining combining) {
-        return getMap(combining).size();
-    }
-
-    public Map<Long, List<ValidatorClassCombiningWrapper>> getMap(final Combining combining) {
-        switch (combining) {
-            case ANY_OF:
-                return anyOfs;
-            case ONE_OF:
-                return oneOfs;
-            case ALL_OF:
-                return allOfs;
-            default:
-                return null;
+        if (combiningGroup == 0) {
+            addOwnProperty(jsonSchema.combining(), fieldName, wrapper);
         }
+        else {
+            addCombination(jsonSchema.combining(), combiningGroup, wrapper);
+        }
+    }
+
+    private void addOwnProperty(final Combining combining, final String fieldName, final ValidatorClassCombiningWrapper wrapper) {
+        final Map<Combining, List<ValidatorClassCombiningWrapper>> map = getOwnPropertyMap(fieldName);
+        if (!map.containsKey(combining)) {
+            map.put(combining, new ArrayList());
+        }
+        map.get(combining).add(wrapper);
+    }
+
+    private void addCombination(final Combining combining, final long group, final ValidatorClassCombiningWrapper wrapper) {
+        final Map<Long, List<ValidatorClassCombiningWrapper>> map = getCombiningMap(combining);
+        if (!map.containsKey(group)) {
+            map.put(group, new ArrayList());
+        }
+        map.get(group).add(wrapper);
     }
 
     private long getCombiningGroup(final JsonSchema jsonSchema) {
@@ -66,12 +70,26 @@ public class ValidatorClassResultWrapper {
         return combiningGroup;
     }
 
-    private void add(final Combining combining, final long group, final ValidatorClassCombiningWrapper wrapper) {
-        final Map<Long, List<ValidatorClassCombiningWrapper>> map = getMap(combining);
-        if (!map.containsKey(group)) {
-            map.put(group, new ArrayList());
+    private int size(final Combining combining) {
+        return getCombiningMap(combining).size();
+    }
+
+    private Map<Long, List<ValidatorClassCombiningWrapper>> getCombiningMap(final Combining combining) {
+        if (combinations.containsKey(combining)) {
+            return combinations.get(combining);
         }
-        map.get(group).add(wrapper);
+        final Map<Long, List<ValidatorClassCombiningWrapper>> map = new LinkedHashMap();
+        combinations.put(combining, map);
+        return map;
+    }
+
+    private Map<Combining, List<ValidatorClassCombiningWrapper>> getOwnPropertyMap(final String fieldName) {
+        if (ownProperty.containsKey(fieldName)) {
+            return ownProperty.get(fieldName);
+        }
+        final Map<Combining, List<ValidatorClassCombiningWrapper>> map = new LinkedHashMap();
+        ownProperty.put(fieldName, map);
+        return map;
     }
 
 }
