@@ -18,7 +18,7 @@ public class IntegerTest {
     private final int value = 2;
 
     @Test
-    public void testIntegerMinFailed() {
+    public void testMinFailed() {
         final IntegerClass instance = new IntegerClass();
         instance.valueMin = value - 1;
         final ValidationReport report = validator.validate(instance);
@@ -31,7 +31,7 @@ public class IntegerTest {
     }
 
     @Test
-    public void testIntegerMaxFailed() {
+    public void testMaxFailed() {
         final IntegerClass instance = new IntegerClass();
         instance.valueMax = value + 1;
         final ValidationReport report = validator.validate(instance);
@@ -44,7 +44,7 @@ public class IntegerTest {
     }
 
     @Test
-    public void testIntegerExMinFailed() {
+    public void testExMinFailed() {
         final IntegerClass instance = new IntegerClass();
         instance.valueExMin = value;
         final ValidationReport report = validator.validate(instance);
@@ -57,7 +57,7 @@ public class IntegerTest {
     }
 
     @Test
-    public void testIntegerExMaxFailed() {
+    public void testExMaxFailed() {
         final IntegerClass instance = new IntegerClass();
         instance.valueExMax = value;
         final ValidationReport report = validator.validate(instance);
@@ -70,7 +70,7 @@ public class IntegerTest {
     }
 
     @Test
-    public void testIntegerMultipleOfFailed() {
+    public void testMultipleOfFailed() {
         final IntegerClass instance = new IntegerClass();
         instance.valueMultipleOf = value + 1;
         final ValidationReport report = validator.validate(instance);
@@ -79,7 +79,21 @@ public class IntegerTest {
                 report,
                 PropertyPath.append(report.propertyPath, "valueMultipleOf"),
                 JsonSchemaField.MULTIPLE_OF.toString(),
-                2L
+                (long) value
+        );
+    }
+
+    @Test
+    public void testConstFailed() {
+        final IntegerClass instance = new IntegerClass();
+        instance.valueConstant = value + 1;
+        final ValidationReport report = validator.validate(instance);
+        Assertions.assertFalse(report.isSuccess(), report.toString());
+        AssertError.assertError(
+                report,
+                PropertyPath.append(report.propertyPath, "valueConstant"),
+                JsonSchemaField.CONST.toString(),
+                (long) value
         );
     }
 
@@ -109,6 +123,11 @@ public class IntegerTest {
                 multipleOf = valueStr
         )
         public int valueMultipleOf = value;
+
+        @JsonSchema(
+                constant = valueStr
+        )
+        public int valueConstant = value;
 
     }
 

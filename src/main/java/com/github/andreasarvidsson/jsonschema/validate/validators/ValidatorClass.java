@@ -4,7 +4,6 @@ import com.github.andreasarvidsson.jsonschema.ClassCombiningWrapper;
 import com.github.andreasarvidsson.jsonschema.ClassResultWrapper;
 import com.github.andreasarvidsson.jsonschema.JsonSchema;
 import com.github.andreasarvidsson.jsonschema.JsonSchema.Combining;
-import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschema.PropertyPath;
 import com.github.andreasarvidsson.jsonschema.ReflectionUtil;
 import com.github.andreasarvidsson.jsonschema.validate.Error;
@@ -172,32 +171,17 @@ public class ValidatorClass implements Validator {
         switch (combining) {
             case ANY_OF:
                 if (matched == 0) {
-                    errors.add(new Error(
-                            path,
-                            combining.toString(),
-                            new ValidationSubReport(path, combining, nrSchemas, matched, errorMap),
-                            String.format("Does not match at least one schema among %d", nrSchemas)
-                    ));
+                    errors.add(Error.anyOf(path, new ValidationSubReport(path, combining, nrSchemas, matched, errorMap)));
                 }
                 break;
             case ONE_OF:
                 if (matched != 1) {
-                    errors.add(new Error(
-                            path,
-                            combining.toString(),
-                            new ValidationSubReport(path, combining, nrSchemas, matched, errorMap),
-                            String.format("Does not match exactly one schema (matched %d / %d)", matched, nrSchemas)
-                    ));
+                    errors.add(Error.oneOf(path, new ValidationSubReport(path, combining, nrSchemas, matched, errorMap)));
                 }
                 break;
             case ALL_OF:
                 if (matched != nrSchemas) {
-                    errors.add(new Error(
-                            path,
-                            combining.toString(),
-                            new ValidationSubReport(path, combining, nrSchemas, matched, errorMap),
-                            String.format("Does not match all required schemas (matched only %d out of %d)", matched, nrSchemas)
-                    ));
+                    errors.add(Error.allOf(path, new ValidationSubReport(path, combining, nrSchemas, matched, errorMap)));
                 }
                 break;
         }
@@ -205,14 +189,7 @@ public class ValidatorClass implements Validator {
 
     private void validateIsRequired(final List<Error> errors, final String path, final Object instance, final String propertyName, final JsonSchema jsonSchema) {
         if (jsonSchema.required()) {
-            errors.add(new Error(
-                    path,
-                    JsonSchemaField.Disabled.REQUIRED.toString(),
-                    propertyName,
-                    String.format("Requires property '%s'", propertyName),
-                    jsonSchema,
-                    instance
-            ));
+            errors.add(Error.requires(path, jsonSchema, propertyName, instance));
         }
     }
 
@@ -227,14 +204,7 @@ public class ValidatorClass implements Validator {
             final Set<String> propertyNames, final String propertyName, final JsonSchema jsonSchema) {
         for (final String depName : jsonSchema.dependencies()) {
             if (!propertyNames.contains(depName)) {
-                errors.add(new Error(
-                        path,
-                        JsonSchemaField.Disabled.DEPENDENCIES.toString(),
-                        depName,
-                        String.format("Property %s not found, required by %s", depName, PropertyPath.append(path, propertyName)),
-                        jsonSchema,
-                        instance
-                ));
+                errors.add(Error.dependencies(path, jsonSchema, depName, PropertyPath.append(path, propertyName), instance));
             }
         }
     }

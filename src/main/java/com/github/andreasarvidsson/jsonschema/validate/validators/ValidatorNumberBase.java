@@ -1,7 +1,6 @@
 package com.github.andreasarvidsson.jsonschema.validate.validators;
 
 import com.github.andreasarvidsson.jsonschema.JsonSchema;
-import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschema.validate.Error;
 import java.util.List;
 
@@ -22,25 +21,19 @@ public abstract class ValidatorNumberBase implements Validator {
         validateExclusiveMinimum(errors, path, instance, jsonSchema);
         validateExclusiveMaximum(errors, path, instance, jsonSchema);
         validateMultipleOf(errors, path, instance, jsonSchema);
+        validateConst(errors, path, instance, jsonSchema);
     }
 
     protected abstract int compareTo(final Number instance, final String value);
 
     protected abstract boolean multipleOf(final Number instance, final String value);
 
-    protected abstract Object getArgument(final String value);
+    protected abstract Number getArgument(final String value);
 
     private void validateMinimum(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema) {
         if (!jsonSchema.minimum().isEmpty()) {
             if (compareTo((Number) instance, jsonSchema.minimum()) == -1) {
-                errors.add(new Error(
-                        path,
-                        JsonSchemaField.MINIMUM.toString(),
-                        getArgument(jsonSchema.minimum()),
-                        String.format("Must have a minimum value of %s", jsonSchema.minimum()),
-                        jsonSchema,
-                        instance
-                ));
+                errors.add(Error.minimum(path, jsonSchema, getArgument(jsonSchema.minimum()), instance));
             }
         }
     }
@@ -48,14 +41,7 @@ public abstract class ValidatorNumberBase implements Validator {
     private void validateMaximum(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema) {
         if (!jsonSchema.maximum().isEmpty()) {
             if (compareTo((Number) instance, jsonSchema.maximum()) == 1) {
-                errors.add(new Error(
-                        path,
-                        JsonSchemaField.MAXIMUM.toString(),
-                        getArgument(jsonSchema.maximum()),
-                        String.format("Must have a maximum value of %s", jsonSchema.maximum()),
-                        jsonSchema,
-                        instance
-                ));
+                errors.add(Error.maximum(path, jsonSchema, getArgument(jsonSchema.maximum()), instance));
             }
         }
     }
@@ -63,14 +49,7 @@ public abstract class ValidatorNumberBase implements Validator {
     private void validateExclusiveMinimum(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema) {
         if (!jsonSchema.exclusiveMinimum().isEmpty()) {
             if (compareTo((Number) instance, jsonSchema.exclusiveMinimum()) != 1) {
-                errors.add(new Error(
-                        path,
-                        JsonSchemaField.EXCLUSIVE_MINIMUM.toString(),
-                        getArgument(jsonSchema.exclusiveMinimum()),
-                        String.format("Must have an exclusive minimum value of %s", jsonSchema.exclusiveMinimum()),
-                        jsonSchema,
-                        instance
-                ));
+                errors.add(Error.exclusiveMinimum(path, jsonSchema, getArgument(jsonSchema.exclusiveMinimum()), instance));
             }
         }
     }
@@ -78,14 +57,7 @@ public abstract class ValidatorNumberBase implements Validator {
     private void validateExclusiveMaximum(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema) {
         if (!jsonSchema.exclusiveMaximum().isEmpty()) {
             if (compareTo((Number) instance, jsonSchema.exclusiveMaximum()) != -1) {
-                errors.add(new Error(
-                        path,
-                        JsonSchemaField.EXCLUSIVE_MAXIMUM.toString(),
-                        getArgument(jsonSchema.exclusiveMaximum()),
-                        String.format("Must have an exclusive maximum value of %s", jsonSchema.exclusiveMaximum()),
-                        jsonSchema,
-                        instance
-                ));
+                errors.add(Error.exclusiveMaximum(path, jsonSchema, getArgument(jsonSchema.exclusiveMaximum()), instance));
             }
         }
     }
@@ -93,14 +65,15 @@ public abstract class ValidatorNumberBase implements Validator {
     private void validateMultipleOf(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema) {
         if (!jsonSchema.multipleOf().isEmpty()) {
             if (!multipleOf((Number) instance, jsonSchema.multipleOf())) {
-                errors.add(new Error(
-                        path,
-                        JsonSchemaField.MULTIPLE_OF.toString(),
-                        getArgument(jsonSchema.multipleOf()),
-                        String.format("Is not a multiple of (divisible by) %s", jsonSchema.multipleOf()),
-                        jsonSchema,
-                        instance
-                ));
+                errors.add(Error.multipleOf(path, jsonSchema, getArgument(jsonSchema.multipleOf()), instance));
+            }
+        }
+    }
+
+    private void validateConst(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema) {
+        if (!jsonSchema.constant().isEmpty()) {
+            if (compareTo((Number) instance, jsonSchema.constant()) != 0) {
+                errors.add(Error.constant(path, jsonSchema, getArgument(jsonSchema.constant()), instance));
             }
         }
     }

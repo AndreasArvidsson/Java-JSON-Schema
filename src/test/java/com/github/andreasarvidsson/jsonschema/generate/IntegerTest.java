@@ -22,6 +22,7 @@ public class IntegerTest {
     private final String minEx = "1";
     private final String maxEx = "4";
     private final String mult = "2";
+    private final String constant = "5";
 
     @Test
     public void testBytePrim() {
@@ -141,6 +142,7 @@ public class IntegerTest {
                                 .addField(JsonSchemaField.EXCLUSIVE_MINIMUM, Long.parseLong(minEx))
                                 .addField(JsonSchemaField.EXCLUSIVE_MAXIMUM, Long.parseLong(maxEx))
                                 .addField(JsonSchemaField.MULTIPLE_OF, Long.parseLong(mult))
+                                .addField(JsonSchemaField.CONST, Long.parseLong(constant))
                                 .build()
                 )
                 .build();
@@ -168,7 +170,8 @@ public class IntegerTest {
                 maximum = max,
                 exclusiveMinimum = minEx,
                 exclusiveMaximum = maxEx,
-                multipleOf = mult
+                multipleOf = mult,
+                constant = constant
         )
         public Integer value;
     }

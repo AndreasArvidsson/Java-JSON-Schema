@@ -62,6 +62,7 @@ public class GeneratorInteger extends GeneratorBase {
                 JsonSchemaField.EXCLUSIVE_MAXIMUM, jsonSchema.exclusiveMaximum(), Long.MIN_VALUE, Long.MAX_VALUE
         );
         JsonSchemaUtil.setInteger(type, target, JsonSchemaField.MULTIPLE_OF, jsonSchema.multipleOf(), Long.MIN_VALUE, Long.MAX_VALUE);
+        JsonSchemaUtil.setInteger(type, target, JsonSchemaField.CONST, jsonSchema.constant(), Long.MIN_VALUE, Long.MAX_VALUE);
     }
 
 }

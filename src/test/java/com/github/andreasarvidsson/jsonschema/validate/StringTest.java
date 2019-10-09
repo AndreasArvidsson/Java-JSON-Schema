@@ -15,10 +15,11 @@ public class StringTest {
 
     private final JsonSchemaValidator validator = new JsonSchemaValidator();
     private final String pattern = "\\d+";
+    private final String constant = "Hello";
     private final long length = 5;
 
     @Test
-    public void testStringMinLengthOk() {
+    public void testMinLengthOk() {
         final StringClass instance = new StringClass();
         instance.valueMin = get(length);
         final ValidationReport report = validator.validate(instance);
@@ -26,7 +27,7 @@ public class StringTest {
     }
 
     @Test
-    public void testStringMinLengthFailed() {
+    public void testMinLengthFailed() {
         final StringClass instance = new StringClass();
         instance.valueMin = get(length - 1);
         final ValidationReport report = validator.validate(instance);
@@ -39,7 +40,7 @@ public class StringTest {
     }
 
     @Test
-    public void testStringMaxLengthOk() {
+    public void testMaxLengthOk() {
         final StringClass instance = new StringClass();
         instance.valueMax = get(length);
         final ValidationReport report = validator.validate(instance);
@@ -47,7 +48,7 @@ public class StringTest {
     }
 
     @Test
-    public void testStringMaxLengthFailed() {
+    public void testMaxLengthFailed() {
         final StringClass instance = new StringClass();
         instance.valueMax = get(length + 1);
         final ValidationReport report = validator.validate(instance);
@@ -60,7 +61,7 @@ public class StringTest {
     }
 
     @Test
-    public void testStringPatternOk() {
+    public void testPatternOk() {
         final StringClass instance = new StringClass();
         instance.valuePattern = "5";
         final ValidationReport report = validator.validate(instance);
@@ -68,7 +69,7 @@ public class StringTest {
     }
 
     @Test
-    public void testStringPatternFailed() {
+    public void testPatternFailed() {
         final StringClass instance = new StringClass();
         instance.valuePattern = "5a";
         final ValidationReport report = validator.validate(instance);
@@ -77,6 +78,27 @@ public class StringTest {
                 PropertyPath.append(report.propertyPath, "valuePattern"),
                 JsonSchemaField.PATTERN.toString(),
                 pattern
+        );
+    }
+
+    @Test
+    public void testConstOk() {
+        final StringClass instance = new StringClass();
+        instance.valueConstant = constant;
+        final ValidationReport report = validator.validate(instance);
+        Assertions.assertTrue(report.isSuccess(), report.toString());
+    }
+
+    @Test
+    public void testConstFailed() {
+        final StringClass instance = new StringClass();
+        instance.valueConstant = "a";
+        final ValidationReport report = validator.validate(instance);
+        AssertError.assertError(
+                report,
+                PropertyPath.append(report.propertyPath, "valueConstant"),
+                JsonSchemaField.CONST.toString(),
+                constant
         );
     }
 
@@ -104,6 +126,11 @@ public class StringTest {
                 pattern = pattern
         )
         public String valuePattern;
+
+        @JsonSchema(
+                constant = constant
+        )
+        public String valueConstant;
 
     }
 

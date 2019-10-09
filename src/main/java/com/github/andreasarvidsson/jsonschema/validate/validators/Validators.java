@@ -83,8 +83,8 @@ public class Validators {
         addDefaults(new ValidatorInteger(), TypeCategories.INTEGERS);
         addDefaults(new ValidatorNumber(), TypeCategories.NUMBERS);
         addDefaults(new ValidatorString(), TypeCategories.STRINGS);
-        doNothing.addAll(TypeCategories.BOOLEANS);
-        doNothing.addAll(TypeCategories.CHARACTERS);
+        addDefaults(new ValidatorBool(), TypeCategories.BOOLEANS);
+        addDefaults(new ValidatorChar(), TypeCategories.CHARACTERS);
         doNothing.add(Object.class);
     }
 

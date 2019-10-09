@@ -5,37 +5,32 @@ import com.github.andreasarvidsson.jsonschema.JsonSchema;
 import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschema.util.AssertJson;
 import com.github.andreasarvidsson.jsonschema.util.JsonBuilder;
-import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
 /**
  *
  * @author Andreas Arvidsson
  */
-public class StringTest {
+public class CharacterTest {
 
     private final JsonSchemaGenerator gen = new JsonSchemaGenerator().hideSchemaField();
     private final String title = "title";
     private final String desc = "desc";
-    private final String pattern = "\\s";
-    private final String format = "any";
-    private final String constant = "Hello";
-    private final int min = 2;
-    private final int max = 3;
+    private final String constant = "A";
 
     @Test
-    public void testString() {
+    public void testChar() {
         AssertJson.assertEquals(
-                getStringExpected(),
-                gen.generate(String.class)
+                getCharExpected(),
+                gen.generate(char.class)
         );
     }
 
     @Test
-    public void testCharSeq() {
+    public void testCharacter() {
         AssertJson.assertEquals(
-                getStringExpected(),
-                gen.generate(CharSequence.class)
+                getCharExpected(),
+                gen.generate(Character.class)
         );
     }
 
@@ -48,46 +43,34 @@ public class StringTest {
                         .setType(JsonType.STRING)
                         .addField(JsonSchemaField.TITLE, title)
                         .addField(JsonSchemaField.DESCRIPTION, desc)
-                        .addField(JsonSchemaField.MIN_LENGTH, min)
-                        .addField(JsonSchemaField.MAX_LENGTH, max)
-                        .addField(JsonSchemaField.PATTERN, pattern)
-                        .addField(JsonSchemaField.FORMAT, format)
                         .addField(JsonSchemaField.CONST, constant)
+                        .addField(JsonSchemaField.MIN_LENGTH, 1)
+                        .addField(JsonSchemaField.MAX_LENGTH, 1)
                         .build()
                 )
                 .build();
         AssertJson.assertEquals(
                 expected,
-                gen.generate(StringClass.class)
+                gen.generate(CharClass.class)
         );
     }
 
-    @Test
-    public void testUUID() {
-        AssertJson.assertEquals(
-                getStringExpected(),
-                gen.generate(UUID.class)
-        );
-    }
-
-    private JsonNode getStringExpected() {
+    private JsonNode getCharExpected() {
         return new JsonBuilder()
                 .setType(JsonType.STRING)
+                .addField(JsonSchemaField.MIN_LENGTH, 1)
+                .addField(JsonSchemaField.MAX_LENGTH, 1)
                 .build();
     }
 
-    class StringClass {
+    class CharClass {
 
         @JsonSchema(
                 title = title,
                 description = desc,
-                minLength = min,
-                maxLength = max,
-                pattern = pattern,
-                format = format,
                 constant = constant
         )
-        public String value;
+        public Character value;
     }
 
 }

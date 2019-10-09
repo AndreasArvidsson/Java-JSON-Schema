@@ -165,6 +165,28 @@ public class CombinationTest {
         final ValidationReport report = validator.validate(instance);
         Assertions.assertTrue(report.isSuccess(), report.toString());
     }
+    
+    @Test
+    public void testConstOk() {
+        final ConstClass instance = new ConstClass();
+        instance.value1 = true;
+        final ValidationReport report = validator.validate(instance);
+        Assertions.assertTrue(report.isSuccess(), report.toString());
+    }
+    
+    @Test
+    public void testConstFail() {
+        final ConstClass instance = new ConstClass();
+        instance.value1 = true;
+        instance.value2 = 5;
+        final ValidationReport report = validator.validate(instance);
+        AssertError.assertErrorMessage(
+                report,
+                report.propertyPath,
+                JsonSchema.Combining.ONE_OF.toString(),
+                "Does not match exactly one schema (matched 2 / 2)"
+        );
+    }
 
     @Test
     public void testGroup0OkText() {
@@ -311,6 +333,22 @@ public class CombinationTest {
                 minLength = 2
         )
         public String value2;
+
+    }
+
+    class ConstClass {
+
+        @JsonSchema(
+                combining = JsonSchema.Combining.ONE_OF,
+                constant = "true"
+        )
+        public boolean value1;
+
+        @JsonSchema(
+                combining = JsonSchema.Combining.ONE_OF,
+                required = true
+        )
+        public Integer value2;
 
     }
 

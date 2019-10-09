@@ -22,7 +22,7 @@ public abstract class JsonSchemaUtil {
     static {
         for (final JsonSchemaField field : JsonSchemaField.values()) {
             try {
-                DEFAULT_VALUES.put(field, JsonSchema.class.getMethod(field.toString()).getDefaultValue());
+                DEFAULT_VALUES.put(field, JsonSchema.class.getMethod(field.getFieldName()).getDefaultValue());
                 VALIDATE_FIELDS.add(field.toString());
             }
             catch (final NoSuchMethodException | SecurityException ex) {
@@ -75,6 +75,14 @@ public abstract class JsonSchemaUtil {
             final JsonSchemaField field, final String value) {
         if (!value.isEmpty()) {
             target.put(field.toString(), value);
+        }
+    }
+
+    public static void setBool(
+            final Class type, final ObjectNode target,
+            final JsonSchemaField field, final String value) {
+        if (!value.isEmpty()) {
+            target.put(field.toString(), Boolean.parseBoolean(value));
         }
     }
 

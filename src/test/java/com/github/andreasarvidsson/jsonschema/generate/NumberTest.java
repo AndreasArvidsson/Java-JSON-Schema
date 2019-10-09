@@ -23,6 +23,7 @@ public class NumberTest {
     private final String minEx = "1";
     private final String maxEx = "4";
     private final String mult = "2";
+    private final String constant = "5";
 
     @Test
     public void testFloatPrim() {
@@ -62,6 +63,7 @@ public class NumberTest {
                         .addField(JsonSchemaField.EXCLUSIVE_MINIMUM, Double.parseDouble(minEx))
                         .addField(JsonSchemaField.EXCLUSIVE_MAXIMUM, Double.parseDouble(maxEx))
                         .addField(JsonSchemaField.MULTIPLE_OF, Double.parseDouble(mult))
+                        .addField(JsonSchemaField.CONST, Double.parseDouble(constant))
                         .build()
                 )
                 .build();
@@ -81,7 +83,8 @@ public class NumberTest {
                 maximum = max,
                 exclusiveMinimum = minEx,
                 exclusiveMaximum = maxEx,
-                multipleOf = mult
+                multipleOf = mult,
+                constant = constant
         )
         public Double value;
     }

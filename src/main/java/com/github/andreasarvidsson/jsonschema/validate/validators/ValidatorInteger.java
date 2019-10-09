@@ -17,7 +17,7 @@ public class ValidatorInteger extends ValidatorNumberBase {
     }
 
     @Override
-    protected Object getArgument(final String value) {
+    protected Number getArgument(final String value) {
         return Long.parseLong(value);
     }
 

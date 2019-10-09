@@ -19,6 +19,7 @@ public @interface JsonSchema {
     //General
     String title() default "";
     String description() default "";
+    String constant() default "";
     
     //Object
     long minProperties() default Long.MIN_VALUE;

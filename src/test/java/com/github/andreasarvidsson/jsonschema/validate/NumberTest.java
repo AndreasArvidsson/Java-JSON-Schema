@@ -18,7 +18,7 @@ public class NumberTest {
     private final float value = 2;
 
     @Test
-    public void testIntegerMinFailed() {
+    public void testMinFailed() {
         final NumberClass instance = new NumberClass();
         instance.valueMin = value - 0.1f;
         final ValidationReport report = validator.validate(instance);
@@ -31,7 +31,7 @@ public class NumberTest {
     }
 
     @Test
-    public void testIntegerMaxFailed() {
+    public void testMaxFailed() {
         final NumberClass instance = new NumberClass();
         instance.valueMax = value + 0.1f;
         final ValidationReport report = validator.validate(instance);
@@ -44,7 +44,7 @@ public class NumberTest {
     }
 
     @Test
-    public void testIntegerExMinFailed() {
+    public void testExMinFailed() {
         final NumberClass instance = new NumberClass();
         instance.valueExMin = value;
         final ValidationReport report = validator.validate(instance);
@@ -57,7 +57,7 @@ public class NumberTest {
     }
 
     @Test
-    public void testIntegerExMaxFailed() {
+    public void testExMaxFailed() {
         final NumberClass instance = new NumberClass();
         instance.valueExMax = value;
         final ValidationReport report = validator.validate(instance);
@@ -70,7 +70,7 @@ public class NumberTest {
     }
 
     @Test
-    public void testIntegerMultipleOfFailed() {
+    public void testMultipleOfFailed() {
         final NumberClass instance = new NumberClass();
         instance.valueMultipleOf = value + 0.1f;
         final ValidationReport report = validator.validate(instance);
@@ -79,6 +79,20 @@ public class NumberTest {
                 report,
                 PropertyPath.append(report.propertyPath, "valueMultipleOf"),
                 JsonSchemaField.MULTIPLE_OF.toString(),
+                (double) value
+        );
+    }
+
+    @Test
+    public void testConstFailed() {
+        final NumberClass instance = new NumberClass();
+        instance.valueConstant = value + 0.1f;
+        final ValidationReport report = validator.validate(instance);
+        Assertions.assertFalse(report.isSuccess(), report.toString());
+        AssertError.assertError(
+                report,
+                PropertyPath.append(report.propertyPath, "valueConstant"),
+                JsonSchemaField.CONST.toString(),
                 (double) value
         );
     }
@@ -109,6 +123,11 @@ public class NumberTest {
                 multipleOf = valueStr
         )
         public float valueMultipleOf = value;
+
+        @JsonSchema(
+                constant = valueStr
+        )
+        public float valueConstant = value;
 
     }
 

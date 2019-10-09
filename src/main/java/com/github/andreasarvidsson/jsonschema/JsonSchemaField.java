@@ -10,6 +10,7 @@ public enum JsonSchemaField {
     //General
     TITLE,
     DESCRIPTION,
+    CONST("constant"),
     
     //Object
     MIN_PROPERTIES,
@@ -33,16 +34,26 @@ public enum JsonSchemaField {
     EXCLUSIVE_MAXIMUM,
     MULTIPLE_OF;
         
-    private final String value;
+    private final String value, fieldName;
 
     private JsonSchemaField() {
         this.value = JsonSchemaField.toString(super.toString());
+        this.fieldName = this.value;
+    }
+
+    private JsonSchemaField(final String fieldName) {
+        this.value = JsonSchemaField.toString(super.toString());
+        this.fieldName = fieldName;
     }
 
     @Override
     @JsonValue()
     public String toString() {
         return value;
+    }
+    
+    public String getFieldName() {
+        return fieldName;
     }
 
     private static String toString(final String str) {

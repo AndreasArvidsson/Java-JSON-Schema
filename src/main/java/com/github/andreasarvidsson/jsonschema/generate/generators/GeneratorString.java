@@ -20,7 +20,8 @@ public class GeneratorString extends GeneratorBase {
                 JsonSchemaField.MIN_LENGTH,
                 JsonSchemaField.MAX_LENGTH,
                 JsonSchemaField.PATTERN,
-                JsonSchemaField.FORMAT
+                JsonSchemaField.FORMAT,
+                JsonSchemaField.CONST
         ));
     }
 
@@ -33,6 +34,7 @@ public class GeneratorString extends GeneratorBase {
         );
         JsonSchemaUtil.setString(type, target, JsonSchemaField.PATTERN, jsonSchema.pattern());
         JsonSchemaUtil.setString(type, target, JsonSchemaField.FORMAT, jsonSchema.format());
+        JsonSchemaUtil.setString(type, target, JsonSchemaField.CONST, jsonSchema.constant());
     }
 
 }

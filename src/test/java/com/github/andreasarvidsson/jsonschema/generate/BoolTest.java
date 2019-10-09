@@ -16,6 +16,7 @@ public class BoolTest {
     private final JsonSchemaGenerator gen = new JsonSchemaGenerator().hideSchemaField();
     private final String title = "title";
     private final String desc = "desc";
+    private final String constant = "true";
 
     @Test
     public void testBoolPrim() {
@@ -42,6 +43,7 @@ public class BoolTest {
                         .setType(JsonType.BOOLEAN)
                         .addField(JsonSchemaField.TITLE, title)
                         .addField(JsonSchemaField.DESCRIPTION, desc)
+                        .addField(JsonSchemaField.CONST, Boolean.parseBoolean(constant))
                         .build()
                 )
                 .build();
@@ -55,7 +57,8 @@ public class BoolTest {
 
         @JsonSchema(
                 title = title,
-                description = desc
+                description = desc,
+                constant = constant
         )
         public Boolean value;
     }
