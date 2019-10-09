@@ -7,9 +7,11 @@ import com.github.andreasarvidsson.jsonschema.TypeCategories;
 import com.github.andreasarvidsson.jsonschema.validate.Error;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -19,6 +21,7 @@ public class Validators {
 
     private final Map<Class, Validator> defaultValidators = new IdentityHashMap();
     private final Map<Class, Validator> customValidators;
+    private final Set<Class> doNothing = new HashSet();
     private final Validator validatorClass, validatorArray, validatorCollection, validatorMap, validatorNothing;
 
     public Validators(final Map<Class, Validator> customValidators) {
@@ -32,13 +35,21 @@ public class Validators {
     }
 
     public void validateClass(final List<Error> errors, final String path, final Object instance) {
-        if (defaultValidators.containsKey(instance.getClass())) {
-            return;
+        if (instance != null) {
+            if (defaultValidators.containsKey(instance.getClass())) {
+                return;
+            }
+            if (doNothing.contains(instance.getClass())) {
+                return;
+            }
+            getValidator(instance.getClass()).validateClass(errors, path, instance);
         }
-        getValidator(instance.getClass()).validateClass(errors, path, instance);
     }
 
     public void validateSchema(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema) {
+        if (doNothing.contains(instance.getClass())) {
+            return;
+        }
         getValidator(instance.getClass()).validateSchema(errors, path, instance, jsonSchema);
     }
 
@@ -72,7 +83,9 @@ public class Validators {
         addDefaults(new ValidatorInteger(), TypeCategories.INTEGERS);
         addDefaults(new ValidatorNumber(), TypeCategories.NUMBERS);
         addDefaults(new ValidatorString(), TypeCategories.STRINGS);
-        defaultValidators.put(Object.class, validatorNothing);
+        doNothing.addAll(TypeCategories.BOOLEANS);
+        doNothing.addAll(TypeCategories.CHARACTERS);
+        doNothing.add(Object.class);
     }
 
     private void addDefaults(final Validator validator, final Collection<Class> types) {
