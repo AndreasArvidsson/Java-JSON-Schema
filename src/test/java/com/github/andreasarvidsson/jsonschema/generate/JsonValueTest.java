@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author Andreas Arvidsson
  */
-public class JsonValueCreatorTest {
+public class JsonValueTest {
 
     private final JsonSchemaGenerator gen = new JsonSchemaGenerator().hideSchemaField();
 

@@ -1,8 +1,11 @@
 package com.github.andreasarvidsson.jsonschema.validate.validators;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.github.andreasarvidsson.jsonschema.JsonSchema;
+import com.github.andreasarvidsson.jsonschema.ReflectionUtil;
 import com.github.andreasarvidsson.jsonschema.TypeCategories;
 import com.github.andreasarvidsson.jsonschema.validate.Error;
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -29,24 +32,19 @@ public class Validators {
     }
 
     public void validateClass(final List<Error> errors, final String path, final Object instance) {
-        final Class type = instance.getClass();
-        if (defaultValidators.containsKey(type)) {
+        if (defaultValidators.containsKey(instance.getClass())) {
             return;
         }
-        getValidator(type).validateClass(errors, path, instance);
+        getValidator(instance.getClass()).validateClass(errors, path, instance);
     }
 
     public void validateSchema(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema) {
-        final Class type = instance.getClass();
-        if (defaultValidators.containsKey(type)) {
-            defaultValidators.get(type).validateSchema(errors, path, instance, jsonSchema);
-        }
-        getValidator(type).validateSchema(errors, path, instance, jsonSchema);
+        getValidator(instance.getClass()).validateSchema(errors, path, instance, jsonSchema);
     }
 
     private Validator getValidator(final Class type) {
-        if (type.isEnum()) {
-            return validatorNothing;
+        if (defaultValidators.containsKey(type)) {
+            return defaultValidators.get(type);
         }
         if (type.isArray()) {
             return validatorArray;
@@ -57,8 +55,15 @@ public class Validators {
         if (Collection.class.isAssignableFrom(type)) {
             return validatorCollection;
         }
+        if (ReflectionUtil.hasMethod(type, JsonValue.class)) {
+            final Method method = ReflectionUtil.getFirstMethod(type, JsonValue.class);
+            return new ValidatorJsonValue(getValidator(method.getReturnType()), method);
+        }
         if (customValidators.containsKey(type)) {
             return customValidators.get(type);
+        }
+        if (type.isEnum()) {
+            return validatorNothing;
         }
         return validatorClass;
     }

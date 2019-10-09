@@ -62,7 +62,7 @@ public class ValidatorString implements Validator {
                         jsonSchema.pattern(),
                         String.format("Does not match pattern '%s'", jsonSchema.pattern()),
                         jsonSchema,
-                        instance
+                        instance.toString()
                 ));
             }
         }

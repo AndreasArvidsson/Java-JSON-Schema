@@ -93,7 +93,7 @@ public class Generators {
             return defaultGenerators.get(type);
         }
         if (!type.isEnum() && ReflectionUtil.hasMethod(type, JsonValue.class)) {
-            return new GeneratorJsonValue(this, type);
+            return getGenerator(ReflectionUtil.getFirstMethod(type, JsonValue.class).getReturnType());
         }
         return null;
     }
