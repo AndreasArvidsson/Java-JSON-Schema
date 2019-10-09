@@ -6,6 +6,7 @@ import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschema.util.AssertJson;
 import com.github.andreasarvidsson.jsonschema.util.JsonBuilder;
 import java.util.Arrays;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -208,6 +209,26 @@ public class CombiningTest {
         );
     }
 
+    @Test
+    public void testCombiningGroupZeroRequireException() {
+        try {
+            gen.generate(CombiningGroupZeroWithRequired.class);
+            Assertions.fail("Expected runtime exception for required on combining group 0");
+        }
+        catch (final RuntimeException ex) {
+        }
+    }
+
+    @Test
+    public void testCombiningGroupZeroDependenciesException() {
+        try {
+            gen.generate(CombiningGroupZeroWithDependencies.class);
+            Assertions.fail("Expected runtime exception for dependencies on combining group 0");
+        }
+        catch (final RuntimeException ex) {
+        }
+    }
+
     class CombiningWithoutGroup {
 
         @JsonSchema(
@@ -335,6 +356,28 @@ public class CombiningTest {
                 minLength = 2
         )
         public String value2;
+
+    }
+
+    class CombiningGroupZeroWithRequired {
+
+        @JsonSchema(
+                combining = Combining.ONE_OF,
+                combiningGroup = 0,
+                required = true
+        )
+        public String value;
+
+    }
+
+    class CombiningGroupZeroWithDependencies {
+
+        @JsonSchema(
+                combining = Combining.ONE_OF,
+                combiningGroup = 0,
+                dependencies = {"value2"}
+        )
+        public String value;
 
     }
 

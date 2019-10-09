@@ -4,17 +4,19 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.andreasarvidsson.jsonschema.JsonSchema;
+import com.github.andreasarvidsson.jsonschema.JsonSchema.Combining;
 import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschema.util.AssertJson;
 import com.github.andreasarvidsson.jsonschema.util.JsonBuilder;
 import java.util.Map;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 /**
  *
  * @author Andreas Arvidsson
  */
-public class ObjectTest {
+public class ClassTest {
 
     private final JsonSchemaGenerator gen = new JsonSchemaGenerator().hideSchemaField();
     private final String classTitle = "My class";
@@ -26,7 +28,7 @@ public class ObjectTest {
     private final String dependency = "anoterValue";
 
     @Test
-    public void testObj() {
+    public void testClass() {
         AssertJson.assertEquals(
                 getExpected(),
                 gen.generate(MyClass.class)
@@ -34,7 +36,7 @@ public class ObjectTest {
     }
 
     @Test
-    public void testOuterObj() {
+    public void testOuterClass() {
         final ObjectNode valueOuter = getExpected();
         valueOuter.put(JsonSchemaField.TITLE.toString(), titleOuter);
         valueOuter.put(JsonSchemaField.DESCRIPTION.toString(), descOuter);
@@ -106,6 +108,16 @@ public class ObjectTest {
                 .build();
     }
 
+    @Test
+    public void testCombiningOnClassException() {
+        try {
+            gen.generate(CombiningFailClass.class);
+            Assertions.fail("Expected runtime exception for combinings on class level");
+        }
+        catch (final RuntimeException ex) {
+        }
+    }
+
     @JsonSchema(
             title = classTitle,
             description = classDesc
@@ -161,6 +173,13 @@ public class ObjectTest {
         public String value;
 
         public String anoterValue;
+
+    }
+
+    @JsonSchema(
+            combining = Combining.ANY_OF
+    )
+    class CombiningFailClass {
 
     }
 

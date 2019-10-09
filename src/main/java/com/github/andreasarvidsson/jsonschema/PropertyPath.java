@@ -6,12 +6,12 @@ package com.github.andreasarvidsson.jsonschema;
  */
 public abstract class PropertyPath {
 
-    public static String append(final String path, final String fieldName) {
-        return String.format("%s.%s", path, fieldName);
+    public static String append(final String path, final String propertyName) {
+        return String.format("%s.%s", path, propertyName);
     }
 
-    public static String append(final String path, final int index) {
-        return String.format("%s[%d]", path, index);
+    public static String append(final String path, final int propertyIndex) {
+        return String.format("%s[%d]", path, propertyIndex);
     }
 
 }

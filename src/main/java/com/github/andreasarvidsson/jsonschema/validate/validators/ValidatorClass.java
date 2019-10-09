@@ -1,5 +1,7 @@
 package com.github.andreasarvidsson.jsonschema.validate.validators;
 
+import com.github.andreasarvidsson.jsonschema.ClassCombiningWrapper;
+import com.github.andreasarvidsson.jsonschema.ClassResultWrapper;
 import com.github.andreasarvidsson.jsonschema.JsonSchema;
 import com.github.andreasarvidsson.jsonschema.JsonSchema.Combining;
 import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
@@ -29,8 +31,8 @@ public class ValidatorClass implements Validator {
 
     @Override
     public void validateClass(final List<Error> errors, final String path, final Object instance) {
-        final ValidatorClassResultWrapper wrapper = new ValidatorClassResultWrapper();
-        validateClassFields(errors, path, instance, instance.getClass(), wrapper);
+        final ClassResultWrapper wrapper = new ClassResultWrapper();
+        parseClassFields(errors, path, instance, instance.getClass(), wrapper);
         validateDependencies(errors, path, instance, wrapper);
         validateCombinations(errors, path, instance, wrapper);
     }
@@ -39,74 +41,79 @@ public class ValidatorClass implements Validator {
     public void validateSchema(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema) {
     }
 
-    private void validateClassFields(
+    private void parseClassFields(
             final List<Error> errors, final String path, final Object instance,
-            final Class type, final ValidatorClassResultWrapper wrapper) {
+            final Class type, final ClassResultWrapper wrapper) {
         //Validate super classes first.
         final Class superType = type.getSuperclass();
         if (superType != null) {
-            validateClassFields(errors, path, instance, superType, wrapper);
+            parseClassFields(errors, path, instance, superType, wrapper);
         }
         for (final Field field : type.getDeclaredFields()) {
             if (ReflectionUtil.ignoreField(field)) {
                 continue;
             }
-            final String fieldName = ReflectionUtil.getFieldName(field);
-            final Object fieldValue = ReflectionUtil.getFieldValue(field, instance);
-            final String fieldPath = PropertyPath.append(path, fieldName);
+            final String propertyName = ReflectionUtil.getPropertyName(field);
+            final Object propertyValue = ReflectionUtil.getFieldValue(field, instance);
+            final String propertyPath = PropertyPath.append(path, propertyName);
 
             final JsonSchema[] jsonSchemas = field.getAnnotationsByType(JsonSchema.class);
             for (final JsonSchema jsonSchema : jsonSchemas) {
-                addSchema(errors, path, instance, fieldPath, fieldName, fieldValue, wrapper, jsonSchema);
+                addSchema(errors, path, instance, propertyPath, propertyName, propertyValue, wrapper, jsonSchema);
             }
 
-            if (fieldValue != null) {
-                wrapper.fieldNames.add(fieldName);
-                validators.validateClass(errors, fieldPath, fieldValue);
+            if (propertyValue != null) {
+                wrapper.propertyNames.add(propertyName);
+                validators.validateClass(errors, propertyPath, propertyValue);
             }
         }
     }
 
     private void addSchema(
-            final List<Error> errors, final String path, final Object instance, final String fieldPath, final String fieldName, final Object fieldInstance,
-            final ValidatorClassResultWrapper wrapper, final JsonSchema jsonSchema) {
+            final List<Error> errors, final String path, final Object instance,
+            final String propertyPath, final String propertyName, final Object propertyInstance,
+            final ClassResultWrapper wrapper, final JsonSchema jsonSchema) {
         if (jsonSchema.combining() == JsonSchema.Combining.NONE) {
-            if (fieldInstance == null) {
-                validateIsRequired(errors, path, instance, fieldName, jsonSchema);
+            if (propertyInstance == null) {
+                validateIsRequired(errors, path, instance, propertyName, jsonSchema);
             }
             else {
                 if (jsonSchema.dependencies().length > 0) {
-                    wrapper.dependencies.put(fieldName, jsonSchema);
+                    wrapper.dependencies.put(propertyName, jsonSchema);
                 }
-                validators.validateSchema(errors, fieldPath, fieldInstance, jsonSchema);
+                validators.validateSchema(errors, propertyPath, propertyInstance, jsonSchema);
             }
         }
         else {
-            wrapper.addCombining(fieldPath, fieldName, jsonSchema, fieldInstance);
+            wrapper.addCombining(propertyPath, propertyName, jsonSchema, propertyInstance);
         }
     }
 
-    private void validateCombinations(final List<Error> errors, final String path, final Object instance, final ValidatorClassResultWrapper wrapper) {
+    private void validateCombinations(
+            final List<Error> errors, final String path,
+            final Object instance, final ClassResultWrapper wrapper) {
         wrapper.combinations.entrySet().forEach(e -> {
-            final Map<Integer, List<Error>> errorMap = validateCombinations(path, instance, wrapper, e.getValue().values(), e.getKey() == Combining.ANY_OF);
+            final Map<Integer, List<Error>> errorMap = validateCombinations(
+                    path, instance, wrapper, e.getValue().values(), e.getKey() == Combining.ANY_OF
+            );
             addCombinationErrors(errors, path, e.getKey(), e.getValue().size(), errorMap);
         });
         wrapper.ownProperty.values().forEach(map -> {
             map.entrySet().forEach(e -> {
-                final Map<Integer, List<Error>> errorMap = validateCombinations(path, instance, wrapper, e.getValue(), e.getKey() == Combining.ANY_OF);
+                final Map<Integer, List<Error>> errorMap = validateCombinations(
+                        path, instance, wrapper, e.getValue(), e.getKey() == Combining.ANY_OF
+                );
                 addCombinationErrors(errors, path, e.getKey(), e.getValue().size(), errorMap);
             });
         });
     }
 
     private Map<Integer, List<Error>> validateCombinations(
-            final String path, final Object instance,
-            final ValidatorClassResultWrapper wrapper,
-            final List<ValidatorClassCombiningWrapper> combinations,
-            final boolean onlyOne) {
+            final String path, final Object instance, final ClassResultWrapper wrapper,
+            final List<ClassCombiningWrapper> combinations, final boolean onlyOne) {
         final Map<Integer, List<Error>> res = new LinkedHashMap();
         int i = 0;
-        for (final ValidatorClassCombiningWrapper combination : combinations) {
+        for (final ClassCombiningWrapper combination : combinations) {
             final List<Error> errors = new ArrayList();
             validateCombination(errors, path, instance, wrapper, combination);
             //This combination has errors
@@ -123,15 +130,13 @@ public class ValidatorClass implements Validator {
     }
 
     private Map<Integer, List<Error>> validateCombinations(
-            final String path, final Object instance,
-            final ValidatorClassResultWrapper wrapper,
-            final Collection<List<ValidatorClassCombiningWrapper>> groups,
-            final boolean onlyOne) {
+            final String path, final Object instance, final ClassResultWrapper wrapper,
+            final Collection<List<ClassCombiningWrapper>> groups, final boolean onlyOne) {
         final Map<Integer, List<Error>> res = new LinkedHashMap();
         int i = 0;
-        for (final List<ValidatorClassCombiningWrapper> groupCombinations : groups) {
+        for (final List<ClassCombiningWrapper> groupCombinations : groups) {
             final List<Error> groupErrors = new ArrayList();
-            for (final ValidatorClassCombiningWrapper combination : groupCombinations) {
+            for (final ClassCombiningWrapper combination : groupCombinations) {
                 validateCombination(groupErrors, path, instance, wrapper, combination);
             }
             //This group has errors
@@ -150,13 +155,13 @@ public class ValidatorClass implements Validator {
     private void validateCombination(
             final List<Error> errors,
             final String path, final Object instance,
-            final ValidatorClassResultWrapper wrapper,
-            final ValidatorClassCombiningWrapper combination) {
+            final ClassResultWrapper wrapper,
+            final ClassCombiningWrapper combination) {
         if (combination.instance == null) {
-            validateIsRequired(errors, path, instance, combination.fieldName, combination.jsonSchema);
+            validateIsRequired(errors, path, instance, combination.propertyName, combination.jsonSchema);
         }
         else {
-            validateDependencies(errors, path, instance, wrapper.fieldNames, combination.fieldName, combination.jsonSchema);
+            validateDependencies(errors, path, instance, wrapper.propertyNames, combination.propertyName, combination.jsonSchema);
             validators.validateSchema(errors, combination.path, combination.instance, combination.jsonSchema);
         }
     }
@@ -198,35 +203,35 @@ public class ValidatorClass implements Validator {
         }
     }
 
-    private void validateIsRequired(final List<Error> errors, final String path, final Object instance, final String fieldName, final JsonSchema jsonSchema) {
+    private void validateIsRequired(final List<Error> errors, final String path, final Object instance, final String propertyName, final JsonSchema jsonSchema) {
         if (jsonSchema.required()) {
             errors.add(new Error(
                     path,
                     JsonSchemaField.Disabled.REQUIRED.toString(),
-                    fieldName,
-                    String.format("Requires property '%s'", fieldName),
+                    propertyName,
+                    String.format("Requires property '%s'", propertyName),
                     jsonSchema,
                     instance
             ));
         }
     }
 
-    private void validateDependencies(final List<Error> errors, final String path, final Object instance, final ValidatorClassResultWrapper wrapper) {
+    private void validateDependencies(final List<Error> errors, final String path, final Object instance, final ClassResultWrapper wrapper) {
         wrapper.dependencies.entrySet().forEach(e -> {
-            validateDependencies(errors, path, instance, wrapper.fieldNames, e.getKey(), e.getValue());
+            validateDependencies(errors, path, instance, wrapper.propertyNames, e.getKey(), e.getValue());
         });
     }
 
     private void validateDependencies(
             final List<Error> errors, final String path, final Object instance,
-            final Set<String> fieldNames, final String fieldName, final JsonSchema jsonSchema) {
-        for (final String depFieldName : jsonSchema.dependencies()) {
-            if (!fieldNames.contains(depFieldName)) {
+            final Set<String> propertyNames, final String propertyName, final JsonSchema jsonSchema) {
+        for (final String depName : jsonSchema.dependencies()) {
+            if (!propertyNames.contains(depName)) {
                 errors.add(new Error(
                         path,
                         JsonSchemaField.Disabled.DEPENDENCIES.toString(),
-                        depFieldName,
-                        String.format("Property %s not found, required by %s", depFieldName, PropertyPath.append(path, fieldName)),
+                        depName,
+                        String.format("Property %s not found, required by %s", depName, PropertyPath.append(path, propertyName)),
                         jsonSchema,
                         instance
                 ));

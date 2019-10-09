@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -11,6 +12,10 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -32,7 +37,7 @@ public abstract class ReflectionUtil {
         return ignore != null && ignore.value();
     }
 
-    public static String getFieldName(final Field field) {
+    public static String getPropertyName(final Field field) {
         final JsonProperty property = (JsonProperty) field.getAnnotation(JsonProperty.class);
         return property != null && !property.value().isEmpty() ? property.value() : field.getName();
     }
@@ -96,6 +101,54 @@ public abstract class ReflectionUtil {
             classType = classType.getSuperclass();
         }
         return null;
+    }
+
+    public static List<Field> getFieldsInOrder(final Class type) {
+        final List<Field> fields = new ArrayList();
+        getFields(fields, type);
+        final JsonPropertyOrder order = ReflectionUtil.getFirstAnotation(type, JsonPropertyOrder.class);
+        if (order != null) {
+            sortFields(fields, order);
+        }
+        return fields;
+    }
+
+    private static void getFields(final List<Field> result, final Class type) {
+        //Parse super classes first.
+        if (type.getSuperclass() != null) {
+            getFields(result, type.getSuperclass());
+        }
+        for (final Field field : type.getDeclaredFields()) {
+            if (!ReflectionUtil.ignoreField(field)) {
+                result.add(field);
+            }
+        }
+    }
+
+    private static void sortFields(final List<Field> fields, final JsonPropertyOrder order) {
+        final Map<String, Integer> orderMap = new HashMap();
+        for (final String propertyName : order.value()) {
+            orderMap.put(propertyName, orderMap.size());
+        }
+        fields.sort((final Field o1, final Field o2) -> {
+            final String n1 = ReflectionUtil.getPropertyName(o1);
+            final String n2 = ReflectionUtil.getPropertyName(o2);
+            final Integer i1 = orderMap.get(n1);
+            final Integer i2 = orderMap.get(n2);
+            if (i1 != null && i2 != null) {
+                return i1 - i2;
+            }
+            if (i1 != null) {
+                return -1;
+            }
+            if (i2 != null) {
+                return 1;
+            }
+            if (order.alphabetic()) {
+                return n1.compareTo(n2);
+            }
+            return 0;
+        });
     }
 
 }
