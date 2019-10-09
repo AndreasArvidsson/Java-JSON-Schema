@@ -18,10 +18,12 @@ public class MapTest {
     private final JsonSchemaValidator validator = new JsonSchemaValidator();
     private final int minProperties = 2;
     private final int maxProperties = 1;
+    private final String minimumStr = "2";
+    private final int minimum = 2;
 
     @Test
     public void testMinPropertiesOk() {
-        final MapMinProperties instance = new MapMinProperties();
+        final MinPropertiesClass instance = new MinPropertiesClass();
         add(instance.values, minProperties);
         final ValidationReport report = validator.validate(instance);
         Assertions.assertTrue(report.isSuccess(), report.toString());
@@ -29,7 +31,7 @@ public class MapTest {
 
     @Test
     public void testMinPropertiesFailed() {
-        final MapMinProperties instance = new MapMinProperties();
+        final MinPropertiesClass instance = new MinPropertiesClass();
         add(instance.values, minProperties - 1);
         final ValidationReport report = validator.validate(instance);
         AssertError.assertError(
@@ -42,7 +44,7 @@ public class MapTest {
 
     @Test
     public void testMaxPropertiesOk() {
-        final MapMaxProperties instance = new MapMaxProperties();
+        final MaxPropertiesClass instance = new MaxPropertiesClass();
         add(instance.values, maxProperties);
         final ValidationReport report = validator.validate(instance);
         Assertions.assertTrue(report.isSuccess(), report.toString());
@@ -50,7 +52,7 @@ public class MapTest {
 
     @Test
     public void testMaxPropertiesFailed() {
-        final MapMaxProperties instance = new MapMaxProperties();
+        final MaxPropertiesClass instance = new MaxPropertiesClass();
         add(instance.values, maxProperties + 1);
         final ValidationReport report = validator.validate(instance);
         AssertError.assertError(
@@ -61,13 +63,34 @@ public class MapTest {
         );
     }
 
+    @Test
+    public void testItemOk() {
+        final Map<String, IntegerClass> instance = new HashMap();
+        instance.put("key", new IntegerClass(minimum));
+        final ValidationReport report = validator.validate(instance);
+        Assertions.assertTrue(report.isSuccess(), report.toString());
+    }
+
+    @Test
+    public void testItemFail() {
+        final Map<String, IntegerClass> instance = new HashMap();
+        instance.put("key", new IntegerClass(minimum - 1));
+        final ValidationReport report = validator.validate(instance);
+        AssertError.assertError(
+                report,
+                PropertyPath.append(PropertyPath.append(report.propertyPath, "key"), "value"),
+                JsonSchemaField.MINIMUM.toString(),
+                (long) minimum
+        );
+    }
+
     private void add(final Map map, final int size) {
         for (int i = 0; i < size; ++i) {
             map.put(String.valueOf((char) ('A' + i)), i);
         }
     }
 
-    class MapMinProperties {
+    class MinPropertiesClass {
 
         @JsonSchema(
                 minProperties = minProperties
@@ -76,7 +99,7 @@ public class MapTest {
 
     }
 
-    class MapMaxProperties {
+    class MaxPropertiesClass {
 
         @JsonSchema(
                 maxProperties = maxProperties
@@ -84,4 +107,18 @@ public class MapTest {
         public Map values = new HashMap();
 
     }
+
+    class IntegerClass {
+
+        @JsonSchema(
+                minimum = minimumStr
+        )
+        public final int value;
+
+        public IntegerClass(final int value) {
+            this.value = value;
+        }
+
+    }
+
 }

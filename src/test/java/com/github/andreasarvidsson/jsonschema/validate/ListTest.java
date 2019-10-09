@@ -4,6 +4,9 @@ import com.github.andreasarvidsson.jsonschema.JsonSchema;
 import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschema.PropertyPath;
 import com.github.andreasarvidsson.jsonschema.util.AssertError;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -11,7 +14,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author Andreas Arvidsson
  */
-public class ArrayTest {
+public class ListTest {
 
     private final JsonSchemaValidator validator = new JsonSchemaValidator();
     private final int minItems = 2;
@@ -21,16 +24,16 @@ public class ArrayTest {
 
     @Test
     public void testMinItemsOk() {
-        final MinItems instance = new MinItems();
-        instance.values = new int[minItems];
+        final MinItemsClass instance = new MinItemsClass();
+        instance.values = get(minItems);
         final ValidationReport report = validator.validate(instance);
         Assertions.assertTrue(report.isSuccess(), report.toString());
     }
 
     @Test
     public void testMinItemsFailed() {
-        final MinItems instance = new MinItems();
-        instance.values = new int[minItems - 1];
+        final MinItemsClass instance = new MinItemsClass();
+        instance.values = get(minItems - 1);
         final ValidationReport report = validator.validate(instance);
         AssertError.assertError(
                 report,
@@ -42,16 +45,16 @@ public class ArrayTest {
 
     @Test
     public void testMaxItemsOk() {
-        final MaxItems instance = new MaxItems();
-        instance.values = new int[maxItems];
+        final MaxItemsClass instance = new MaxItemsClass();
+        instance.values = get(maxItems);
         final ValidationReport report = validator.validate(instance);
         Assertions.assertTrue(report.isSuccess(), report.toString());
     }
 
     @Test
     public void testMaxItemsFailed() {
-        final MaxItems instance = new MaxItems();
-        instance.values = new int[maxItems + 1];
+        final MaxItemsClass instance = new MaxItemsClass();
+        instance.values = get(maxItems + 1);
         final ValidationReport report = validator.validate(instance);
         AssertError.assertError(
                 report,
@@ -62,15 +65,15 @@ public class ArrayTest {
     }
 
     @Test
-    public void testArrayItemOk() {
-        final IntegerClass[] instance = {new IntegerClass(minimum)};
+    public void testItemOk() {
+        final List<IntegerClass> instance = Arrays.asList(new IntegerClass(minimum));
         final ValidationReport report = validator.validate(instance);
         Assertions.assertTrue(report.isSuccess(), report.toString());
     }
 
     @Test
-    public void testArrayItemFail() {
-        final IntegerClass[] instance = {new IntegerClass(minimum - 1)};
+    public void testItemFail() {
+        final List<IntegerClass> instance = Arrays.asList(new IntegerClass(minimum - 1));
         final ValidationReport report = validator.validate(instance);
         AssertError.assertError(
                 report,
@@ -80,21 +83,29 @@ public class ArrayTest {
         );
     }
 
-    class MinItems {
+    private List get(final int size) {
+        final List res = new ArrayList();
+        for (int i = 0; i < size; ++i) {
+            res.add(i);
+        }
+        return res;
+    }
+
+    class MinItemsClass {
 
         @JsonSchema(
                 minItems = minItems
         )
-        public int[] values;
+        public List values;
 
     }
 
-    class MaxItems {
+    class MaxItemsClass {
 
         @JsonSchema(
                 maxItems = maxItems
         )
-        public int[] values;
+        public List values;
 
     }
 

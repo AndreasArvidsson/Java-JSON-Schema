@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
  *
  * @author Andreas Arvidsson
  */
-public class CollectionTest {
+public class ListTest {
 
     private final JsonSchemaGenerator gen = new JsonSchemaGenerator().hideSchemaField();
     private final String title = "title";
