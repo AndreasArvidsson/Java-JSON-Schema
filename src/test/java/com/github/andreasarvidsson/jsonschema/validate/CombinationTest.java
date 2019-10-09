@@ -15,7 +15,7 @@ public class CombinationTest {
 
     @Test
     public void testAnyOfOk() {
-        final AnyOfClass instance = new AnyOfClass();
+        final CombiningAnyOf instance = new CombiningAnyOf();
         instance.value1 = 5;
         final ValidationReport report = validator.validate(instance);
         Assertions.assertTrue(report.isSuccess(), report.toString());
@@ -23,7 +23,7 @@ public class CombinationTest {
 
     @Test
     public void testAnyOfFail() {
-        final AnyOfClass instance = new AnyOfClass();
+        final CombiningAnyOf instance = new CombiningAnyOf();
         final ValidationReport report = validator.validate(instance);
         AssertError.assertErrorMessage(
                 report,
@@ -35,7 +35,7 @@ public class CombinationTest {
 
     @Test
     public void testOneOfOk() {
-        final OneOfClass instance = new OneOfClass();
+        final CombiningOneOf instance = new CombiningOneOf();
         instance.value1 = 5;
         final ValidationReport report = validator.validate(instance);
         Assertions.assertTrue(report.isSuccess(), report.toString());
@@ -43,7 +43,7 @@ public class CombinationTest {
 
     @Test
     public void testOneOfFail0() {
-        final OneOfClass instance = new OneOfClass();
+        final CombiningOneOf instance = new CombiningOneOf();
         final ValidationReport report = validator.validate(instance);
         AssertError.assertErrorMessage(
                 report,
@@ -55,7 +55,7 @@ public class CombinationTest {
 
     @Test
     public void testOneOfFail2() {
-        final OneOfClass instance = new OneOfClass();
+        final CombiningOneOf instance = new CombiningOneOf();
         instance.value1 = 5;
         instance.value2 = 5;
         final ValidationReport report = validator.validate(instance);
@@ -69,7 +69,7 @@ public class CombinationTest {
 
     @Test
     public void testAllOfOk() {
-        final AllOfClass instance = new AllOfClass();
+        final CombiningAllOf instance = new CombiningAllOf();
         instance.value1 = 5;
         instance.value2 = 5;
         final ValidationReport report = validator.validate(instance);
@@ -78,7 +78,7 @@ public class CombinationTest {
 
     @Test
     public void testAllOfFail0() {
-        final AllOfClass instance = new AllOfClass();
+        final CombiningAllOf instance = new CombiningAllOf();
         final ValidationReport report = validator.validate(instance);
         AssertError.assertErrorMessage(
                 report,
@@ -90,7 +90,7 @@ public class CombinationTest {
 
     @Test
     public void testAllOfFail1() {
-        final AllOfClass instance = new AllOfClass();
+        final CombiningAllOf instance = new CombiningAllOf();
         instance.value1 = 5;
         final ValidationReport report = validator.validate(instance);
         AssertError.assertErrorMessage(
@@ -103,7 +103,7 @@ public class CombinationTest {
 
     @Test
     public void testDependenciesOk() {
-        final DependenciesClass instance = new DependenciesClass();
+        final CombiningDependencies instance = new CombiningDependencies();
         instance.value3 = 5;
         instance.value4 = 5;
         final ValidationReport report = validator.validate(instance);
@@ -112,7 +112,7 @@ public class CombinationTest {
 
     @Test
     public void testDependenciesFail() {
-        final DependenciesClass instance = new DependenciesClass();
+        final CombiningDependencies instance = new CombiningDependencies();
         instance.value3 = 5;
         final ValidationReport report = validator.validate(instance);
         AssertError.assertErrorMessage(
@@ -125,7 +125,7 @@ public class CombinationTest {
 
     @Test
     public void testMinimumOk() {
-        final MinimumCLass instance = new MinimumCLass();
+        final CombiningMinimum instance = new CombiningMinimum();
         instance.value1 = 5;
         final ValidationReport report = validator.validate(instance);
         Assertions.assertTrue(report.isSuccess(), report.toString());
@@ -133,7 +133,7 @@ public class CombinationTest {
 
     @Test
     public void testMinimumFail0() {
-        final MinimumCLass instance = new MinimumCLass();
+        final CombiningMinimum instance = new CombiningMinimum();
         final ValidationReport report = validator.validate(instance);
         AssertError.assertErrorMessage(
                 report,
@@ -145,7 +145,7 @@ public class CombinationTest {
 
     @Test
     public void testMinimumFail2() {
-        final MinimumCLass instance = new MinimumCLass();
+        final CombiningMinimum instance = new CombiningMinimum();
         instance.value1 = 5;
         instance.value2 = 5;
         final ValidationReport report = validator.validate(instance);
@@ -157,7 +157,53 @@ public class CombinationTest {
         );
     }
 
-    class AnyOfClass {
+    @Test
+    public void testGroup0OkDigit() {
+        final CombiningGroupZero instance = new CombiningGroupZero();
+        instance.value1 = "5";
+        instance.value2 = "5";
+        final ValidationReport report = validator.validate(instance);
+        Assertions.assertTrue(report.isSuccess(), report.toString());
+    }
+
+    @Test
+    public void testGroup0OkText() {
+        final CombiningGroupZero instance = new CombiningGroupZero();
+        instance.value1 = "abcde";
+        instance.value2 = "ab";
+        final ValidationReport report = validator.validate(instance);
+        Assertions.assertTrue(report.isSuccess(), report.toString());
+    }
+
+    @Test
+    public void testGroup0Fail1() {
+        final CombiningGroupZero instance = new CombiningGroupZero();
+        instance.value1 = "abcd";
+        instance.value2 = "ab";
+        final ValidationReport report = validator.validate(instance);
+        AssertError.assertErrorMessage(
+                report,
+                report.propertyPath,
+                JsonSchema.Combining.ONE_OF.toString(),
+                "Does not match exactly one schema (matched 0 / 2)"
+        );
+    }
+
+    @Test
+    public void testGroup0Fail2() {
+        final CombiningGroupZero instance = new CombiningGroupZero();
+        instance.value1 = "5";
+        instance.value2 = "a";
+        final ValidationReport report = validator.validate(instance);
+        AssertError.assertErrorMessage(
+                report,
+                report.propertyPath,
+                JsonSchema.Combining.ONE_OF.toString(),
+                "Does not match exactly one schema (matched 0 / 2)"
+        );
+    }
+
+    class CombiningAnyOf {
 
         @JsonSchema(
                 combining = JsonSchema.Combining.ANY_OF,
@@ -173,7 +219,7 @@ public class CombinationTest {
 
     }
 
-    class OneOfClass {
+    class CombiningOneOf {
 
         @JsonSchema(
                 combining = JsonSchema.Combining.ONE_OF,
@@ -189,7 +235,7 @@ public class CombinationTest {
 
     }
 
-    class AllOfClass {
+    class CombiningAllOf {
 
         @JsonSchema(
                 combining = JsonSchema.Combining.ALL_OF,
@@ -205,7 +251,7 @@ public class CombinationTest {
 
     }
 
-    class DependenciesClass {
+    class CombiningDependencies {
 
         @JsonSchema(
                 combining = JsonSchema.Combining.ALL_OF,
@@ -224,7 +270,7 @@ public class CombinationTest {
 
     }
 
-    class MinimumCLass {
+    class CombiningMinimum {
 
         @JsonSchema(
                 combining = JsonSchema.Combining.ONE_OF,
@@ -237,6 +283,34 @@ public class CombinationTest {
                 minimum = "4"
         )
         public int value2;
+
+    }
+
+    class CombiningGroupZero {
+
+        @JsonSchema(
+                combining = JsonSchema.Combining.ONE_OF,
+                combiningGroup = 0,
+                pattern = "\\d"
+        )
+        @JsonSchema(
+                combining = JsonSchema.Combining.ONE_OF,
+                combiningGroup = 0,
+                minLength = 5
+        )
+        public String value1;
+
+        @JsonSchema(
+                combining = JsonSchema.Combining.ONE_OF,
+                combiningGroup = 0,
+                pattern = "\\d"
+        )
+        @JsonSchema(
+                combining = JsonSchema.Combining.ONE_OF,
+                combiningGroup = 0,
+                minLength = 2
+        )
+        public String value2;
 
     }
 
