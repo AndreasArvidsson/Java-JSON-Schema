@@ -71,7 +71,14 @@ public class GeneratorClass extends GeneratorBase {
             final Generator generator = generators.getGenerator(field.getType());
 
             //Add schema anotations
-            addSchemas(generator, wrapper, propertyNode, propertyName, field);
+            try {
+                addSchemas(generator, wrapper, propertyNode, propertyName, field);
+            }
+            catch (final Exception ex) {
+                throw new RuntimeException(String.format(
+                        "[%s] -> %s", ReflectionUtil.getPath(field), ex.getMessage())
+                );
+            }
 
             wrapper.propertyNames.add(propertyName);
             wrapper.properties.set(propertyName, propertyNode);

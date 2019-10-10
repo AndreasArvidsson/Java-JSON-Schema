@@ -3,10 +3,8 @@ package com.github.andreasarvidsson.jsonschema.generate;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,11 +20,7 @@ public class ClassDefinitions {
         return classes.containsKey(type);
     }
 
-    public void add(final Class type, final ObjectNode node) {
-        final ClassWrapper wrapper = new ClassWrapper();
-        wrapper.name = type.getSimpleName();
-        wrapper.classNode = node;
-
+    public void add(final Class type, final ClassWrapper wrapper) {
         classes.put(type, wrapper);
     }
 
@@ -74,14 +68,6 @@ public class ClassDefinitions {
                 target.set(e.getKey(), e.getValue());
             }
         }
-    }
-
-    private class ClassWrapper {
-
-        public String name;
-        public ObjectNode classNode;
-        public List<ObjectNode> references = new ArrayList();
-
     }
 
 }

@@ -1,5 +1,6 @@
 package com.github.andreasarvidsson.jsonschema.generate.generators;
 
+import com.github.andreasarvidsson.jsonschema.generate.ClassWrapper;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.andreasarvidsson.jsonschema.ReflectionUtil;
@@ -80,8 +81,11 @@ public class Generators {
             return collectionGenerator.parseCollectionClass(type, valueType);
         }
 
-        final ObjectNode classNode = getAdvancedGenerator(type).parseClass(type);
-        classDefinitions.add(type, classNode);
+        final ClassWrapper wrapper = new ClassWrapper(type);
+        //Need to add wrapper to definitions before parsing members in case of circular dependencies.
+        classDefinitions.add(type, wrapper);
+        wrapper.classNode = getAdvancedGenerator(type).parseClass(type);
+
         return classDefinitions.getRef(type);
     }
 
