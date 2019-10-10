@@ -20,8 +20,8 @@ public class ValidatorMap implements Validator {
 
     @Override
     public void validateClass(final List<Error> errors, final String path, final Object instance) {
-        for (final Map.Entry<String, Object> e : ((Map<String, Object>) instance).entrySet()) {
-            validators.validateClass(errors, PropertyPath.append(path, e.getKey()), e.getValue());
+        for (final Map.Entry<Object, Object> e : ((Map<Object, Object>) instance).entrySet()) {
+            validators.validateClass(errors, PropertyPath.append(path, e.getKey().toString()), e.getValue());
         }
     }
 
