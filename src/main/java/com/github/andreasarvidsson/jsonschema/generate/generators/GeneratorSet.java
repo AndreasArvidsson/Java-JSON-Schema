@@ -1,6 +1,7 @@
 package com.github.andreasarvidsson.jsonschema.generate.generators;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.lang.reflect.Type;
 
 /**
  *
@@ -13,7 +14,7 @@ public class GeneratorSet extends GeneratorArrayBase implements GeneratorCollect
     }
 
     @Override
-    public ObjectNode parseCollectionClass(final Class type, final Class valueType) {
+    public ObjectNode parseCollectionClass(final Class type, final Type valueType) {
         return super.parseUniqueArrayClass(type, valueType);
     }
 

@@ -1,12 +1,14 @@
 package com.github.andreasarvidsson.jsonschema.generate.generators;
 
-import com.github.andreasarvidsson.jsonschema.generate.ClassWrapper;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.andreasarvidsson.jsonschema.ReflectionUtil;
 import com.github.andreasarvidsson.jsonschema.TypeCategories;
 import com.github.andreasarvidsson.jsonschema.generate.ClassDefinitions;
+import com.github.andreasarvidsson.jsonschema.generate.ClassWrapper;
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -37,6 +39,31 @@ public class Generators {
         this.generatorCollection = new GeneratorCollection(this);
         this.generatorEnum = new GeneratorEnum();
         addDefaults(autoRangeNumbers);
+    }
+
+    public ObjectNode parseClass(final Type genericType) {
+        //Generic type
+        if (genericType instanceof ParameterizedType) {
+            final Type[] paramTypes = ((ParameterizedType) genericType).getActualTypeArguments();
+            //Use last index instead of [0] for map where value is at [1]
+            final Type type = paramTypes[paramTypes.length - 1];
+
+            //Nested collection or map.
+            if (type instanceof ParameterizedType) {
+                final ParameterizedType paramType = (ParameterizedType) type;
+                final Class collectionType = (Class) paramType.getRawType();
+                return getCollectionGenerator(collectionType).parseCollectionClass(
+                        collectionType,
+                        paramType.getActualTypeArguments()[paramType.getActualTypeArguments().length - 1]
+                );
+            }
+
+            //Not a generic type. Just a class.
+            return parseClass((Class) type);
+        }
+
+        //Not a generic type. Just a class.
+        return parseClass((Class) genericType);
     }
 
     public ObjectNode parseClass(final Class type) {
@@ -77,8 +104,16 @@ public class Generators {
 
         final GeneratorCollectionInterface collectionGenerator = getCollectionGenerator(type);
         if (collectionGenerator != null) {
-            final Class valueType = field != null ? ReflectionUtil.getGenericValueType(field) : Object.class;
-            return collectionGenerator.parseCollectionClass(type, valueType);
+            if (field != null && field.getGenericType() instanceof ParameterizedType) {
+                //Field has ParameterizedType. Use it.
+                if (field.getGenericType() instanceof ParameterizedType) {
+                    return collectionGenerator.parseCollectionClass(type, field.getGenericType());
+                }
+            }
+            //Field doesnt have ParameterizedType. Defautl to Object
+            else {
+                return collectionGenerator.parseCollectionClass(type, Object.class);
+            }
         }
 
         final ClassWrapper wrapper = new ClassWrapper(type);

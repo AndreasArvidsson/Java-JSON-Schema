@@ -21,20 +21,13 @@ public class MapTest {
     private final int max = 2;
 
     @Test
-    public void testMapBool() {
+    public void testMapRoot() {
         AssertJson.assertEquals(
-                getExpected(new JsonBuilder()
-                        .setType(JsonType.BOOLEAN)
-                        .build()),
-                gen.generate(MapBoolClass.class)
-        );
-    }
-
-    @Test
-    public void testMapObject() {
-        AssertJson.assertEquals(
-                getExpected(new JsonBuilder().build()),
-                gen.generate(MapObjectClass.class)
+                new JsonBuilder()
+                        .setType(JsonType.OBJECT)
+                        .addPatternProperty("^.*$", new JsonBuilder().build())
+                        .build(),
+                gen.generate(Map.class)
         );
     }
 
@@ -42,7 +35,52 @@ public class MapTest {
     public void testMapDefault() {
         AssertJson.assertEquals(
                 getExpected(new JsonBuilder().build()),
-                gen.generate(MapDefaultClass.class)
+                gen.generate(MapDefault.class)
+        );
+    }
+
+    @Test
+    public void testMapOfObjects() {
+        AssertJson.assertEquals(
+                getExpected(new JsonBuilder().build()),
+                gen.generate(MapOfObjects.class)
+        );
+    }
+
+    @Test
+    public void testMapOfBools() {
+        AssertJson.assertEquals(
+                getExpected(new JsonBuilder()
+                        .setType(JsonType.BOOLEAN)
+                        .build()),
+                gen.generate(MapOfBools.class)
+        );
+    }
+
+    @Test
+    public void testMapOfMaps() {
+        AssertJson.assertEquals(
+                getExpectedMapOfMaps(new JsonBuilder().build()),
+                gen.generate(MapOfMaps.class)
+        );
+    }
+
+    @Test
+    public void testMapOfMapsOfObjects() {
+        AssertJson.assertEquals(
+                getExpectedMapOfMaps(new JsonBuilder()
+                        .build()),
+                gen.generate(MapOfMapsOfObjects.class)
+        );
+    }
+
+    @Test
+    public void testMapOfMapsOfBools() {
+        AssertJson.assertEquals(
+                getExpectedMapOfMaps(new JsonBuilder()
+                        .setType(JsonType.BOOLEAN)
+                        .build()),
+                gen.generate(MapOfMapsOfBools.class)
         );
     }
 
@@ -56,13 +94,28 @@ public class MapTest {
                         .addField(JsonSchemaField.DESCRIPTION, desc)
                         .addField(JsonSchemaField.MIN_PROPERTIES, min)
                         .addField(JsonSchemaField.MAX_PROPERTIES, max)
-                        .addPatternProperty("^.*$", property)
+                        .addPatternProperty(JsonSchemaField.Disabled.ANY_MATCH.toString(), property)
                         .build()
                 )
                 .build();
     }
 
-    class MapBoolClass {
+    private JsonNode getExpectedMapOfMaps(final JsonNode property) {
+        return new JsonBuilder()
+                .setType(JsonType.OBJECT)
+                .setAdditionalProps(false)
+                .addProperty("value", new JsonBuilder()
+                        .setType(JsonType.OBJECT)
+                        .addPatternProperty(JsonSchemaField.Disabled.ANY_MATCH.toString(), new JsonBuilder()
+                                .setType(JsonType.OBJECT)
+                                .addPatternProperty(JsonSchemaField.Disabled.ANY_MATCH.toString(), property)
+                                .build())
+                        .build()
+                )
+                .build();
+    }
+
+    class MapDefault {
 
         @JsonSchema(
                 title = title,
@@ -70,11 +123,11 @@ public class MapTest {
                 minProperties = min,
                 maxProperties = max
         )
-        public Map<String, Boolean> value;
+        public Map value;
 
     }
 
-    class MapObjectClass {
+    class MapOfObjects {
 
         @JsonSchema(
                 title = title,
@@ -86,7 +139,7 @@ public class MapTest {
 
     }
 
-    class MapDefaultClass {
+    class MapOfBools {
 
         @JsonSchema(
                 title = title,
@@ -94,7 +147,25 @@ public class MapTest {
                 minProperties = min,
                 maxProperties = max
         )
-        public Map value;
+        public Map<String, Boolean> value;
+
+    }
+
+    class MapOfMaps {
+
+        public Map<String, Map> value;
+
+    }
+
+    class MapOfMapsOfObjects {
+
+        public Map<String, Map<String, Object>> value;
+
+    }
+
+    class MapOfMapsOfBools {
+
+        public Map<String, Map<String, Boolean>> value;
 
     }
 

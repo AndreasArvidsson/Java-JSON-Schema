@@ -5,6 +5,7 @@ import com.github.andreasarvidsson.jsonschema.JsonSchema;
 import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschema.JsonSchemaUtil;
 import com.github.andreasarvidsson.jsonschema.generate.JsonType;
+import java.lang.reflect.Type;
 import java.util.Arrays;
 
 /**
@@ -26,7 +27,7 @@ public class GeneratorMap extends GeneratorBase implements GeneratorCollectionIn
     }
 
     @Override
-    public ObjectNode parseCollectionClass(final Class type, final Class valueType) {
+    public ObjectNode parseCollectionClass(final Class type, final Type valueType) {
         final ObjectNode result = super.parseClass(type);
         final ObjectNode patternProperties = MAPPER.createObjectNode();
         patternProperties.set(JsonSchemaField.Disabled.ANY_MATCH.toString(), generators.parseClass(valueType));

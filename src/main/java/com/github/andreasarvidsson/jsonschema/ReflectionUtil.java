@@ -10,8 +10,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -78,42 +76,6 @@ public abstract class ReflectionUtil {
         return hasMethod(type, JsonAnyGetter.class)
                 && hasMethod(type, JsonAnySetter.class);
     }
-
-    public static Class getGenericValueType(final Field field) {
-        final Type genericType = field.getGenericType();
-        //Generic type
-        if (genericType instanceof ParameterizedType) {
-            final ParameterizedType paramType = (ParameterizedType) genericType;
-            final Type[] paramTypes = paramType.getActualTypeArguments();
-            //Use last index instead of [0] for map where value is at [1]
-            return (Class) paramTypes[paramTypes.length - 1];
-        }
-        //No generic type. Defaults to Object.
-        return Object.class;
-    }
-    
-//        private static ObjectNode parseGeneric(ParameterizedType genericType, Map<Class, ClassWrapper> classes) throws Exception {
-//        //Last type is paylouad /value
-//        Type[] types = genericType.getActualTypeArguments();
-//        Type type = types[types.length - 1];
-//        //Nested colletion or map.
-//        if (type instanceof ParameterizedType) {
-//            Class rawType = (Class) ((ParameterizedType) type).getRawType();
-//            if (Collection.class.isAssignableFrom(rawType)) {
-//                return parseCollection((ParameterizedType) type, classes);
-//            }
-//            else if (Map.class.isAssignableFrom(rawType)) {
-//                return parseMap((ParameterizedType) type, classes);
-//            }
-//            else {
-//                throw new RuntimeException("Unknown type " + rawType.getSimpleName());
-//            }
-//        }
-//        //Contains instance of class or primitive
-//        else {
-//            return parseField(null, (Class) type, classes);
-//        }
-//    }
 
     public static <T extends Annotation> T getFirstAnotation(Class classType, Class<T> anotType) {
         while (classType != null) {

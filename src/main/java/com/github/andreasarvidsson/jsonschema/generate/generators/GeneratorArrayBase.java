@@ -5,6 +5,7 @@ import com.github.andreasarvidsson.jsonschema.JsonSchema;
 import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschema.JsonSchemaUtil;
 import com.github.andreasarvidsson.jsonschema.generate.JsonType;
+import java.lang.reflect.Type;
 import java.util.Arrays;
 
 /**
@@ -34,7 +35,7 @@ public abstract class GeneratorArrayBase extends GeneratorBase {
         );
     }
 
-    private ObjectNode parseArrayClass(final Class type, final Class valueType, final boolean isUnique) {
+    private ObjectNode parseArrayClass(final Class type, final Type valueType, final boolean isUnique) {
         final ObjectNode result = super.parseClass(type);
         if (isUnique) {
             result.put(JsonSchemaField.Disabled.UNIQUE_ITEMS.toString(), true);
@@ -43,11 +44,11 @@ public abstract class GeneratorArrayBase extends GeneratorBase {
         return result;
     }
 
-    protected ObjectNode parseArrayClass(final Class type, final Class valueType) {
+    protected ObjectNode parseArrayClass(final Class type, final Type valueType) {
         return parseArrayClass(type, valueType, false);
     }
 
-    protected ObjectNode parseUniqueArrayClass(final Class type, final Class valueType) {
+    protected ObjectNode parseUniqueArrayClass(final Class type, final Type valueType) {
         return parseArrayClass(type, valueType, true);
     }
 
