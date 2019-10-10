@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -46,7 +47,8 @@ public abstract class TypeCategories {
     public final static Set<Class> STRINGS = new HashSet(Arrays.asList(
             String.class,
             CharSequence.class,
-            UUID.class
+            UUID.class,
+            Pattern.class
     ));
 
 }
