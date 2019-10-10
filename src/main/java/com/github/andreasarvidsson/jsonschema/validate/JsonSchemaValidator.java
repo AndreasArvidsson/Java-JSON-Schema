@@ -32,11 +32,11 @@ public class JsonSchemaValidator {
         return new ValidationReport(errors);
     }
 
-    public <T> ValidationReport validate(final InputStream is, final Class<T> type) throws IOException {
+    public ValidationReport validate(final InputStream is, final Class type) throws IOException {
         return validate(MAPPER.readValue(is, type));
     }
 
-    public <T> ValidationReport validate(final JsonNode node, final Class<T> type) throws IOException {
+    public ValidationReport validate(final JsonNode node, final Class type) throws IOException {
         return validate(MAPPER.treeToValue(node, type));
     }
 
