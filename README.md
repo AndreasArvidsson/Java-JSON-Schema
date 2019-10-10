@@ -1,6 +1,243 @@
 # Java JSON Schema
 
-Adds JSON schema support to domain objects.
+Adds JSON schema support to domain objects.    
+* Enables both schema generation and instance validation.
+* Supports most of the Draft-06 specification.
+
+# JsonSchema anotations
+```java
+@JsonSchema(
+        title = "My example class",
+        description = "This is an example of a class using JsonSchema"
+)
+class MyClass {
+
+    @JsonSchema(
+            title = "A string",
+            description = "This is a string",
+            minLength = 1,
+            maxLength = 100,
+            pattern = "\\s",
+            format = "myFormat",
+            required = true
+    )
+    public String str;
+
+    @JsonSchema(
+            minimum = "5",
+            maximum = "18",
+            multipleOf = "2",
+            constant = "55",
+            dependencies = { "number" }
+    )
+    public int integer;
+
+    @JsonSchema(
+            exclusiveMinimum = "0.0",
+            exclusiveMaximum = "1.0"
+    )
+    public double number;
+
+    @JsonSchema(
+            minItems = 0,
+            maxItems = 20,
+            combining = JsonSchema.Combining.ONE_OF
+    )
+    public List<Integer> intList;
+
+    @JsonSchema(
+            minProperties = 0,
+            maxProperties = 20,
+            combining = JsonSchema.Combining.ONE_OF
+    )
+    public Map<String, Boolean> boolMap;
+    
+}
+```
+```json
+{
+    "$schema": "http://json-schema.org/draft-06/schema#",
+    "type": "object",
+    "title": "My example class",
+    "description": "This is an example of a class using JsonSchema",
+    "additionalProperties": false,
+    "required": [ "str", "integer", "number" ],
+    "dependencies": {
+        "integer": [ "number" ]
+    },
+    "properties": {
+        "str": {
+            "type": "string",
+            "title": "A string",
+            "description": "This is a string",
+            "minLength": 1,
+            "maxLength": 100,
+            "pattern": "\\s",
+            "format": "myFormat"
+        },
+        "integer": {
+            "type": "integer",
+            "minimum": 5,
+            "maximum": 18,
+            "multipleOf": 2,
+            "const": 55
+        },
+        "number": {
+            "type": "number",
+            "exclusiveMinimum": 0.0,
+            "exclusiveMaximum": 1.0
+        },
+        "intList": {
+            "type": "array",
+            "items": {
+                "type": "integer",
+                "minimum": -2147483648,
+                "maximum": 2147483647
+            }
+        },
+        "boolMap": {
+            "type": "object",
+            "patternProperties": {
+                "^.*$": {
+                    "type": "boolean"
+                }
+            }
+        }
+    },
+    "oneOf": [
+        {
+            "properties": {
+                "intList": {
+                    "minItems": 0,
+                    "maxItems": 20
+                }
+            }
+        },
+        {
+            "properties": {
+                "intMap": {
+                    "minProperties": 0,
+                    "maxProperties": 20
+                }
+            }
+        }
+    ]
+}
+```
+
+# JSON schema generation
+Generate a json schema for a specific class/type.
+* Since Java classes have fixed members `additionalProperties = false` is added by default.
+    - Se Jackson anotations @JsonAnyGetter / @JsonAnySetter to enable dynamic properties. 
+* Primitive types like int, double and boolean will always be required since they can't be null.
+    - Use class types Integer, Double and Boolean to get nullable and non-required properties.
+* Numbers will automatically get data type ranges(minimum, maximum) added if not specified othervise.
+    - int will by default have `minimum = Integer.MIN_VALUE, maximum = Integer.MAX_VALUE`.
+* Sets gets `uniqueItems = true` while other collections doesn't.
+* Characters/chars is type `string` but with `minLength = 1, maxLength = 1`.
+
+```java
+JsonSchemaGenerator gen = new JsonSchemaGenerator();
+JsonNode schema = gen.generate(MyClass.class);
+```
+
+## Generator options
+
+```java
+JsonSchemaGenerator gen = new JsonSchemaGenerator()
+        //Hide the root field $schema
+        .hideSchemaField()
+        //Set a custom $schema field
+        .setSchemaField(new URI("http://www.example.com/schema"))
+        //Disable the addition of auto range(minimum, maximum) values.
+        .disableAutoRangeNumbers();
+```
+
+## Custom generators
+Register custom generators
+```java
+class CustomGenerator implements Generator  { ... }
+
+JsonSchemaGenerator gen = new JsonSchemaGenerator()
+        .addCustomGenerator(MyClass.class, new CustomGenerator());
+```
+
+# JSON schema validation
+Validate an existing instance using its class anotations.
+```java
+JsonSchemaValidator validator = new JsonSchemaValidator();
+MyClass instance = new MyClass();
+ValidationReport report = validator.validate(instance);
+Assertions.assertTrue(report.isSuccess(), report.toString());
+```
+
+## Custom validators
+Register custom validators.
+```java
+class CustomValidator implements Validator  { ... }
+
+JsonSchemaValidator validator = new JsonSchemaValidator()
+        .addCustomValidator(MyClass.class, new CustomValidator());
+```
+
+## JsonSchemaEnum interface
+If a class implements the `JsonSchemaEnum` interface the returned title and description will be added to the generated schema.    
+* Return null to not generate specific title and/or description.
+```java
+public enum MyClass implements JsonSchemaEnum {
+    A, B, C;
+
+    @JsonValue
+    public Object getVal() {
+        return toString();
+    }
+
+    @Override
+    public String getTitle() {
+        return toString().toLowerCase();
+    }
+
+    @Override
+    public String getDescription() {
+        return toString() + "_desc";
+    }
+}
+```
+```json
+{
+    "oneOf": [
+        {
+            "const": "A",
+            "title": "a",
+            "description": "A_desc"
+        },
+        {
+            "const": "B",
+            "title": "b",
+            "description": "B_desc"
+        },
+        {
+            "const": "C",
+            "title": "c",
+            "description": "C_desc"
+        }
+    ]
+}
+```
+
+# Jackson anotation support
+
+* @JsonIgnore    
+If a field is anotated with `@JsonIgnore` it will not be generated or validated.
+
+* @JsonPropertyOrder    
+If a class is anotated with `@JsonPropertyOrder` the order in the generated properties field will be matching.
+
+* @JsonAnyGetter / @JsonAnySetter    
+If a class have `@JsonAnyGetter` and `@JsonAnySetter` methods `additionalProperties = true` will be added in generation.
+
+* @JsonValue    
+If a method is anotated with `@JsonValue` its return type vill be used instead of the class for both generation and validation.
 
 # Combining schemas (anyOf, oneOf, allOf)
 
