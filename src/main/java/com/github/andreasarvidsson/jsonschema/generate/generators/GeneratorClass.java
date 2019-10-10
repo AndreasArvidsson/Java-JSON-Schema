@@ -49,9 +49,7 @@ public class GeneratorClass extends GeneratorBase {
         if (wrapper.dependencies.size() > 0) {
             addDependencies(classNode, wrapper.propertyNames, wrapper.dependencies);
         }
-        if (wrapper.properties.size() > 0) {
-            classNode.set(JsonSchemaField.Disabled.PROPERTIES.toString(), wrapper.properties);
-        }
+        classNode.set(JsonSchemaField.Disabled.PROPERTIES.toString(), wrapper.properties);
         wrapper.combinations.entrySet().forEach(e -> {
             addCombinations(classNode, wrapper.propertyNames, e.getKey(), e.getValue().values());
         });
