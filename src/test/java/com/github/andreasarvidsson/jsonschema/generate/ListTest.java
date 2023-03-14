@@ -167,12 +167,14 @@ public class ListTest {
 
     class MyClass<T> {
 
-        public List<T> value;
+        public T value;
     }
 
     class ListOfGenerics {
 
-        public List<MyClass<String>> value;
+        public MyClass<String> value1;
+        public MyClass<Integer> value2;
+        public List<MyClass<Double>> value3;
 
     }
 

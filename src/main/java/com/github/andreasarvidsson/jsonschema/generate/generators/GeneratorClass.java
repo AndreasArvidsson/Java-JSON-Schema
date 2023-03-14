@@ -10,6 +10,7 @@ import com.github.andreasarvidsson.jsonschema.JsonSchemaField;
 import com.github.andreasarvidsson.jsonschema.ReflectionUtil;
 import com.github.andreasarvidsson.jsonschema.generate.JsonType;
 import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -35,11 +36,15 @@ public class GeneratorClass extends GeneratorBase {
 
     @Override
     public ObjectNode parseClass(final Class type) {
+        return parseClass(type, null);
+    }
+
+    public ObjectNode parseClass(final Class type, final Map<String, Type> args) {
         final ClassResultWrapper wrapper = new ClassResultWrapper();
         wrapper.required = MAPPER.createArrayNode();
         wrapper.properties = MAPPER.createObjectNode();
         wrapper.dependencyPropertyNames = new HashSet<>();
-        parseClassFields(type, wrapper);
+        parseClassFields(type, args, wrapper);
 
         final ObjectNode classNode = super.parseClass(type);
         classNode.put(JsonSchemaField.Disabled.ADDITIONAL_PROPERTIES.toString(), ReflectionUtil.hasAnyGetterAndAnySetter(type));
@@ -61,11 +66,11 @@ public class GeneratorClass extends GeneratorBase {
         return classNode;
     }
 
-    private void parseClassFields(final Class type, final ClassResultWrapper wrapper) {
+    private void parseClassFields(final Class type, final Map<String, Type> args, final ClassResultWrapper wrapper) {
         final List<Field> fields = ReflectionUtil.getFieldsInOrder(type);
         for (final Field field : fields) {
             final String propertyName = ReflectionUtil.getPropertyName(field);
-            final ObjectNode propertyNode = generators.parseClassField(field);
+            final ObjectNode propertyNode = generators.parseClassField(field, args);
             final Generator generator = generators.getGenerator(field.getType());
 
             //Add schema anotations

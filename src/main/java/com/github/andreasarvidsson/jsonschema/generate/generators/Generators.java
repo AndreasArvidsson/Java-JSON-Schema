@@ -8,9 +8,10 @@ import com.github.andreasarvidsson.jsonschema.generate.ClassDefinitions;
 import com.github.andreasarvidsson.jsonschema.generate.ClassWrapper;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.TypeVariable;
 import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -23,7 +24,8 @@ public class Generators {
 
     private final Map<Class, Generator> defaultGenerators = new IdentityHashMap<>();
     private final Map<Class, Generator> customGenerators;
-    private final Generator generatorClass, generatorArray, generatorEnum;
+    private final GeneratorClass generatorClass;
+    private final Generator generatorArray, generatorEnum;
     private final GeneratorCollectionInterface generatorMap, generatorSet, generatorCollection;
     private final ClassDefinitions classDefinitions;
 
@@ -63,16 +65,33 @@ public class Generators {
             return collectionGenerator.parseCollectionClass(rawType, valueType);
         }
 
+        final TypeVariable<Class>[] params = rawType.getTypeParameters();
+
+        if(args.length != params.length) {
+            throw new RuntimeException(String.format("Mismatch between number of arguments and parameters"));
+        }
+
+        final Map<String, Type> argsMap = new HashMap<>();
+
+        for (int i = 0; i < args.length; ++i) {
+            argsMap.put(params[i].getName(), args[i]);
+        }
+
         //Not a generic type. Just a.
-        return parseClass(rawType, null, args);
+        return parseClass(rawType, null, argsMap);
     }
 
     public ObjectNode parseClass(final Class type) {
         return parseClass(type, null, null);
     }
 
-    public ObjectNode parseClassField(final Field field) {
-        return parseClass(field.getType(), field, null);
+    public ObjectNode parseClassField(final Field field, final Map<String, Type> args) {
+        //Type variable. eg: T value;
+        if(field.getGenericType() instanceof TypeVariable) {
+            final Type arg = getArgument(args, (TypeVariable)field.getGenericType());
+            return parseClass((Class)arg, null, null);
+        }
+        return parseClass(field.getType(), field, args);
     }
 
     public String getDefType(final Class type) {
@@ -84,14 +103,14 @@ public class Generators {
         if (generator != null) {
             return generator;
         }
-        generator = (Generator) getCollectionGenerator(type);
+        generator = getCollectionGenerator(type);
         if (generator != null) {
             return generator;
         }
         return getAdvancedGenerator(type);
     }
 
-    private ObjectNode parseClass(final Class type, final Field field, final Type[] args2) {
+    private ObjectNode parseClass(final Class type, final Field field, final Map<String, Type> args) {
         //First check if we already parsed this class;
         if (classDefinitions.has(type)) {
             return classDefinitions.getRef(type);
@@ -107,9 +126,16 @@ public class Generators {
         if (collectionGenerator != null) {
             if (field != null && field.getGenericType() instanceof ParameterizedType) {
                 final ParameterizedType paramType = (ParameterizedType)field.getGenericType();
-                final Type[] args = paramType.getActualTypeArguments();
+                final Type[] collArgs = paramType.getActualTypeArguments();
                 //Use last index instead of [0] for map where value is at [1]
-                final Type valueType = args[args.length - 1];
+                final Type valueType = collArgs[collArgs.length - 1];
+                if(args != null) {
+                    //Type variable. eg: <T>
+                    if(valueType instanceof TypeVariable) {
+                        final Type arg = getArgument(args, (TypeVariable)valueType);
+                        return collectionGenerator.parseCollectionClass(type, arg);
+                    }
+                }
                 return collectionGenerator.parseCollectionClass(type, valueType);
             }
             //Field doesnt have ParameterizedType. Default to Object
@@ -118,18 +144,25 @@ public class Generators {
             }
         }
 
-        // //Type variable. eg: <T>
-            // else if(type instanceof TypeVariable) {
-            //     final TypeVariable typeVar = (TypeVariable)type;
-            //     throw new RuntimeException(String.format("Can't generate schema for generic type '%s'", typeVar.getName()));
-            // }
-
         final ClassWrapper wrapper = new ClassWrapper(type);
         //Need to add wrapper to definitions before parsing members in case of circular dependencies.
         classDefinitions.add(type, wrapper);
-        wrapper.classNode = getAdvancedGenerator(type).parseClass(type);
+
+        if(args != null) {
+            wrapper.classNode = generatorClass.parseClass(type, args);
+        }
+        else {
+            wrapper.classNode = getAdvancedGenerator(type).parseClass(type);
+        }
 
         return classDefinitions.getRef(type);
+    }
+
+    private Type getArgument(final Map<String, Type> args, final TypeVariable typeVar) {
+        if(!args.containsKey(typeVar.getName())) {
+            throw new RuntimeException(String.format("Unknown parameter: '%s'", typeVar.getName()));
+        }
+        return args.get(typeVar.getName());
     }
 
     private Generator getSimpleGenerator(final Class type) {
