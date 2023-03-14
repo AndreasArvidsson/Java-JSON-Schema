@@ -8,6 +8,7 @@ import com.github.andreasarvidsson.jsonschema.generate.ClassDefinitions;
 import com.github.andreasarvidsson.jsonschema.generate.ClassWrapper;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.TypeVariable;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.IdentityHashMap;
@@ -56,6 +57,11 @@ public class Generators {
                         collectionType,
                         paramType.getActualTypeArguments()[paramType.getActualTypeArguments().length - 1]
                 );
+            }
+            //Type variable. eg: <T>
+            else if(type instanceof TypeVariable) {
+                final TypeVariable typeVar = (TypeVariable)type;
+                throw new RuntimeException(String.format("Can't generate schema for generic type '%s'", typeVar.getName()));
             }
 
             //Not a generic type. Just a class.
@@ -144,7 +150,7 @@ public class Generators {
         if (Set.class.isAssignableFrom(type)) {
             return generatorSet;
         }
-        //Collection that is not set.
+        //Collection that is not map or set.
         if (Collection.class.isAssignableFrom(type)) {
             return generatorCollection;
         }
