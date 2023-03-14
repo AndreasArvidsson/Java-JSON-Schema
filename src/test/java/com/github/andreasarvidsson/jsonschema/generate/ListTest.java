@@ -159,7 +159,7 @@ public class ListTest {
 
     class ListOfLists {
 
-        public List<List> value;
+        public List<List<Object>> value;
 
     }
 

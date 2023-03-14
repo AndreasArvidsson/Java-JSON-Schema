@@ -153,7 +153,7 @@ public class MapTest {
 
     class MapOfMaps {
 
-        public Map<String, Map> value;
+        public Map<String, Map<String, Object>> value;
 
     }
 

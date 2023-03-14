@@ -14,8 +14,8 @@ import java.util.Map;
  */
 public class GeneratorInteger extends GeneratorBase {
 
-    private final static Map<Class, Long> MIN_VALUES = new HashMap();
-    private final static Map<Class, Long> MAX_VALUES = new HashMap();
+    private final static Map<Class, Long> MIN_VALUES = new HashMap<>();
+    private final static Map<Class, Long> MAX_VALUES = new HashMap<>();
 
     private static void addRange(final Class type, final long min, final long max) {
         MIN_VALUES.put(type, min);

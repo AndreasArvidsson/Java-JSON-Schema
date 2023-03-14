@@ -19,7 +19,7 @@ public abstract class GeneratorBase implements Generator {
     protected static final ObjectMapper MAPPER = new ObjectMapper();
 
     private final JsonType jsonType;
-    private final Set<String> schemaFields = new HashSet();
+    private final Set<String> schemaFields = new HashSet<>();
 
     public GeneratorBase(final Collection<JsonSchemaField> schemaFields) {
         this(null, schemaFields);

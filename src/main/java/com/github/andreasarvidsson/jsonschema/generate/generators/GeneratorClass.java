@@ -38,7 +38,7 @@ public class GeneratorClass extends GeneratorBase {
         final ClassResultWrapper wrapper = new ClassResultWrapper();
         wrapper.required = MAPPER.createArrayNode();
         wrapper.properties = MAPPER.createObjectNode();
-        wrapper.dependencyPropertyNames = new HashSet();
+        wrapper.dependencyPropertyNames = new HashSet<>();
         parseClassFields(type, wrapper);
 
         final ObjectNode classNode = super.parseClass(type);
@@ -284,7 +284,7 @@ public class GeneratorClass extends GeneratorBase {
     }
 
     private Set<String> getUniqueNames(final Collection<List<ClassCombiningWrapper>> groupCombinings) {
-        final Set<String> uniqueNames = new HashSet();
+        final Set<String> uniqueNames = new HashSet<>();
         groupCombinings.forEach(list -> {
             list.forEach(c -> {
                 uniqueNames.add(c.propertyName);

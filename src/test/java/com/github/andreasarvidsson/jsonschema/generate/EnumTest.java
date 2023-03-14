@@ -16,8 +16,8 @@ import org.junit.jupiter.api.Test;
 public class EnumTest {
 
     private final JsonSchemaGenerator gen = new JsonSchemaGenerator().hideSchemaField();
-    private final String title = "title";
-    private final String desc = "desc";
+    private final static String title = "title";
+    private final static String desc = "desc";
 
     @Test
     public void testSimpleEnum() {

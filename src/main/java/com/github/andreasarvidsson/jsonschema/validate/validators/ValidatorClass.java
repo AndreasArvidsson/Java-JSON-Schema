@@ -110,10 +110,10 @@ public class ValidatorClass implements Validator {
     private Map<Integer, List<Error>> validateCombinations(
             final String path, final Object instance, final ClassResultWrapper wrapper,
             final List<ClassCombiningWrapper> combinations, final boolean onlyOne) {
-        final Map<Integer, List<Error>> res = new LinkedHashMap();
+        final Map<Integer, List<Error>> res = new LinkedHashMap<>();
         int i = 0;
         for (final ClassCombiningWrapper combination : combinations) {
-            final List<Error> errors = new ArrayList();
+            final List<Error> errors = new ArrayList<>();
             validateCombination(errors, path, instance, wrapper, combination);
             //This combination has errors
             if (!errors.isEmpty()) {
@@ -131,10 +131,10 @@ public class ValidatorClass implements Validator {
     private Map<Integer, List<Error>> validateCombinations(
             final String path, final Object instance, final ClassResultWrapper wrapper,
             final Collection<List<ClassCombiningWrapper>> groups, final boolean onlyOne) {
-        final Map<Integer, List<Error>> res = new LinkedHashMap();
+        final Map<Integer, List<Error>> res = new LinkedHashMap<>();
         int i = 0;
         for (final List<ClassCombiningWrapper> groupCombinations : groups) {
-            final List<Error> groupErrors = new ArrayList();
+            final List<Error> groupErrors = new ArrayList<>();
             for (final ClassCombiningWrapper combination : groupCombinations) {
                 validateCombination(groupErrors, path, instance, wrapper, combination);
             }

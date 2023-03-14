@@ -22,7 +22,7 @@ public class ValidationSubReport {
             final int matched, final Map<Integer, List<Error>> reports) {
         this.nrSchemas = nrSchemas;
         this.matched = matched;
-        this.failedSchemas = new ArrayList();
+        this.failedSchemas = new ArrayList<>();
         reports.entrySet().forEach(e -> {
             failedSchemas.add(new ValidationSubSchema(
                     PropertyPath.append(PropertyPath.append(path, combining.toString()), e.getKey()),

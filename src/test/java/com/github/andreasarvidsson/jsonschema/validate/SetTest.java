@@ -66,14 +66,14 @@ public class SetTest {
 
     @Test
     public void testItemOk() {
-        final Set<IntegerClass> instance = new HashSet(Arrays.asList(new IntegerClass(minimum)));
+        final Set<IntegerClass> instance = new HashSet<>(Arrays.asList(new IntegerClass(minimum)));
         final ValidationReport report = validator.validate(instance);
         Assertions.assertTrue(report.isSuccess(), report.toString());
     }
 
     @Test
     public void testItemFail() {
-        final Set<IntegerClass> instance = new HashSet(Arrays.asList(new IntegerClass(minimum - 1)));
+        final Set<IntegerClass> instance = new HashSet<>(Arrays.asList(new IntegerClass(minimum - 1)));
         final ValidationReport report = validator.validate(instance);
         AssertError.assertError(
                 report,
@@ -83,8 +83,8 @@ public class SetTest {
         );
     }
 
-    private Set get(final int size) {
-        final Set res = new HashSet();
+    private Set<Integer> get(final int size) {
+        final Set<Integer> res = new HashSet<>();
         for (int i = 0; i < size; ++i) {
             res.add(i);
         }
@@ -96,7 +96,7 @@ public class SetTest {
         @JsonSchema(
                 minItems = minItems
         )
-        public Set values;
+        public Set<Integer> values;
 
     }
 
@@ -105,7 +105,7 @@ public class SetTest {
         @JsonSchema(
                 maxItems = maxItems
         )
-        public Set values;
+        public Set<Integer> values;
 
     }
 

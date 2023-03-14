@@ -20,7 +20,7 @@ import java.util.Set;
  */
 public class Generators {
 
-    private final Map<Class, Generator> defaultGenerators = new IdentityHashMap();
+    private final Map<Class, Generator> defaultGenerators = new IdentityHashMap<>();
     private final Map<Class, Generator> customGenerators;
     private final Generator generatorClass, generatorArray, generatorEnum;
     private final GeneratorCollectionInterface generatorMap, generatorSet, generatorCollection;

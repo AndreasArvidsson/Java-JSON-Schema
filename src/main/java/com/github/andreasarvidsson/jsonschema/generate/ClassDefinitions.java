@@ -14,7 +14,7 @@ import java.util.Map;
 public class ClassDefinitions {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private final Map<Class, ClassWrapper> classes = new HashMap();
+    private final Map<Class, ClassWrapper> classes = new HashMap<>();
 
     public boolean has(final Class type) {
         return classes.containsKey(type);
