@@ -59,6 +59,14 @@ public class ListTest {
     }
 
     @Test
+    public void testListOfGenerics() {
+        AssertJson.assertEquals(
+                getExpected(new JsonBuilder().build()),
+                gen.generate(ListOfGenerics.class)
+        );
+    }
+
+    @Test
     public void testListOfLists() {
         AssertJson.assertEquals(
                 getExpectedArrayOfArrays(
@@ -154,6 +162,17 @@ public class ListTest {
                 maxItems = max
         )
         public List<Boolean> value;
+
+    }
+
+    class MyClass<T> {
+
+        public List<T> value;
+    }
+
+    class ListOfGenerics {
+
+        public List<MyClass<String>> value;
 
     }
 
