@@ -65,7 +65,7 @@ public class MapTest {
 
     @Test
     public void testItemOk() {
-        final Map<String, IntegerClass> instance = new HashMap();
+        final Map<String, IntegerClass> instance = new HashMap<>();
         instance.put("key", new IntegerClass(minimum));
         final ValidationReport report = validator.validate(instance);
         Assertions.assertTrue(report.isSuccess(), report.toString());
@@ -73,7 +73,7 @@ public class MapTest {
 
     @Test
     public void testItemFail() {
-        final Map<String, IntegerClass> instance = new HashMap();
+        final Map<String, IntegerClass> instance = new HashMap<>();
         instance.put("key", new IntegerClass(minimum - 1));
         final ValidationReport report = validator.validate(instance);
         AssertError.assertError(
@@ -84,7 +84,7 @@ public class MapTest {
         );
     }
 
-    private void add(final Map map, final int size) {
+    private void add(final Map<String, Integer> map, final int size) {
         for (int i = 0; i < size; ++i) {
             map.put(String.valueOf((char) ('A' + i)), i);
         }
@@ -95,7 +95,7 @@ public class MapTest {
         @JsonSchema(
                 minProperties = minProperties
         )
-        public Map values = new HashMap();
+        public Map<String, Integer> values = new HashMap<>();
 
     }
 
@@ -104,7 +104,7 @@ public class MapTest {
         @JsonSchema(
                 maxProperties = maxProperties
         )
-        public Map values = new HashMap();
+        public Map<String, Integer> values = new HashMap<>();
 
     }
 

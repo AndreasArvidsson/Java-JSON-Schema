@@ -89,7 +89,7 @@ public abstract class ReflectionUtil {
     }
 
     public static List<Field> getFieldsInOrder(final Class type) {
-        final List<Field> fields = new ArrayList();
+        final List<Field> fields = new ArrayList<>();
         getFields(fields, type);
         final JsonPropertyOrder order = ReflectionUtil.getFirstAnotation(type, JsonPropertyOrder.class);
         if (order != null) {
@@ -115,7 +115,7 @@ public abstract class ReflectionUtil {
     }
 
     private static void sortFields(final List<Field> fields, final JsonPropertyOrder order) {
-        final Map<String, Integer> orderMap = new HashMap();
+        final Map<String, Integer> orderMap = new HashMap<>();
         for (final String propertyName : order.value()) {
             orderMap.put(propertyName, orderMap.size());
         }

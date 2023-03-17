@@ -19,13 +19,13 @@ import org.junit.jupiter.api.Test;
 public class ClassTest {
 
     private final JsonSchemaGenerator gen = new JsonSchemaGenerator().hideSchemaField();
-    private final String classTitle = "My class";
-    private final String classDesc = "This is a class";
-    private final String titleOuter = "My outer class";
-    private final String descOuter = "This is an outer class";
-    private final String fieldTitle = "My field";
-    private final String fieldDesc = "This is a field";
-    private final String dependency = "anoterValue";
+    private final static String classTitle = "My class";
+    private final static String classDesc = "This is a class";
+    private final static String titleOuter = "My outer class";
+    private final static String descOuter = "This is an outer class";
+    private final static String fieldTitle = "My field";
+    private final static String fieldDesc = "This is a field";
+    private final static String dependency = "anoterValue";
 
     @Test
     public void testClass() {

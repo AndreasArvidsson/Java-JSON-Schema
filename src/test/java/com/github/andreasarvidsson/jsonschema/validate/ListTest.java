@@ -83,8 +83,8 @@ public class ListTest {
         );
     }
 
-    private List get(final int size) {
-        final List res = new ArrayList();
+    private List<Integer> get(final int size) {
+        final List<Integer> res = new ArrayList<>();
         for (int i = 0; i < size; ++i) {
             res.add(i);
         }
@@ -96,7 +96,7 @@ public class ListTest {
         @JsonSchema(
                 minItems = minItems
         )
-        public List values;
+        public List<Integer> values;
 
     }
 
@@ -105,7 +105,7 @@ public class ListTest {
         @JsonSchema(
                 maxItems = maxItems
         )
-        public List values;
+        public List<Integer> values;
 
     }
 

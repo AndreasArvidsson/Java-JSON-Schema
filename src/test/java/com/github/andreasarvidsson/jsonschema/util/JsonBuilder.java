@@ -98,6 +98,11 @@ public class JsonBuilder {
         return this;
     }
 
+    public JsonBuilder setProperties(final ObjectNode properties) {
+        this.properties.setAll(properties);
+        return this;
+    }
+
     public JsonBuilder addProperty(final String key, final JsonNode value) {
         properties.set(key, value);
         return this;

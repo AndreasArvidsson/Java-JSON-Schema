@@ -20,7 +20,7 @@ public class JsonSchemaGenerator {
 
     private URI schemaField = URI.create("http://json-schema.org/draft-06/schema#");
     private boolean autoRangeNumbes = true;
-    private final Map<Class, Generator> customGenerators = new HashMap();
+    private final Map<Class, Generator> customGenerators = new HashMap<>();
 
     public JsonSchemaGenerator hideSchemaField() {
         schemaField = null;

@@ -17,10 +17,10 @@ import java.util.Set;
  */
 public class ClassResultWrapper {
 
-    public final Set<String> propertyNames = new HashSet();
-    public final Map<String, JsonSchema> dependencies = new HashMap();
-    public final Map<Combining, Map<Long, List<ClassCombiningWrapper>>> combinations = new HashMap();
-    public final Map<String, Map<Combining, List<ClassCombiningWrapper>>> ownProperty = new LinkedHashMap();
+    public final Set<String> propertyNames = new HashSet<>();
+    public final Map<String, JsonSchema> dependencies = new HashMap<>();
+    public final Map<Combining, Map<Long, List<ClassCombiningWrapper>>> combinations = new HashMap<>();
+    public final Map<String, Map<Combining, List<ClassCombiningWrapper>>> ownProperty = new LinkedHashMap<>();
     public ArrayNode required;
     public ObjectNode properties;
     public Set<String> dependencyPropertyNames;
@@ -55,7 +55,7 @@ public class ClassResultWrapper {
     private void addOwnProperty(final Combining combining, final String propertyName, final ClassCombiningWrapper wrapper) {
         final Map<Combining, List<ClassCombiningWrapper>> map = getOwnPropertyMap(propertyName);
         if (!map.containsKey(combining)) {
-            map.put(combining, new ArrayList());
+            map.put(combining, new ArrayList<>());
         }
         map.get(combining).add(wrapper);
     }
@@ -63,7 +63,7 @@ public class ClassResultWrapper {
     private void addCombination(final Combining combining, final long group, final ClassCombiningWrapper wrapper) {
         final Map<Long, List<ClassCombiningWrapper>> map = getCombiningMap(combining);
         if (!map.containsKey(group)) {
-            map.put(group, new ArrayList());
+            map.put(group, new ArrayList<>());
         }
         map.get(group).add(wrapper);
     }
@@ -94,7 +94,7 @@ public class ClassResultWrapper {
         if (combinations.containsKey(combining)) {
             return combinations.get(combining);
         }
-        final Map<Long, List<ClassCombiningWrapper>> map = new LinkedHashMap();
+        final Map<Long, List<ClassCombiningWrapper>> map = new LinkedHashMap<>();
         combinations.put(combining, map);
         return map;
     }
@@ -103,7 +103,7 @@ public class ClassResultWrapper {
         if (ownProperty.containsKey(propertyName)) {
             return ownProperty.get(propertyName);
         }
-        final Map<Combining, List<ClassCombiningWrapper>> map = new LinkedHashMap();
+        final Map<Combining, List<ClassCombiningWrapper>> map = new LinkedHashMap<>();
         ownProperty.put(propertyName, map);
         return map;
     }

@@ -19,9 +19,9 @@ import java.util.Set;
  */
 public class Validators {
 
-    private final Map<Class, Validator> defaultValidators = new IdentityHashMap();
+    private final Map<Class, Validator> defaultValidators = new IdentityHashMap<>();
     private final Map<Class, Validator> customValidators;
-    private final Set<Class> doNothing = new HashSet();
+    private final Set<Class> doNothing = new HashSet<>();
     private final Validator validatorClass, validatorArray, validatorCollection, validatorMap, validatorNothing;
 
     public Validators(final Map<Class, Validator> customValidators) {

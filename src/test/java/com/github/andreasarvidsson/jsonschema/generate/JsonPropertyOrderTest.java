@@ -140,7 +140,7 @@ public class JsonPropertyOrderTest {
     }
 
     private List<String> getPropertyOrder(final Object instance) {
-        final List<String> result = new ArrayList();
+        final List<String> result = new ArrayList<>();
         final JsonNode json = mapper.valueToTree(instance);
         json.fieldNames().forEachRemaining(field -> {
             result.add(field);

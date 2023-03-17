@@ -16,8 +16,8 @@ import java.util.Set;
  */
 public abstract class JsonSchemaUtil {
 
-    private static final Map<JsonSchemaField, Object> DEFAULT_VALUES = new HashMap();
-    private static final Set<String> VALIDATE_FIELDS = new HashSet();
+    private static final Map<JsonSchemaField, Object> DEFAULT_VALUES = new HashMap<>();
+    private static final Set<String> VALIDATE_FIELDS = new HashSet<>();
 
     static {
         for (final JsonSchemaField field : JsonSchemaField.values()) {
@@ -53,7 +53,7 @@ public abstract class JsonSchemaUtil {
     }
 
     public static Map<String, Object> toMap(final JsonSchema jsonSchema) {
-        final Map<String, Object> res = new LinkedHashMap();
+        final Map<String, Object> res = new LinkedHashMap<>();
         for (final Method method : JsonSchema.class.getDeclaredMethods()) {
             final Object value = getValue(method, jsonSchema);
             if (value.getClass().isArray()) {

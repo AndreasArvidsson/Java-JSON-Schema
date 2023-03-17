@@ -18,7 +18,7 @@ import java.util.Map;
 public class JsonSchemaValidator {
 
     private final static ObjectMapper MAPPER = new ObjectMapper();
-    private final Map<Class, Validator> customValidators = new HashMap();
+    private final Map<Class, Validator> customValidators = new HashMap<>();
 
     public JsonSchemaValidator addCustomValidator(final Class type, final Validator validator) {
         customValidators.put(type, validator);
@@ -27,7 +27,7 @@ public class JsonSchemaValidator {
 
     public ValidationReport validate(final Object instance) {
         final Validators validators = new Validators(customValidators);
-        final List<Error> errors = new ArrayList();
+        final List<Error> errors = new ArrayList<>();
         validators.validateClass(errors, "instance", instance);
         return new ValidationReport(errors);
     }

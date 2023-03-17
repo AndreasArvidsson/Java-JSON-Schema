@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
  */
 public abstract class TypeCategories {
 
-    public final static Set<Class> INTEGERS = new HashSet(Arrays.asList(
+    public final static Set<Class> INTEGERS = new HashSet<>(Arrays.asList(
             byte.class,
             Byte.class,
             short.class,
@@ -26,7 +26,7 @@ public abstract class TypeCategories {
             BigInteger.class
     ));
 
-    public final static Set<Class> NUMBERS = new HashSet(Arrays.asList(
+    public final static Set<Class> NUMBERS = new HashSet<>(Arrays.asList(
             float.class,
             Float.class,
             double.class,
@@ -34,17 +34,17 @@ public abstract class TypeCategories {
             BigDecimal.class
     ));
 
-    public final static Set<Class> BOOLEANS = new HashSet(Arrays.asList(
+    public final static Set<Class> BOOLEANS = new HashSet<>(Arrays.asList(
             boolean.class,
             Boolean.class
     ));
 
-    public final static Set<Class> CHARACTERS = new HashSet(Arrays.asList(
+    public final static Set<Class> CHARACTERS = new HashSet<>(Arrays.asList(
             char.class,
             Character.class
     ));
 
-    public final static Set<Class> STRINGS = new HashSet(Arrays.asList(
+    public final static Set<Class> STRINGS = new HashSet<>(Arrays.asList(
             String.class,
             CharSequence.class,
             UUID.class,
