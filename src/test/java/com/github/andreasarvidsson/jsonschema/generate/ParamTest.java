@@ -18,7 +18,7 @@ public class ParamTest {
     private final JsonSchemaGenerator gen = new JsonSchemaGenerator().hideSchemaField();
 
     @Test
-    public void testListOfGenerics() {
+    public void testParam() {
         AssertJson.assertEquals(
             getExpected(),
             gen.generate(ParamClass.class)
