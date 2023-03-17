@@ -3,9 +3,12 @@ package com.github.andreasarvidsson.jsonschema.generate;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -14,28 +17,34 @@ import java.util.Map;
 public class ClassDefinitions {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private final Map<Class, ClassWrapper> classes = new HashMap<>();
+    private final Map<String, ClassWrapper> classes = new HashMap<>();
 
-    public boolean has(final Class type) {
-        return classes.containsKey(type);
+    public boolean has(final Class type, final Map<String, Type> args) {
+        return classes.containsKey(getKey(type, args));
     }
 
-    public void add(final Class type, final ClassWrapper wrapper) {
-        classes.put(type, wrapper);
+    public void add(final Class type, final Map<String, Type> args,final ClassWrapper wrapper) {
+        classes.put(getKey(type, args), wrapper);
     }
 
-    public ObjectNode getRef(final Class type) {
+    private String getKey(final Class type, final Map<String, Type> args) {
+        final String classKey = type.getTypeName();
+        if(args != null) {
+            final String argsKey = args.keySet()
+                .stream()
+                .sorted()
+                .map(k -> String.format("%s=%s", k, args.get(k).getTypeName()))
+                .collect(Collectors.joining(", "));
+            return String.format("%s(%s)", classKey, argsKey);
+        }
+        return classKey;
+    }
+
+    public ObjectNode getRef(final Class type, final Map<String, Type> args) {
         final ObjectNode refNode = MAPPER.createObjectNode();
-        final ClassWrapper wrapper = classes.get(type);
+        final ClassWrapper wrapper = classes.get(getKey(type, args));
         wrapper.references.add(refNode);
         return refNode;
-    }
-
-    public String getType(final Class type) {
-        if (!classes.containsKey(type)) {
-            return null;
-        }
-        return classes.get(type).classNode.get("type").asText();
     }
 
     public void update(final ObjectNode schemaNode) {

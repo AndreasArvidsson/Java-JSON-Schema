@@ -54,6 +54,24 @@ public class Generators {
         return parseClass((Class) type);
     }
 
+    public ObjectNode parseClass(final Class type) {
+        return parseClass(type, null, null);
+    }
+
+    public ObjectNode parseClassField(final Field field, final Map<String, Type> args) {
+        if (field.getGenericType() instanceof ParameterizedType) {
+            return parseParameterizedType((ParameterizedType)field.getGenericType());
+        }
+
+        //Type variable. eg: T value;
+        if(field.getGenericType() instanceof TypeVariable) {
+            final Type arg = getArgument(args, (TypeVariable)field.getGenericType());
+            return parseClass((Class)arg, null, null);
+        }
+
+        return parseClass(field.getType(), field, args);
+    }
+
     private ObjectNode parseParameterizedType(final ParameterizedType type) {
         final Class rawType = (Class)type.getRawType();
         final Type[] args = type.getActualTypeArguments();
@@ -81,23 +99,6 @@ public class Generators {
         return parseClass(rawType, null, argsMap);
     }
 
-    public ObjectNode parseClass(final Class type) {
-        return parseClass(type, null, null);
-    }
-
-    public ObjectNode parseClassField(final Field field, final Map<String, Type> args) {
-        //Type variable. eg: T value;
-        if(field.getGenericType() instanceof TypeVariable) {
-            final Type arg = getArgument(args, (TypeVariable)field.getGenericType());
-            return parseClass((Class)arg, null, null);
-        }
-        return parseClass(field.getType(), field, args);
-    }
-
-    public String getDefType(final Class type) {
-        return classDefinitions.getType(type);
-    }
-
     public Generator getGenerator(final Class type) {
         Generator generator = getSimpleGenerator(type);
         if (generator != null) {
@@ -112,8 +113,8 @@ public class Generators {
 
     private ObjectNode parseClass(final Class type, final Field field, final Map<String, Type> args) {
         //First check if we already parsed this class;
-        if (classDefinitions.has(type)) {
-            return classDefinitions.getRef(type);
+        if (classDefinitions.has(type, args)) {
+            return classDefinitions.getRef(type, args);
         }
 
         //Dont use references / definiitions for simple or collection types.
@@ -146,7 +147,7 @@ public class Generators {
 
         final ClassWrapper wrapper = new ClassWrapper(type);
         //Need to add wrapper to definitions before parsing members in case of circular dependencies.
-        classDefinitions.add(type, wrapper);
+        classDefinitions.add(type,args, wrapper);
 
         if(args != null) {
             wrapper.classNode = generatorClass.parseClass(type, args);
@@ -155,7 +156,7 @@ public class Generators {
             wrapper.classNode = getAdvancedGenerator(type).parseClass(type);
         }
 
-        return classDefinitions.getRef(type);
+        return classDefinitions.getRef(type, args);
     }
 
     private Type getArgument(final Map<String, Type> args, final TypeVariable typeVar) {
