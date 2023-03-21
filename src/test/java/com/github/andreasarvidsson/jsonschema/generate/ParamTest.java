@@ -19,19 +19,27 @@ public class ParamTest {
 
     @Test
     public void testParam() {
-        AssertJson.assertEquals(
-            getExpected(),
-            gen.generate(ParamClass.class)
-        );
-    }
-
-    private JsonNode getExpected() {
         final ObjectNode properties = new JsonBuilder()
             .addField("value1", getObject("value", getString()))
             .addField("value2", getObject("value", getInt()))
             .addField("value3", getArray(getObject("value", getNumber())))
             .build();
-        return getObject(properties);
+        AssertJson.assertEquals(
+            getObject(properties),
+            gen.generate(ParamClass.class)
+        );
+    }
+
+    @Test
+    public void testSub1() {
+        final ObjectNode properties = new JsonBuilder()
+            .addField("value", getString())
+            .addField("values", getArray(getString()))
+            .build();
+        AssertJson.assertEquals(
+            getObject(properties),
+            gen.generate(Sub.class)
+        );
     }
 
     private ObjectNode getObject(final String key, final JsonNode value) {
@@ -83,6 +91,15 @@ public class ParamTest {
         public MyDataClass<String> value1;
         public MyDataClass<Integer> value2;
         public List<MyDataClass<Double>> value3;
+
+    }
+
+    class Parent<T> {
+        public T value;
+        public List<T> values;
+    }
+
+    class Sub extends Parent<String> {
 
     }
 

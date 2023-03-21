@@ -18,21 +18,23 @@ import java.util.Arrays;
 public class GeneratorEnum extends GeneratorBase {
 
     public GeneratorEnum() {
-        super(Arrays.asList(
+        super(
+            Arrays.asList(
                 JsonSchemaField.TITLE,
                 JsonSchemaField.DESCRIPTION
-        ));
+            )
+        );
     }
 
     @Override
     public ObjectNode parseClass(final Class type) {
         final ObjectNode result = super.parseClass(type);
         final Method jsonValueMethod = ReflectionUtil.getFirstMethod(type, JsonValue.class);
-        //Enum with description. Use oneOf array
+        // Enum with description. Use oneOf array
         if (JsonSchemaEnum.class.isAssignableFrom(type)) {
             addDescriptiveValues(result, jsonValueMethod, (Enum[]) type.getEnumConstants());
         }
-        //Basic enum array without description.
+        // Basic enum array without description.
         else {
             addSimpleValues(result, jsonValueMethod, (Enum[]) type.getEnumConstants());
         }
@@ -40,32 +42,47 @@ public class GeneratorEnum extends GeneratorBase {
     }
 
     private void addDescriptiveValues(
-            final ObjectNode result, final Method jsonValueMethod,
-            final Enum[] enumValues) {
+        final ObjectNode result, final Method jsonValueMethod,
+        final Enum[] enumValues
+    ) {
         final ArrayNode oneOfNode = MAPPER.createArrayNode();
         for (final Enum e : enumValues) {
-            oneOfNode.add(createDesc(
+            oneOfNode.add(
+                createDesc(
                     getEnumValue(e, jsonValueMethod),
                     ((JsonSchemaEnum) e).getTitle(),
                     ((JsonSchemaEnum) e).getDescription()
-            ));
+                )
+            );
         }
         result.set("oneOf", oneOfNode);
     }
 
     private void addSimpleValues(
-            final ObjectNode result, final Method jsonValueMethod,
-            final Enum[] enumValues) {
+        final ObjectNode result, final Method jsonValueMethod,
+        final Enum[] enumValues
+    ) {
         final ArrayNode enumNode = MAPPER.createArrayNode();
         for (final Enum e : enumValues) {
-            enumNode.addPOJO(getEnumValue(e, jsonValueMethod));
+            final Object enumValue = getEnumValue(e, jsonValueMethod);
+            if (enumValue instanceof String) {
+                enumNode.add((String) enumValue);
+            }
+            else {
+                enumNode.addPOJO(enumValue);
+            }
         }
         result.set(JsonSchemaField.Disabled.ENUM.toString(), enumNode);
     }
 
     private JsonNode createDesc(final Object value, final String title, final String description) {
         final ObjectNode result = MAPPER.createObjectNode();
-        result.putPOJO(JsonSchemaField.Disabled.CONST.toString(), value);
+        if (value instanceof String) {
+            result.put(JsonSchemaField.Disabled.CONST.toString(), (String) value);
+        }
+        else {
+            result.putPOJO(JsonSchemaField.Disabled.CONST.toString(), value);
+        }
         if (title != null) {
             result.put(JsonSchemaField.TITLE.toString(), title);
         }
