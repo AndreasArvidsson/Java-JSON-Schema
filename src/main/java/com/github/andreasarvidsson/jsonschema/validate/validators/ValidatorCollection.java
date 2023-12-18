@@ -22,7 +22,7 @@ public class ValidatorCollection extends ValidatorArrayBase {
     public void validateClass(final List<Error> errors, final String path, final Object instance) {
         int i = 0;
         for (final Object o : (Collection) instance) {
-            validators.validateClass(errors, PropertyPath.append(path, i), o);
+            validators.validateClass(errors, PropertyPath.append(path, i++), o);
         }
     }
 

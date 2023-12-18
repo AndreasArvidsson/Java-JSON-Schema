@@ -70,11 +70,11 @@ public class ArrayTest {
 
     @Test
     public void testArrayItemFail() {
-        final IntegerClass[] instance = {new IntegerClass(minimum - 1)};
+        final IntegerClass[] instance = {new IntegerClass(minimum), new IntegerClass(minimum - 1)};
         final ValidationReport report = validator.validate(instance);
         AssertError.assertError(
                 report,
-                PropertyPath.append(PropertyPath.append(report.propertyPath, 0), "value"),
+                PropertyPath.append(PropertyPath.append(report.propertyPath, 1), "value"),
                 JsonSchemaField.MINIMUM.toString(),
                 (long) minimum
         );

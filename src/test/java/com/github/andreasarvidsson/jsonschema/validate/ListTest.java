@@ -73,11 +73,11 @@ public class ListTest {
 
     @Test
     public void testItemFail() {
-        final List<IntegerClass> instance = Arrays.asList(new IntegerClass(minimum - 1));
+        final List<IntegerClass> instance = Arrays.asList(new IntegerClass(minimum), new IntegerClass(minimum - 1));
         final ValidationReport report = validator.validate(instance);
         AssertError.assertError(
                 report,
-                PropertyPath.append(PropertyPath.append(report.propertyPath, 0), "value"),
+                PropertyPath.append(PropertyPath.append(report.propertyPath, 1), "value"),
                 JsonSchemaField.MINIMUM.toString(),
                 (long) minimum
         );
