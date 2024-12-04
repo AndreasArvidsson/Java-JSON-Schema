@@ -14,7 +14,6 @@ public class ParamTest {
 
     private final JsonSchemaValidator validator = new JsonSchemaValidator();
 
-
     @Test
     public void testParamOk() {
         final ParamClass instance = new ParamClass();

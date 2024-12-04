@@ -28,11 +28,9 @@ public class GeneratorClass extends GeneratorBase {
 
     public GeneratorClass(final Generators generators) {
         super(
-            JsonType.OBJECT, Arrays.asList(
-                JsonSchemaField.TITLE,
-                JsonSchemaField.DESCRIPTION
-            )
-        );
+                JsonType.OBJECT, Arrays.asList(
+                        JsonSchemaField.TITLE,
+                        JsonSchemaField.DESCRIPTION));
         this.generators = generators;
     }
 
@@ -50,8 +48,8 @@ public class GeneratorClass extends GeneratorBase {
 
         final ObjectNode classNode = super.parseClass(type);
         classNode.put(
-            JsonSchemaField.Disabled.ADDITIONAL_PROPERTIES.toString(), ReflectionUtil.hasAnyGetterAndAnySetter(type)
-        );
+                JsonSchemaField.Disabled.ADDITIONAL_PROPERTIES.toString(),
+                ReflectionUtil.hasAnyGetterAndAnySetter(type));
         if (wrapper.required.size() > 0) {
             classNode.set(JsonSchemaField.Disabled.REQUIRED.toString(), wrapper.required);
         }
@@ -80,13 +78,10 @@ public class GeneratorClass extends GeneratorBase {
             // Add schema anotations
             try {
                 addSchemas(generator, wrapper, propertyNode, propertyName, field);
-            }
-            catch (final Exception ex) {
+            } catch (final Exception ex) {
                 throw new RuntimeException(
-                    String.format(
-                        "[%s] -> %s", ReflectionUtil.getPath(field), ex.getMessage()
-                    )
-                );
+                        String.format(
+                                "[%s] -> %s", ReflectionUtil.getPath(field), ex.getMessage()));
             }
 
             wrapper.propertyNames.add(propertyName);
@@ -95,9 +90,8 @@ public class GeneratorClass extends GeneratorBase {
     }
 
     private void addSchemas(
-        final Generator generator, final ClassResultWrapper wrapper,
-        final ObjectNode propertyNode, final String propertyName, final Field field
-    ) {
+            final Generator generator, final ClassResultWrapper wrapper,
+            final ObjectNode propertyNode, final String propertyName, final Field field) {
         final Class type = field.getType();
         final JsonSchema[] jsonSchemas = field.getAnnotationsByType(JsonSchema.class);
         final int requiredSize = wrapper.required.size();
@@ -111,10 +105,9 @@ public class GeneratorClass extends GeneratorBase {
     }
 
     private void addSchema(
-        final Generator generator, final ClassResultWrapper wrapper,
-        ObjectNode target, final Class type,
-        final String propertyName, final JsonSchema jsonSchema
-    ) {
+            final Generator generator, final ClassResultWrapper wrapper,
+            ObjectNode target, final Class type,
+            final String propertyName, final JsonSchema jsonSchema) {
         final boolean isCombining = jsonSchema.combining() != Combining.NONE;
         boolean addCombining = false;
 
@@ -126,8 +119,7 @@ public class GeneratorClass extends GeneratorBase {
             // Required for combining is added separetly in later step.
             if (isCombining) {
                 addCombining = true;
-            }
-            else {
+            } else {
                 wrapper.required.add(propertyName);
             }
         }
@@ -136,8 +128,7 @@ public class GeneratorClass extends GeneratorBase {
             // Dependencies for combining is added separetly in later step.
             if (isCombining) {
                 addCombining = true;
-            }
-            else {
+            } else {
                 wrapper.dependencies.put(propertyName, jsonSchema);
             }
         }
@@ -152,10 +143,9 @@ public class GeneratorClass extends GeneratorBase {
     }
 
     private void addCombinations(
-        final ObjectNode classNode, final Set<String> propertyNames,
-        final Combining combining,
-        final Collection<List<ClassCombiningWrapper>> groupCombinings
-    ) {
+            final ObjectNode classNode, final Set<String> propertyNames,
+            final Combining combining,
+            final Collection<List<ClassCombiningWrapper>> groupCombinings) {
         final Set<String> uniqueNames = getUniqueNames(groupCombinings);
         final boolean singleField = uniqueNames.size() == 1;
         final ArrayNode combiningArray = MAPPER.createArrayNode();
@@ -171,15 +161,13 @@ public class GeneratorClass extends GeneratorBase {
                 }
                 if (combiningWrapper.jsonSchema.dependencies().length > 0) {
                     addDependencies(
-                        combiningGroup, propertyNames, combiningWrapper.propertyName, combiningWrapper.jsonSchema
-                    );
+                            combiningGroup, propertyNames, combiningWrapper.propertyName, combiningWrapper.jsonSchema);
                 }
                 // Property level schemas.
                 if (combiningWrapper.propertyNode.size() > 0) {
                     if (singleField) {
                         combiningGroup.setAll(combiningWrapper.propertyNode);
-                    }
-                    else {
+                    } else {
                         addProperty(combiningGroup, combiningWrapper.propertyName, combiningWrapper.propertyNode);
                     }
                 }
@@ -192,18 +180,16 @@ public class GeneratorClass extends GeneratorBase {
         if (combiningArray.size() > 0) {
             if (singleField) {
                 addToProperty(classNode, uniqueNames.iterator().next(), combining, combiningArray);
-            }
-            else {
+            } else {
                 classNode.set(combining.toString(), combiningArray);
             }
         }
     }
 
     private void addOwnProperty(
-        final ObjectNode classNode,
-        final Combining combining,
-        final List<ClassCombiningWrapper> combinings
-    ) {
+            final ObjectNode classNode,
+            final Combining combining,
+            final List<ClassCombiningWrapper> combinings) {
         final ArrayNode combiningArray = MAPPER.createArrayNode();
         final String propertyName = combinings.get(0).propertyName;
         // Each in this list is a new jsonSchema and in a different group, but on the
@@ -212,19 +198,15 @@ public class GeneratorClass extends GeneratorBase {
             // Parent level schemas are not allowed for own property anotations.
             if (combiningWrapper.jsonSchema.required()) {
                 throw new RuntimeException(
-                    String.format(
-                        "Required is not applicable together with combining group 0. '%s'",
-                        propertyName
-                    )
-                );
+                        String.format(
+                                "Required is not applicable together with combining group 0. '%s'",
+                                propertyName));
             }
             if (combiningWrapper.jsonSchema.dependencies().length > 0) {
                 throw new RuntimeException(
-                    String.format(
-                        "Dependencies is not applicable together with combining group 0. '%s'",
-                        propertyName
-                    )
-                );
+                        String.format(
+                                "Dependencies is not applicable together with combining group 0. '%s'",
+                                propertyName));
             }
             if (combiningWrapper.propertyNode.size() > 0) {
                 combiningArray.add(combiningWrapper.propertyNode);
@@ -234,13 +216,12 @@ public class GeneratorClass extends GeneratorBase {
     }
 
     private void addToProperty(
-        final ObjectNode classNode, final String propertyName,
-        final Combining combining, final ArrayNode combinationArray
-    ) {
+            final ObjectNode classNode, final String propertyName,
+            final Combining combining, final ArrayNode combinationArray) {
         ((ObjectNode) classNode
-            .get(JsonSchemaField.Disabled.PROPERTIES.toString())
-            .get(propertyName))
-            .set(combining.toString(), combinationArray);
+                .get(JsonSchemaField.Disabled.PROPERTIES.toString())
+                .get(propertyName))
+                .set(combining.toString(), combinationArray);
     }
 
     private void addRequired(final ObjectNode target, final String value) {
@@ -248,13 +229,13 @@ public class GeneratorClass extends GeneratorBase {
             target.set(JsonSchemaField.Disabled.REQUIRED.toString(), MAPPER.createArrayNode());
         }
         ((ArrayNode) target
-            .get(JsonSchemaField.Disabled.REQUIRED.toString()))
-            .add(value);
+                .get(JsonSchemaField.Disabled.REQUIRED.toString()))
+                .add(value);
     }
 
     private void addDependencies(
-        final ObjectNode target, final Set<String> propertyNames, final String propertyName, final JsonSchema jsonSchema
-    ) {
+            final ObjectNode target, final Set<String> propertyNames, final String propertyName,
+            final JsonSchema jsonSchema) {
         ObjectNode dependencies = (ObjectNode) target.get(JsonSchemaField.Disabled.DEPENDENCIES.toString());
         if (dependencies == null) {
             dependencies = MAPPER.createObjectNode();
@@ -264,8 +245,7 @@ public class GeneratorClass extends GeneratorBase {
     }
 
     private void addDependencies(
-        final ObjectNode target, final Set<String> propertyNames, final Map<String, JsonSchema> dependencies
-    ) {
+            final ObjectNode target, final Set<String> propertyNames, final Map<String, JsonSchema> dependencies) {
         final ObjectNode dependenciesNode = MAPPER.createObjectNode();
         dependencies.entrySet().forEach(e -> {
             addDependencies(dependenciesNode, propertyNames, e.getKey(), e.getValue().dependencies());
@@ -274,25 +254,21 @@ public class GeneratorClass extends GeneratorBase {
     }
 
     private void addDependencies(
-        final ObjectNode target, final Set<String> propertyNames, final String propertyName, final String[] values
-    ) {
+            final ObjectNode target, final Set<String> propertyNames, final String propertyName,
+            final String[] values) {
         final ArrayNode arrNode = MAPPER.createArrayNode();
         for (final String depName : values) {
             if (propertyName.equals(depName)) {
                 throw new RuntimeException(
-                    String.format(
-                        "'%s' can not have dependency to itself",
-                        propertyName
-                    )
-                );
+                        String.format(
+                                "'%s' can not have dependency to itself",
+                                propertyName));
             }
             if (!propertyNames.contains(depName)) {
                 throw new RuntimeException(
-                    String.format(
-                        "'%s' has dependency on missing field '%s'",
-                        propertyName, depName
-                    )
-                );
+                        String.format(
+                                "'%s' has dependency on missing field '%s'",
+                                propertyName, depName));
             }
             arrNode.add(depName);
         }
@@ -300,9 +276,8 @@ public class GeneratorClass extends GeneratorBase {
     }
 
     private void addProperty(
-        final ObjectNode target, final String propertyName,
-        final ObjectNode node
-    ) {
+            final ObjectNode target, final String propertyName,
+            final ObjectNode node) {
         ObjectNode propertiesNode = (ObjectNode) target.get(JsonSchemaField.Disabled.PROPERTIES.toString());
         if (propertiesNode == null) {
             propertiesNode = MAPPER.createObjectNode();

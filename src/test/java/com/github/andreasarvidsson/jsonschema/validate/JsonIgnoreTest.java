@@ -26,8 +26,7 @@ public class JsonIgnoreTest {
                 report,
                 PropertyPath.append(report.propertyPath, "value"),
                 JsonSchemaField.MINIMUM.toString(),
-                (long) min
-        );
+                (long) min);
     }
 
     @Test
@@ -39,18 +38,14 @@ public class JsonIgnoreTest {
 
     class NormalClass {
 
-        @JsonSchema(
-                minimum = minStr
-        )
+        @JsonSchema(minimum = minStr)
         public int value = min - 1;
 
     }
 
     class JsonIgnoreClass {
 
-        @JsonSchema(
-                minimum = minStr
-        )
+        @JsonSchema(minimum = minStr)
         @JsonIgnore
         public int value = min - 1;
 

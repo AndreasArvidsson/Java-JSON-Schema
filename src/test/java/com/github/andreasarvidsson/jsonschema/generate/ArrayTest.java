@@ -25,19 +25,16 @@ public class ArrayTest {
                 .setType(JsonType.ARRAY)
                 .setItems(new JsonBuilder()
                         .setType(JsonType.BOOLEAN)
-                        .build()
-                )
+                        .build())
                 .build(),
-                gen.generate(Boolean[].class)
-        );
+                gen.generate(Boolean[].class));
     }
 
     @Test
     public void testObject() {
         AssertJson.assertEquals(
                 getExpected(new JsonBuilder().build()),
-                gen.generate(ArrayObject.class)
-        );
+                gen.generate(ArrayObject.class));
     }
 
     @Test
@@ -46,8 +43,7 @@ public class ArrayTest {
                 getExpected(new JsonBuilder()
                         .setType(JsonType.BOOLEAN)
                         .build()),
-                gen.generate(ArrayBoolPrim.class)
-        );
+                gen.generate(ArrayBoolPrim.class));
     }
 
     @Test
@@ -56,8 +52,7 @@ public class ArrayTest {
                 getExpected(new JsonBuilder()
                         .setType(JsonType.BOOLEAN)
                         .build()),
-                gen.generate(ArrayBoolClass.class)
-        );
+                gen.generate(ArrayBoolClass.class));
     }
 
     @Test
@@ -65,10 +60,8 @@ public class ArrayTest {
         AssertJson.assertEquals(
                 getExpectedArrayOfArrays(new JsonBuilder()
                         .setType(JsonType.BOOLEAN)
-                        .build()
-                ),
-                gen.generate(ArrayOfArraysOfBools.class)
-        );
+                        .build()),
+                gen.generate(ArrayOfArraysOfBools.class));
     }
 
     private JsonNode getExpected(final JsonNode items) {
@@ -82,8 +75,7 @@ public class ArrayTest {
                         .addField(JsonSchemaField.MIN_ITEMS, min)
                         .addField(JsonSchemaField.MAX_ITEMS, max)
                         .setItems(items)
-                        .build()
-                )
+                        .build())
                 .build();
     }
 
@@ -97,43 +89,27 @@ public class ArrayTest {
                                 .setType(JsonType.ARRAY)
                                 .setItems(items)
                                 .build())
-                        .build()
-                )
+                        .build())
                 .build();
     }
 
     class ArrayObject {
 
-        @JsonSchema(
-                title = title,
-                description = desc,
-                minItems = min,
-                maxItems = max
-        )
+        @JsonSchema(title = title, description = desc, minItems = min, maxItems = max)
         public Object[] value;
 
     }
 
     class ArrayBoolPrim {
 
-        @JsonSchema(
-                title = title,
-                description = desc,
-                minItems = min,
-                maxItems = max
-        )
+        @JsonSchema(title = title, description = desc, minItems = min, maxItems = max)
         public boolean[] value;
 
     }
 
     class ArrayBoolClass {
 
-        @JsonSchema(
-                title = title,
-                description = desc,
-                minItems = min,
-                maxItems = max
-        )
+        @JsonSchema(title = title, description = desc, minItems = min, maxItems = max)
         public Boolean[] value;
 
     }

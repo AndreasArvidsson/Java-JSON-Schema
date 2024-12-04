@@ -17,8 +17,7 @@ public class GeneratorChar extends GeneratorBase {
         super(JsonType.STRING, Arrays.asList(
                 JsonSchemaField.TITLE,
                 JsonSchemaField.DESCRIPTION,
-                JsonSchemaField.CONST
-        ));
+                JsonSchemaField.CONST));
     }
 
     @Override

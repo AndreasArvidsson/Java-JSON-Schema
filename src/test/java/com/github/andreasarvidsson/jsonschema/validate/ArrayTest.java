@@ -36,8 +36,7 @@ public class ArrayTest {
                 report,
                 PropertyPath.append(report.propertyPath, "values"),
                 JsonSchemaField.MIN_ITEMS.toString(),
-                (long) minItems
-        );
+                (long) minItems);
     }
 
     @Test
@@ -57,52 +56,44 @@ public class ArrayTest {
                 report,
                 PropertyPath.append(report.propertyPath, "values"),
                 JsonSchemaField.MAX_ITEMS.toString(),
-                (long) maxItems
-        );
+                (long) maxItems);
     }
 
     @Test
     public void testArrayItemOk() {
-        final IntegerClass[] instance = {new IntegerClass(minimum)};
+        final IntegerClass[] instance = { new IntegerClass(minimum) };
         final ValidationReport report = validator.validate(instance);
         Assertions.assertTrue(report.isSuccess(), report.toString());
     }
 
     @Test
     public void testArrayItemFail() {
-        final IntegerClass[] instance = {new IntegerClass(minimum), new IntegerClass(minimum - 1)};
+        final IntegerClass[] instance = { new IntegerClass(minimum), new IntegerClass(minimum - 1) };
         final ValidationReport report = validator.validate(instance);
         AssertError.assertError(
                 report,
                 PropertyPath.append(PropertyPath.append(report.propertyPath, 1), "value"),
                 JsonSchemaField.MINIMUM.toString(),
-                (long) minimum
-        );
+                (long) minimum);
     }
 
     class MinItems {
 
-        @JsonSchema(
-                minItems = minItems
-        )
+        @JsonSchema(minItems = minItems)
         public int[] values;
 
     }
 
     class MaxItems {
 
-        @JsonSchema(
-                maxItems = maxItems
-        )
+        @JsonSchema(maxItems = maxItems)
         public int[] values;
 
     }
 
     class IntegerClass {
 
-        @JsonSchema(
-                minimum = minimumStr
-        )
+        @JsonSchema(minimum = minimumStr)
         public final int value;
 
         public IntegerClass(final int value) {

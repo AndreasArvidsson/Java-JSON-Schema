@@ -28,64 +28,56 @@ public class IntegerTest {
     public void testBytePrim() {
         AssertJson.assertEquals(
                 getExcpected(Byte.MIN_VALUE, Byte.MAX_VALUE),
-                gen.generate(byte.class)
-        );
+                gen.generate(byte.class));
     }
 
     @Test
     public void testByteClass() {
         AssertJson.assertEquals(
                 getExcpected(Byte.MIN_VALUE, Byte.MAX_VALUE),
-                gen.generate(Byte.class)
-        );
+                gen.generate(Byte.class));
     }
 
     @Test
     public void testShortPrim() {
         AssertJson.assertEquals(
                 getExcpected(Short.MIN_VALUE, Short.MAX_VALUE),
-                gen.generate(short.class)
-        );
+                gen.generate(short.class));
     }
 
     @Test
     public void testShortClass() {
         AssertJson.assertEquals(
                 getExcpected(Short.MIN_VALUE, Short.MAX_VALUE),
-                gen.generate(Short.class)
-        );
+                gen.generate(Short.class));
     }
 
     @Test
     public void testIntPrim() {
         AssertJson.assertEquals(
                 getExcpected(Integer.MIN_VALUE, Integer.MAX_VALUE),
-                gen.generate(int.class)
-        );
+                gen.generate(int.class));
     }
 
     @Test
     public void testIntClass() {
         AssertJson.assertEquals(
                 getExcpected(Integer.MIN_VALUE, Integer.MAX_VALUE),
-                gen.generate(Integer.class)
-        );
+                gen.generate(Integer.class));
     }
 
     @Test
     public void testLongPrim() {
         AssertJson.assertEquals(
                 getExcpected(Long.MIN_VALUE, Long.MAX_VALUE),
-                gen.generate(long.class)
-        );
+                gen.generate(long.class));
     }
 
     @Test
     public void testLongClass() {
         AssertJson.assertEquals(
                 getExcpected(Long.MIN_VALUE, Long.MAX_VALUE),
-                gen.generate(Long.class)
-        );
+                gen.generate(Long.class));
     }
 
     @Test
@@ -94,8 +86,7 @@ public class IntegerTest {
                 new JsonBuilder()
                         .setType(JsonType.INTEGER)
                         .build(),
-                gen.generate(BigInteger.class)
-        );
+                gen.generate(BigInteger.class));
     }
 
     @Test
@@ -106,8 +97,7 @@ public class IntegerTest {
                         .setType(JsonType.INTEGER)
                         .build(),
                 new JsonSchemaGenerator().hideSchemaField().disableAutoRangeNumbers()
-                        .generate(int.class)
-        );
+                        .generate(int.class));
     }
 
     public void testAutoRangeAndAnot() {
@@ -119,8 +109,7 @@ public class IntegerTest {
                                 .setType(JsonType.INTEGER)
                                 .addField(JsonSchemaField.MINIMUM, Long.parseLong(min))
                                 .addField(JsonSchemaField.MAXIMUM, Integer.MAX_VALUE)
-                                .build()
-                )
+                                .build())
                 .build();
         final JsonNode actual = new JsonSchemaGenerator()
                 .hideSchemaField()
@@ -143,8 +132,7 @@ public class IntegerTest {
                                 .addField(JsonSchemaField.EXCLUSIVE_MAXIMUM, Long.parseLong(maxEx))
                                 .addField(JsonSchemaField.MULTIPLE_OF, Long.parseLong(mult))
                                 .addField(JsonSchemaField.CONST, Long.parseLong(constant))
-                                .build()
-                )
+                                .build())
                 .build();
         final JsonNode actual = new JsonSchemaGenerator()
                 .hideSchemaField()
@@ -163,24 +151,13 @@ public class IntegerTest {
 
     class IntClass {
 
-        @JsonSchema(
-                title = title,
-                description = desc,
-                minimum = min,
-                maximum = max,
-                exclusiveMinimum = minEx,
-                exclusiveMaximum = maxEx,
-                multipleOf = mult,
-                constant = constant
-        )
+        @JsonSchema(title = title, description = desc, minimum = min, maximum = max, exclusiveMinimum = minEx, exclusiveMaximum = maxEx, multipleOf = mult, constant = constant)
         public Integer value;
     }
 
     class IntMinClass {
 
-        @JsonSchema(
-                minimum = min
-        )
+        @JsonSchema(minimum = min)
         public Integer value;
     }
 

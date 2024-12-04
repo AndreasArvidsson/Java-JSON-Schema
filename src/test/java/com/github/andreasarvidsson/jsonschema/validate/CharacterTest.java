@@ -33,15 +33,12 @@ public class CharacterTest {
                 report,
                 PropertyPath.append(report.propertyPath, "value"),
                 JsonSchemaField.CONST.toString(),
-                constant.charAt(0)
-        );
+                constant.charAt(0));
     }
 
     class CharClass {
 
-        @JsonSchema(
-                constant = constant
-        )
+        @JsonSchema(constant = constant)
         public char value;
 
     }

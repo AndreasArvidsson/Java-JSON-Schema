@@ -22,8 +22,7 @@ public abstract class AssertJson {
                 final String expectedStr = WRITER.writeValueAsString(expected);
                 final String actualStr = WRITER.writeValueAsString(actual);
                 Assertions.assertEquals(expectedStr, actualStr, message);
-            }
-            catch (JsonProcessingException ex) {
+            } catch (JsonProcessingException ex) {
                 Assertions.fail(ex);
             }
         }
@@ -35,8 +34,7 @@ public abstract class AssertJson {
                 final String expectedStr = WRITER.writeValueAsString(expected);
                 final String actualStr = WRITER.writeValueAsString(actual);
                 Assertions.assertEquals(expectedStr, actualStr);
-            }
-            catch (final JsonProcessingException ex) {
+            } catch (final JsonProcessingException ex) {
                 Assertions.fail(ex);
             }
         }
@@ -47,8 +45,7 @@ public abstract class AssertJson {
             final String expectedStr = WRITER.writeValueAsString(expected);
             final String actualStr = WRITER.writeValueAsString(actual);
             Assertions.assertEquals(expectedStr, actualStr);
-        }
-        catch (final JsonProcessingException ex) {
+        } catch (final JsonProcessingException ex) {
             Assertions.fail(ex);
         }
     }

@@ -18,70 +18,70 @@ public class Error {
     private final JsonSchema schema;
     public final Object instance;
 
-    public static Error constant(final String property, final JsonSchema jsonSchema, final Object argument, final Object instance) {
+    public static Error constant(final String property, final JsonSchema jsonSchema, final Object argument,
+            final Object instance) {
         return new Error(
                 property,
                 JsonSchemaField.CONST.toString(),
                 argument,
                 String.format("Does not exactly match expected constant: %s", jsonSchema.constant()),
                 jsonSchema,
-                instance
-        );
+                instance);
     }
 
-    public static Error multipleOf(final String property, final JsonSchema jsonSchema, final Number argument, final Object instance) {
+    public static Error multipleOf(final String property, final JsonSchema jsonSchema, final Number argument,
+            final Object instance) {
         return new Error(
                 property,
                 JsonSchemaField.MULTIPLE_OF.toString(),
                 argument,
                 String.format("Is not a multiple of (divisible by) %s", jsonSchema.multipleOf()),
                 jsonSchema,
-                instance
-        );
+                instance);
     }
 
-    public static Error minimum(final String property, final JsonSchema jsonSchema, final Number argument, final Object instance) {
+    public static Error minimum(final String property, final JsonSchema jsonSchema, final Number argument,
+            final Object instance) {
         return new Error(
                 property,
                 JsonSchemaField.MINIMUM.toString(),
                 argument,
                 String.format("Must have a minimum value of %s", jsonSchema.minimum()),
                 jsonSchema,
-                instance
-        );
+                instance);
     }
 
-    public static Error maximum(final String property, final JsonSchema jsonSchema, final Number argument, final Object instance) {
+    public static Error maximum(final String property, final JsonSchema jsonSchema, final Number argument,
+            final Object instance) {
         return new Error(
                 property,
                 JsonSchemaField.MAXIMUM.toString(),
                 argument,
                 String.format("Must have a maximum value of %s", jsonSchema.maximum()),
                 jsonSchema,
-                instance
-        );
+                instance);
     }
 
-    public static Error exclusiveMinimum(final String property, final JsonSchema jsonSchema, final Number argument, final Object instance) {
+    public static Error exclusiveMinimum(final String property, final JsonSchema jsonSchema, final Number argument,
+            final Object instance) {
         return new Error(
                 property,
                 JsonSchemaField.EXCLUSIVE_MINIMUM.toString(),
                 argument,
                 String.format("Must have an exclusive minimum value of %s", jsonSchema.exclusiveMinimum()),
                 jsonSchema,
-                instance
-        );
+                instance);
     }
 
-    public static Error exclusiveMaximum(final String property, final JsonSchema jsonSchema, final Number argument, final Object instance) {
+    public static Error exclusiveMaximum(final String property, final JsonSchema jsonSchema, final Number argument,
+            final Object instance) {
         return new Error(
                 property,
                 JsonSchemaField.EXCLUSIVE_MAXIMUM.toString(),
                 argument,
                 String.format("Must have an exclusive minimum value of %s", jsonSchema.exclusiveMaximum()),
                 jsonSchema,
-                instance
-        );
+                instance);
     }
 
     public static Error minLength(final String property, final JsonSchema jsonSchema, final Object instance) {
@@ -91,8 +91,7 @@ public class Error {
                 jsonSchema.minLength(),
                 String.format("Does not meet minimum length of %d", jsonSchema.minLength()),
                 jsonSchema,
-                instance
-        );
+                instance);
     }
 
     public static Error maxLength(final String property, final JsonSchema jsonSchema, final Object instance) {
@@ -102,8 +101,7 @@ public class Error {
                 jsonSchema.maxLength(),
                 String.format("Does not meet maximum length of %d", jsonSchema.maxLength()),
                 jsonSchema,
-                instance
-        );
+                instance);
     }
 
     public static Error pattern(final String property, final JsonSchema jsonSchema, final Object instance) {
@@ -113,8 +111,7 @@ public class Error {
                 jsonSchema.pattern(),
                 String.format("Does not match pattern '%s'", jsonSchema.pattern()),
                 jsonSchema,
-                instance.toString()
-        );
+                instance.toString());
     }
 
     public static Error minItems(final String property, final JsonSchema jsonSchema, final Object instance) {
@@ -124,8 +121,7 @@ public class Error {
                 jsonSchema.minItems(),
                 String.format("Does not meet minimum length of %d", jsonSchema.minItems()),
                 jsonSchema,
-                instance
-        );
+                instance);
     }
 
     public static Error maxItems(final String property, final JsonSchema jsonSchema, final Object instance) {
@@ -135,8 +131,7 @@ public class Error {
                 jsonSchema.maxItems(),
                 String.format("Does not meet maximum length of %d", jsonSchema.maxItems()),
                 jsonSchema,
-                instance
-        );
+                instance);
     }
 
     public static Error minProperties(final String property, final JsonSchema jsonSchema, final Object instance) {
@@ -146,8 +141,7 @@ public class Error {
                 jsonSchema.minProperties(),
                 String.format("Does not meet minimum length of %d", jsonSchema.minProperties()),
                 jsonSchema,
-                instance
-        );
+                instance);
     }
 
     public static Error maxProperties(final String property, final JsonSchema jsonSchema, final Object instance) {
@@ -157,30 +151,29 @@ public class Error {
                 jsonSchema.maxProperties(),
                 String.format("Does not meet maximum length of %d", jsonSchema.maxProperties()),
                 jsonSchema,
-                instance
-        );
+                instance);
     }
 
-    public static Error requires(final String property, final JsonSchema jsonSchema, final String propertyName, final Object instance) {
+    public static Error requires(final String property, final JsonSchema jsonSchema, final String propertyName,
+            final Object instance) {
         return new Error(
                 property,
                 JsonSchemaField.Disabled.REQUIRED.toString(),
                 propertyName,
                 String.format("Requires property '%s'", propertyName),
                 jsonSchema,
-                instance
-        );
+                instance);
     }
 
-    public static Error dependencies(final String property, final JsonSchema jsonSchema, final String dependencyName, final String propertyPath, final Object instance) {
+    public static Error dependencies(final String property, final JsonSchema jsonSchema, final String dependencyName,
+            final String propertyPath, final Object instance) {
         return new Error(
                 property,
                 JsonSchemaField.Disabled.DEPENDENCIES.toString(),
                 dependencyName,
                 String.format("Property %s not found, required by %s", dependencyName, propertyPath),
                 jsonSchema,
-                instance
-        );
+                instance);
     }
 
     public static Error anyOf(final String property, final ValidationSubReport subReport) {
@@ -188,8 +181,7 @@ public class Error {
                 property,
                 Combining.ANY_OF.toString(),
                 subReport,
-                String.format("Does not match at least one schema among %d", subReport.nrSchemas)
-        );
+                String.format("Does not match at least one schema among %d", subReport.nrSchemas));
     }
 
     public static Error oneOf(final String property, final ValidationSubReport subReport) {
@@ -197,8 +189,8 @@ public class Error {
                 property,
                 Combining.ONE_OF.toString(),
                 subReport,
-                String.format("Does not match exactly one schema (matched %d / %d)", subReport.matched, subReport.nrSchemas)
-        );
+                String.format("Does not match exactly one schema (matched %d / %d)", subReport.matched,
+                        subReport.nrSchemas));
     }
 
     public static Error allOf(final String property, final ValidationSubReport subReport) {
@@ -206,8 +198,8 @@ public class Error {
                 property,
                 Combining.ALL_OF.toString(),
                 subReport,
-                String.format("Does not match all required schemas (matched only %d out of %d)", subReport.matched, subReport.nrSchemas)
-        );
+                String.format("Does not match all required schemas (matched only %d out of %d)", subReport.matched,
+                        subReport.nrSchemas));
     }
 
     public Error(

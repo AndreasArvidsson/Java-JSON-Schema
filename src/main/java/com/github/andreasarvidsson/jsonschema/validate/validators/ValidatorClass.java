@@ -37,13 +37,14 @@ public class ValidatorClass implements Validator {
     }
 
     @Override
-    public void validateSchema(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema) {
+    public void validateSchema(final List<Error> errors, final String path, final Object instance,
+            final JsonSchema jsonSchema) {
     }
 
     private void parseClassFields(
             final List<Error> errors, final String path, final Object instance,
             final Class type, final ClassResultWrapper wrapper) {
-        //Validate super classes first.
+        // Validate super classes first.
         final Class superType = type.getSuperclass();
         if (superType != null) {
             parseClassFields(errors, path, instance, superType, wrapper);
@@ -75,15 +76,13 @@ public class ValidatorClass implements Validator {
         if (jsonSchema.combining() == JsonSchema.Combining.NONE) {
             if (propertyInstance == null) {
                 validateIsRequired(errors, path, instance, propertyName, jsonSchema);
-            }
-            else {
+            } else {
                 if (jsonSchema.dependencies().length > 0) {
                     wrapper.dependencies.put(propertyName, jsonSchema);
                 }
                 validators.validateSchema(errors, propertyPath, propertyInstance, jsonSchema);
             }
-        }
-        else {
+        } else {
             wrapper.addCombining(propertyPath, propertyName, jsonSchema, propertyInstance);
         }
     }
@@ -93,15 +92,13 @@ public class ValidatorClass implements Validator {
             final Object instance, final ClassResultWrapper wrapper) {
         wrapper.combinations.entrySet().forEach(e -> {
             final Map<Integer, List<Error>> errorMap = validateCombinations(
-                    path, instance, wrapper, e.getValue().values(), e.getKey() == Combining.ANY_OF
-            );
+                    path, instance, wrapper, e.getValue().values(), e.getKey() == Combining.ANY_OF);
             addCombinationErrors(errors, path, e.getKey(), e.getValue().size(), errorMap);
         });
         wrapper.ownProperty.values().forEach(map -> {
             map.entrySet().forEach(e -> {
                 final Map<Integer, List<Error>> errorMap = validateCombinations(
-                        path, instance, wrapper, e.getValue(), e.getKey() == Combining.ANY_OF
-                );
+                        path, instance, wrapper, e.getValue(), e.getKey() == Combining.ANY_OF);
                 addCombinationErrors(errors, path, e.getKey(), e.getValue().size(), errorMap);
             });
         });
@@ -115,11 +112,11 @@ public class ValidatorClass implements Validator {
         for (final ClassCombiningWrapper combination : combinations) {
             final List<Error> errors = new ArrayList<>();
             validateCombination(errors, path, instance, wrapper, combination);
-            //This combination has errors
+            // This combination has errors
             if (!errors.isEmpty()) {
                 res.put(i, errors);
             }
-            //Only require one valid combination.
+            // Only require one valid combination.
             else if (onlyOne) {
                 return res;
             }
@@ -138,11 +135,11 @@ public class ValidatorClass implements Validator {
             for (final ClassCombiningWrapper combination : groupCombinations) {
                 validateCombination(groupErrors, path, instance, wrapper, combination);
             }
-            //This group has errors
+            // This group has errors
             if (!groupErrors.isEmpty()) {
                 res.put(i, groupErrors);
             }
-            //Only require one valid group.
+            // Only require one valid group.
             else if (onlyOne) {
                 return res;
             }
@@ -158,9 +155,9 @@ public class ValidatorClass implements Validator {
             final ClassCombiningWrapper combination) {
         if (combination.instance == null) {
             validateIsRequired(errors, path, instance, combination.propertyName, combination.jsonSchema);
-        }
-        else {
-            validateDependencies(errors, path, instance, wrapper.propertyNames, combination.propertyName, combination.jsonSchema);
+        } else {
+            validateDependencies(errors, path, instance, wrapper.propertyNames, combination.propertyName,
+                    combination.jsonSchema);
             validators.validateSchema(errors, combination.path, combination.instance, combination.jsonSchema);
         }
     }
@@ -171,29 +168,34 @@ public class ValidatorClass implements Validator {
         switch (combining) {
             case ANY_OF:
                 if (matched == 0) {
-                    errors.add(Error.anyOf(path, new ValidationSubReport(path, combining, nrSchemas, matched, errorMap)));
+                    errors.add(
+                            Error.anyOf(path, new ValidationSubReport(path, combining, nrSchemas, matched, errorMap)));
                 }
                 break;
             case ONE_OF:
                 if (matched != 1) {
-                    errors.add(Error.oneOf(path, new ValidationSubReport(path, combining, nrSchemas, matched, errorMap)));
+                    errors.add(
+                            Error.oneOf(path, new ValidationSubReport(path, combining, nrSchemas, matched, errorMap)));
                 }
                 break;
             case ALL_OF:
                 if (matched != nrSchemas) {
-                    errors.add(Error.allOf(path, new ValidationSubReport(path, combining, nrSchemas, matched, errorMap)));
+                    errors.add(
+                            Error.allOf(path, new ValidationSubReport(path, combining, nrSchemas, matched, errorMap)));
                 }
                 break;
         }
     }
 
-    private void validateIsRequired(final List<Error> errors, final String path, final Object instance, final String propertyName, final JsonSchema jsonSchema) {
+    private void validateIsRequired(final List<Error> errors, final String path, final Object instance,
+            final String propertyName, final JsonSchema jsonSchema) {
         if (jsonSchema.required()) {
             errors.add(Error.requires(path, jsonSchema, propertyName, instance));
         }
     }
 
-    private void validateDependencies(final List<Error> errors, final String path, final Object instance, final ClassResultWrapper wrapper) {
+    private void validateDependencies(final List<Error> errors, final String path, final Object instance,
+            final ClassResultWrapper wrapper) {
         wrapper.dependencies.entrySet().forEach(e -> {
             validateDependencies(errors, path, instance, wrapper.propertyNames, e.getKey(), e.getValue());
         });
@@ -204,7 +206,8 @@ public class ValidatorClass implements Validator {
             final Set<String> propertyNames, final String propertyName, final JsonSchema jsonSchema) {
         for (final String depName : jsonSchema.dependencies()) {
             if (!propertyNames.contains(depName)) {
-                errors.add(Error.dependencies(path, jsonSchema, depName, PropertyPath.append(path, propertyName), instance));
+                errors.add(Error.dependencies(path, jsonSchema, depName, PropertyPath.append(path, propertyName),
+                        instance));
             }
         }
     }

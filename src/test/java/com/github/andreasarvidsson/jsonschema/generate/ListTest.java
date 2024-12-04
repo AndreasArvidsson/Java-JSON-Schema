@@ -28,24 +28,21 @@ public class ListTest {
                         .setType(JsonType.ARRAY)
                         .setItems(new JsonBuilder().build())
                         .build(),
-                gen.generate(ArrayList.class)
-        );
+                gen.generate(ArrayList.class));
     }
 
     @Test
     public void testListDefault() {
         AssertJson.assertEquals(
                 getExpected(new JsonBuilder().build()),
-                gen.generate(ListDefault.class)
-        );
+                gen.generate(ListDefault.class));
     }
 
     @Test
     public void testListOfObjects() {
         AssertJson.assertEquals(
                 getExpected(new JsonBuilder().build()),
-                gen.generate(ListOfObjects.class)
-        );
+                gen.generate(ListOfObjects.class));
     }
 
     @Test
@@ -54,28 +51,23 @@ public class ListTest {
                 getExpected(new JsonBuilder()
                         .setType(JsonType.BOOLEAN)
                         .build()),
-                gen.generate(ListOfBools.class)
-        );
+                gen.generate(ListOfBools.class));
     }
 
     @Test
     public void testListOfLists() {
         AssertJson.assertEquals(
                 getExpectedArrayOfArrays(
-                        new JsonBuilder().build()
-                ),
-                gen.generate(ListOfLists.class)
-        );
+                        new JsonBuilder().build()),
+                gen.generate(ListOfLists.class));
     }
 
     @Test
     public void testListOfListsOfObjects() {
         AssertJson.assertEquals(
                 getExpectedArrayOfArrays(
-                        new JsonBuilder().build()
-                ),
-                gen.generate(ListOfListsOfObjects.class)
-        );
+                        new JsonBuilder().build()),
+                gen.generate(ListOfListsOfObjects.class));
     }
 
     @Test
@@ -84,10 +76,8 @@ public class ListTest {
                 getExpectedArrayOfArrays(
                         new JsonBuilder()
                                 .setType(JsonType.BOOLEAN)
-                                .build()
-                ),
-                gen.generate(ListOfListsOfBools.class)
-        );
+                                .build()),
+                gen.generate(ListOfListsOfBools.class));
     }
 
     private JsonNode getExpected(final JsonNode items) {
@@ -101,8 +91,7 @@ public class ListTest {
                         .addField(JsonSchemaField.MIN_ITEMS, min)
                         .addField(JsonSchemaField.MAX_ITEMS, max)
                         .setItems(items)
-                        .build()
-                )
+                        .build())
                 .build();
     }
 
@@ -116,43 +105,27 @@ public class ListTest {
                                 .setType(JsonType.ARRAY)
                                 .setItems(items)
                                 .build())
-                        .build()
-                )
+                        .build())
                 .build();
     }
 
     class ListDefault {
 
-        @JsonSchema(
-                title = title,
-                description = desc,
-                minItems = min,
-                maxItems = max
-        )
+        @JsonSchema(title = title, description = desc, minItems = min, maxItems = max)
         public List value;
 
     }
 
     class ListOfObjects {
 
-        @JsonSchema(
-                title = title,
-                description = desc,
-                minItems = min,
-                maxItems = max
-        )
+        @JsonSchema(title = title, description = desc, minItems = min, maxItems = max)
         public List<Object> value;
 
     }
 
     class ListOfBools {
 
-        @JsonSchema(
-                title = title,
-                description = desc,
-                minItems = min,
-                maxItems = max
-        )
+        @JsonSchema(title = title, description = desc, minItems = min, maxItems = max)
         public List<Boolean> value;
 
     }

@@ -49,8 +49,7 @@ public abstract class GeneratorBase implements Generator {
             if (jsonSchema.combining() != JsonSchema.Combining.NONE) {
                 throw new RuntimeException(String.format(
                         "Schema combinings(anyOf, oneOf, allOf) is not allowed on class level. '%s'",
-                        type.getTypeName())
-                );
+                        type.getTypeName()));
             }
             addFields(type, target, jsonSchema);
         }

@@ -40,8 +40,7 @@ public class ClassTest {
                 report,
                 report.propertyPath,
                 JsonSchemaField.Disabled.REQUIRED.toString(),
-                "value"
-        );
+                "value");
     }
 
     @Test
@@ -53,8 +52,7 @@ public class ClassTest {
                 report,
                 PropertyPath.append(report.propertyPath, "wrapper"),
                 JsonSchemaField.Disabled.REQUIRED.toString(),
-                "value"
-        );
+                "value");
     }
 
     @Test
@@ -82,33 +80,26 @@ public class ClassTest {
                 report,
                 report.propertyPath,
                 JsonSchemaField.Disabled.DEPENDENCIES.toString(),
-                "value2"
-        );
+                "value2");
     }
 
     class RequiredInt {
 
-        @JsonSchema(
-                required = true
-        )
+        @JsonSchema(required = true)
         public Integer value;
 
     }
 
     class RequiredSubInt {
 
-        @JsonSchema(
-                required = true
-        )
+        @JsonSchema(required = true)
         public RequiredInt wrapper;
 
     }
 
     class Dependency {
 
-        @JsonSchema(
-                dependencies = {"value2"}
-        )
+        @JsonSchema(dependencies = { "value2" })
         public Integer value1;
 
         public Integer value2;

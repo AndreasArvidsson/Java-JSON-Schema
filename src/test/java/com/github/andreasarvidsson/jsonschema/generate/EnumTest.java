@@ -23,8 +23,7 @@ public class EnumTest {
     public void testSimpleEnum() {
         AssertJson.assertEquals(
                 getSimpleExpected(),
-                gen.generate(SimpleEnum.class)
-        );
+                gen.generate(SimpleEnum.class));
     }
 
     @Test
@@ -34,8 +33,7 @@ public class EnumTest {
                 .setAdditionalProps(false)
                 .addProperty("value", getSimpleExpected())
                 .build(),
-                gen.generate(SimpleEnumClass.class)
-        );
+                gen.generate(SimpleEnumClass.class));
     }
 
     @Test
@@ -46,16 +44,14 @@ public class EnumTest {
                 .addRequired("value")
                 .addProperty("value", getSimpleExpected())
                 .build(),
-                gen.generate(SimpleEnumRequiredClass.class)
-        );
+                gen.generate(SimpleEnumRequiredClass.class));
     }
 
     @Test
     public void testDescriptiveEnum() {
         AssertJson.assertEquals(
                 getDescriptiveExpected(),
-                gen.generate(DescriptiveEnum.class)
-        );
+                gen.generate(DescriptiveEnum.class));
     }
 
     @Test
@@ -65,8 +61,7 @@ public class EnumTest {
                 .setAdditionalProps(false)
                 .addProperty("value", getDescriptiveExpected())
                 .build(),
-                gen.generate(DescriptiveEnumClass.class)
-        );
+                gen.generate(DescriptiveEnumClass.class));
     }
 
     @Test
@@ -77,15 +72,12 @@ public class EnumTest {
                 .setAdditionalProps(false)
                 .addProperty("value1", new JsonBuilder()
                         .setRef(DescriptiveEnum.class.getSimpleName())
-                        .build()
-                )
+                        .build())
                 .addProperty("value2", new JsonBuilder()
                         .setRef(DescriptiveEnum.class.getSimpleName())
-                        .build()
-                )
+                        .build())
                 .build(),
-                gen.generate(DoubleEnumClass.class)
-        );
+                gen.generate(DoubleEnumClass.class));
     }
 
     private JsonNode getSimpleExpected() {
@@ -106,36 +98,27 @@ public class EnumTest {
                         .addField(JsonSchemaField.Disabled.CONST, "A")
                         .addField(JsonSchemaField.TITLE, "a")
                         .addField(JsonSchemaField.DESCRIPTION, "A_desc")
-                        .build()
-                )
+                        .build())
                 .addOneOf(new JsonBuilder()
                         .addField(JsonSchemaField.Disabled.CONST, "B")
                         .addField(JsonSchemaField.TITLE, "b")
                         .addField(JsonSchemaField.DESCRIPTION, "B_desc")
-                        .build()
-                )
+                        .build())
                 .addOneOf(new JsonBuilder()
                         .addField(JsonSchemaField.Disabled.CONST, "C")
                         .addField(JsonSchemaField.TITLE, "c")
                         .addField(JsonSchemaField.DESCRIPTION, "C_desc")
-                        .build()
-                )
+                        .build())
                 .build();
     }
 
-    @JsonSchema(
-            title = title,
-            description = desc
-    )
+    @JsonSchema(title = title, description = desc)
     enum SimpleEnum {
 
         A, B, C;
     }
 
-    @JsonSchema(
-            title = title,
-            description = desc
-    )
+    @JsonSchema(title = title, description = desc)
     public static enum DescriptiveEnum implements JsonSchemaEnum {
 
         A, B, C;
@@ -163,9 +146,7 @@ public class EnumTest {
 
     class SimpleEnumRequiredClass {
 
-        @JsonSchema(
-                required = true
-        )
+        @JsonSchema(required = true)
         public SimpleEnum value;
     }
 

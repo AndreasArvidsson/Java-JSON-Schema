@@ -29,18 +29,17 @@ public class ValidatorJsonValue implements Validator {
         }
         try {
             validator.validateClass(errors, path, method.invoke(instance));
-        }
-        catch (final IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+        } catch (final IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             throw new RuntimeException(ex);
         }
     }
 
     @Override
-    public void validateSchema(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema) {
+    public void validateSchema(final List<Error> errors, final String path, final Object instance,
+            final JsonSchema jsonSchema) {
         try {
             validator.validateSchema(errors, path, method.invoke(instance), jsonSchema);
-        }
-        catch (final IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+        } catch (final IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             throw new RuntimeException(ex);
         }
     }

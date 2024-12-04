@@ -23,18 +23,18 @@ public class ClassDefinitions {
         return classes.containsKey(getKey(type, args));
     }
 
-    public void add(final Class type, final Map<String, Type> args,final ClassWrapper wrapper) {
+    public void add(final Class type, final Map<String, Type> args, final ClassWrapper wrapper) {
         classes.put(getKey(type, args), wrapper);
     }
 
     private String getKey(final Class type, final Map<String, Type> args) {
         final String classKey = type.getTypeName();
-        if(args != null) {
+        if (args != null) {
             final String argsKey = args.keySet()
-                .stream()
-                .sorted()
-                .map(k -> String.format("%s=%s", k, args.get(k).getTypeName()))
-                .collect(Collectors.joining(", "));
+                    .stream()
+                    .sorted()
+                    .map(k -> String.format("%s=%s", k, args.get(k).getTypeName()))
+                    .collect(Collectors.joining(", "));
             return String.format("%s(%s)", classKey, argsKey);
         }
         return classKey;
@@ -53,20 +53,20 @@ public class ClassDefinitions {
     public void update(final ObjectNode schemaNode) {
         final ObjectNode definitions = MAPPER.createObjectNode();
         for (final ClassWrapper wrapper : classes.values()) {
-            //Use reference. Add class node to definitions list.
+            // Use reference. Add class node to definitions list.
             if (wrapper.references.size() > 1) {
                 definitions.set(wrapper.name, wrapper.classNode);
                 for (final ObjectNode node : wrapper.references) {
                     node.put("$ref", "#/definitions/" + wrapper.name);
                 }
             }
-            //Replace reference node with class node.
+            // Replace reference node with class node.
             else {
                 setAllAbsent(wrapper.references.get(0), wrapper.classNode);
             }
         }
 
-        //Add definitions
+        // Add definitions
         if (definitions.size() > 0) {
             schemaNode.set("definitions", definitions);
         }

@@ -47,8 +47,7 @@ public class JsonBuilder {
     public JsonBuilder addField(final String field, final Object value) {
         if (value instanceof String) {
             fields.put(field, (String) value);
-        }
-        else {
+        } else {
             fields.putPOJO(field, value);
         }
         return this;
@@ -130,10 +129,8 @@ public class JsonBuilder {
         }
         if (ref != null) {
             res.put(
-                JsonSchemaField.Disabled.REF.toString(), String.format(
-                    "#/%s/%s", JsonSchemaField.Disabled.DEFINITIONS.toString(), ref
-                )
-            );
+                    JsonSchemaField.Disabled.REF.toString(), String.format(
+                            "#/%s/%s", JsonSchemaField.Disabled.DEFINITIONS.toString(), ref));
         }
         if (type != null) {
             res.put(JsonSchemaField.Disabled.TYPE.toString(), type.toString());

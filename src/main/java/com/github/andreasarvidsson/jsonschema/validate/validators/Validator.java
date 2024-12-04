@@ -9,7 +9,9 @@ import java.util.List;
  */
 public interface Validator {
 
-    public void validateClass(final List<com.github.andreasarvidsson.jsonschema.validate.Error> errors, final String path, final Object instance);
+    public void validateClass(final List<com.github.andreasarvidsson.jsonschema.validate.Error> errors,
+            final String path, final Object instance);
 
-    public void validateSchema(final List<com.github.andreasarvidsson.jsonschema.validate.Error> errors, final String path, final Object instance, final JsonSchema jsonSchema);
+    public void validateSchema(final List<com.github.andreasarvidsson.jsonschema.validate.Error> errors,
+            final String path, final Object instance, final JsonSchema jsonSchema);
 }

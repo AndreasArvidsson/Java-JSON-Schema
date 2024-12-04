@@ -20,49 +20,47 @@ public class ParamTest {
     @Test
     public void testParam() {
         final ObjectNode properties = new JsonBuilder()
-            .addField("value1", getObject("value", getString()))
-            .addField("value2", getObject("value", getInt()))
-            .addField("value3", getArray(getObject("value", getNumber())))
-            .build();
+                .addField("value1", getObject("value", getString()))
+                .addField("value2", getObject("value", getInt()))
+                .addField("value3", getArray(getObject("value", getNumber())))
+                .build();
         AssertJson.assertEquals(
-            getObject(properties),
-            gen.generate(ParamClass.class)
-        );
+                getObject(properties),
+                gen.generate(ParamClass.class));
     }
 
     @Test
     public void testSub1() {
         final ObjectNode properties = new JsonBuilder()
-            .addField("value", getString())
-            .addField("values", getArray(getString()))
-            .build();
+                .addField("value", getString())
+                .addField("values", getArray(getString()))
+                .build();
         AssertJson.assertEquals(
-            getObject(properties),
-            gen.generate(Sub.class)
-        );
+                getObject(properties),
+                gen.generate(Sub.class));
     }
 
     private ObjectNode getObject(final String key, final JsonNode value) {
         return new JsonBuilder()
-            .setType(JsonType.OBJECT)
-            .setAdditionalProps(false)
-            .addProperty(key, value)
-            .build();
+                .setType(JsonType.OBJECT)
+                .setAdditionalProps(false)
+                .addProperty(key, value)
+                .build();
     }
 
     private ObjectNode getObject(final ObjectNode properties) {
         return new JsonBuilder()
-            .setType(JsonType.OBJECT)
-            .setAdditionalProps(false)
-            .setProperties(properties)
-            .build();
+                .setType(JsonType.OBJECT)
+                .setAdditionalProps(false)
+                .setProperties(properties)
+                .build();
     }
 
     private ObjectNode getArray(final ObjectNode items) {
         return new JsonBuilder()
-            .setType(JsonType.ARRAY)
-            .setItems(items)
-            .build();
+                .setType(JsonType.ARRAY)
+                .setItems(items)
+                .build();
     }
 
     private ObjectNode getString() {
@@ -75,10 +73,10 @@ public class ParamTest {
 
     private ObjectNode getInt() {
         return new JsonBuilder()
-            .setType(JsonType.INTEGER)
-            .addField("minimum", Integer.MIN_VALUE)
-            .addField("maximum", Integer.MAX_VALUE)
-            .build();
+                .setType(JsonType.INTEGER)
+                .addField("minimum", Integer.MIN_VALUE)
+                .addField("maximum", Integer.MAX_VALUE)
+                .build();
     }
 
     class MyDataClass<T> {

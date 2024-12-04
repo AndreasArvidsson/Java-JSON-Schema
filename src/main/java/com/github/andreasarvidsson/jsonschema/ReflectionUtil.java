@@ -22,15 +22,15 @@ import java.util.Map;
 public abstract class ReflectionUtil {
 
     public static boolean ignoreField(final Field field) {
-        //Ignore private fields.
+        // Ignore private fields.
         if (!Modifier.isPublic(field.getModifiers())) {
             return true;
         }
-        //Inner class with reference to outer class.
+        // Inner class with reference to outer class.
         if (field.isSynthetic()) {
             return true;
         }
-        //Ignore fields with @JsonIgnore annotation
+        // Ignore fields with @JsonIgnore annotation
         final JsonIgnore ignore = (JsonIgnore) field.getAnnotation(JsonIgnore.class);
         return ignore != null && ignore.value();
     }
@@ -44,8 +44,7 @@ public abstract class ReflectionUtil {
         try {
             field.setAccessible(true);
             return field.get(object);
-        }
-        catch (final IllegalAccessException | IllegalArgumentException ex) {
+        } catch (final IllegalAccessException | IllegalArgumentException ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -103,7 +102,7 @@ public abstract class ReflectionUtil {
     }
 
     private static void getFields(final List<Field> result, final Class type) {
-        //Parse super classes first.
+        // Parse super classes first.
         if (type.getSuperclass() != null) {
             getFields(result, type.getSuperclass());
         }

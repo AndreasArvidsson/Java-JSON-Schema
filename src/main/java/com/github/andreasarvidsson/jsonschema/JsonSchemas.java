@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  *
  * @author Andreas Arvidsson
  */
-@Target({ElementType.TYPE, ElementType.FIELD})
+@Target({ ElementType.TYPE, ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface JsonSchemas {
 

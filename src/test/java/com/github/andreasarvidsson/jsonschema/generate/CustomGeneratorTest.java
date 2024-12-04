@@ -18,8 +18,7 @@ public class CustomGeneratorTest {
                 .addCustomGenerator(CustomClass.class, new GeneratorString());
         AssertJson.assertEquals(
                 getExpected(),
-                gen.generate(CustomClass.class)
-        );
+                gen.generate(CustomClass.class));
     }
 
     @Test
@@ -28,8 +27,7 @@ public class CustomGeneratorTest {
                 .addCustomGenerator(CustomClass.class, new CustomGenerator());
         AssertJson.assertEquals(
                 getExpected(),
-                gen.generate(CustomClass.class)
-        );
+                gen.generate(CustomClass.class));
     }
 
     private JsonNode getExpected() {

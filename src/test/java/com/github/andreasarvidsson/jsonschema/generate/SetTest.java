@@ -26,24 +26,21 @@ public class SetTest {
                 getExpected(new JsonBuilder()
                         .setType(JsonType.BOOLEAN)
                         .build()),
-                gen.generate(SetBool.class)
-        );
+                gen.generate(SetBool.class));
     }
 
     @Test
     public void testSetObject() {
         AssertJson.assertEquals(
                 getExpected(new JsonBuilder().build()),
-                gen.generate(SetObject.class)
-        );
+                gen.generate(SetObject.class));
     }
 
     @Test
     public void testSetDefault() {
         AssertJson.assertEquals(
                 getExpected(new JsonBuilder().build()),
-                gen.generate(SetDefault.class)
-        );
+                gen.generate(SetDefault.class));
     }
 
     private JsonNode getExpected(final JsonNode items) {
@@ -58,43 +55,27 @@ public class SetTest {
                         .addField(JsonSchemaField.MIN_ITEMS, min)
                         .addField(JsonSchemaField.MAX_ITEMS, max)
                         .setItems(items)
-                        .build()
-                )
+                        .build())
                 .build();
     }
 
     class SetBool {
 
-        @JsonSchema(
-                title = title,
-                description = desc,
-                minItems = min,
-                maxItems = max
-        )
+        @JsonSchema(title = title, description = desc, minItems = min, maxItems = max)
         public Set<Boolean> value;
 
     }
 
     class SetObject {
 
-        @JsonSchema(
-                title = title,
-                description = desc,
-                minItems = min,
-                maxItems = max
-        )
+        @JsonSchema(title = title, description = desc, minItems = min, maxItems = max)
         public Set<Object> value;
 
     }
 
     class SetDefault {
 
-        @JsonSchema(
-                title = title,
-                description = desc,
-                minItems = min,
-                maxItems = max
-        )
+        @JsonSchema(title = title, description = desc, minItems = min, maxItems = max)
         public Set value;
 
     }

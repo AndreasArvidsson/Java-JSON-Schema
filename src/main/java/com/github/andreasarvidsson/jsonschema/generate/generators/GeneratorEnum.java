@@ -19,11 +19,9 @@ public class GeneratorEnum extends GeneratorBase {
 
     public GeneratorEnum() {
         super(
-            Arrays.asList(
-                JsonSchemaField.TITLE,
-                JsonSchemaField.DESCRIPTION
-            )
-        );
+                Arrays.asList(
+                        JsonSchemaField.TITLE,
+                        JsonSchemaField.DESCRIPTION));
     }
 
     @Override
@@ -42,33 +40,28 @@ public class GeneratorEnum extends GeneratorBase {
     }
 
     private void addDescriptiveValues(
-        final ObjectNode result, final Method jsonValueMethod,
-        final Enum[] enumValues
-    ) {
+            final ObjectNode result, final Method jsonValueMethod,
+            final Enum[] enumValues) {
         final ArrayNode oneOfNode = MAPPER.createArrayNode();
         for (final Enum e : enumValues) {
             oneOfNode.add(
-                createDesc(
-                    getEnumValue(e, jsonValueMethod),
-                    ((JsonSchemaEnum) e).getTitle(),
-                    ((JsonSchemaEnum) e).getDescription()
-                )
-            );
+                    createDesc(
+                            getEnumValue(e, jsonValueMethod),
+                            ((JsonSchemaEnum) e).getTitle(),
+                            ((JsonSchemaEnum) e).getDescription()));
         }
         result.set("oneOf", oneOfNode);
     }
 
     private void addSimpleValues(
-        final ObjectNode result, final Method jsonValueMethod,
-        final Enum[] enumValues
-    ) {
+            final ObjectNode result, final Method jsonValueMethod,
+            final Enum[] enumValues) {
         final ArrayNode enumNode = MAPPER.createArrayNode();
         for (final Enum e : enumValues) {
             final Object enumValue = getEnumValue(e, jsonValueMethod);
             if (enumValue instanceof String) {
                 enumNode.add((String) enumValue);
-            }
-            else {
+            } else {
                 enumNode.addPOJO(enumValue);
             }
         }
@@ -79,8 +72,7 @@ public class GeneratorEnum extends GeneratorBase {
         final ObjectNode result = MAPPER.createObjectNode();
         if (value instanceof String) {
             result.put(JsonSchemaField.Disabled.CONST.toString(), (String) value);
-        }
-        else {
+        } else {
             result.putPOJO(JsonSchemaField.Disabled.CONST.toString(), value);
         }
         if (title != null) {
@@ -96,8 +88,7 @@ public class GeneratorEnum extends GeneratorBase {
         if (jsonValueMethod != null) {
             try {
                 return jsonValueMethod.invoke(e);
-            }
-            catch (final IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            } catch (final IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                 throw new RuntimeException(ex);
             }
         }

@@ -22,16 +22,14 @@ public class BoolTest {
     public void testBoolPrim() {
         AssertJson.assertEquals(
                 new JsonBuilder().setType(JsonType.BOOLEAN).build(),
-                gen.generate(boolean.class)
-        );
+                gen.generate(boolean.class));
     }
 
     @Test
     public void testBoolClass() {
         AssertJson.assertEquals(
                 new JsonBuilder().setType(JsonType.BOOLEAN).build(),
-                gen.generate(Boolean.class)
-        );
+                gen.generate(Boolean.class));
     }
 
     @Test
@@ -44,22 +42,16 @@ public class BoolTest {
                         .addField(JsonSchemaField.TITLE, title)
                         .addField(JsonSchemaField.DESCRIPTION, desc)
                         .addField(JsonSchemaField.CONST, Boolean.parseBoolean(constant))
-                        .build()
-                )
+                        .build())
                 .build();
         AssertJson.assertEquals(
                 expected,
-                gen.generate(BoolClass.class)
-        );
+                gen.generate(BoolClass.class));
     }
 
     class BoolClass {
 
-        @JsonSchema(
-                title = title,
-                description = desc,
-                constant = constant
-        )
+        @JsonSchema(title = title, description = desc, constant = constant)
         public Boolean value;
     }
 

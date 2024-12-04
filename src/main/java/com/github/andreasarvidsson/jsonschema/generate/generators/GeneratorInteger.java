@@ -55,14 +55,14 @@ public class GeneratorInteger extends GeneratorBase {
         super.addFields(type, target, jsonSchema);
         JsonSchemaUtil.setIntegers(type, target,
                 JsonSchemaField.MINIMUM, jsonSchema.minimum(), Long.MIN_VALUE, Long.MAX_VALUE,
-                JsonSchemaField.MAXIMUM, jsonSchema.maximum(), Long.MIN_VALUE, Long.MAX_VALUE
-        );
+                JsonSchemaField.MAXIMUM, jsonSchema.maximum(), Long.MIN_VALUE, Long.MAX_VALUE);
         JsonSchemaUtil.setIntegers(type, target,
                 JsonSchemaField.EXCLUSIVE_MINIMUM, jsonSchema.exclusiveMinimum(), Long.MIN_VALUE, Long.MAX_VALUE,
-                JsonSchemaField.EXCLUSIVE_MAXIMUM, jsonSchema.exclusiveMaximum(), Long.MIN_VALUE, Long.MAX_VALUE
-        );
-        JsonSchemaUtil.setInteger(type, target, JsonSchemaField.MULTIPLE_OF, jsonSchema.multipleOf(), Long.MIN_VALUE, Long.MAX_VALUE);
-        JsonSchemaUtil.setInteger(type, target, JsonSchemaField.CONST, jsonSchema.constant(), Long.MIN_VALUE, Long.MAX_VALUE);
+                JsonSchemaField.EXCLUSIVE_MAXIMUM, jsonSchema.exclusiveMaximum(), Long.MIN_VALUE, Long.MAX_VALUE);
+        JsonSchemaUtil.setInteger(type, target, JsonSchemaField.MULTIPLE_OF, jsonSchema.multipleOf(), Long.MIN_VALUE,
+                Long.MAX_VALUE);
+        JsonSchemaUtil.setInteger(type, target, JsonSchemaField.CONST, jsonSchema.constant(), Long.MIN_VALUE,
+                Long.MAX_VALUE);
     }
 
 }

@@ -31,8 +31,7 @@ public class ClassTest {
     public void testClass() {
         AssertJson.assertEquals(
                 getExpected(),
-                gen.generate(MyClass.class)
-        );
+                gen.generate(MyClass.class));
     }
 
     @Test
@@ -51,8 +50,7 @@ public class ClassTest {
 
         AssertJson.assertEquals(
                 expected,
-                gen.generate(MyClass2.class)
-        );
+                gen.generate(MyClass2.class));
     }
 
     @Test
@@ -62,13 +60,11 @@ public class ClassTest {
                 .setAdditionalProps(true)
                 .addProperty("value", new JsonBuilder()
                         .setType(JsonType.STRING)
-                        .build()
-                )
+                        .build())
                 .build();
         AssertJson.assertEquals(
                 expected,
-                gen.generate(AnyGetterSetterClass.class)
-        );
+                gen.generate(AnyGetterSetterClass.class));
     }
 
     @Test
@@ -76,20 +72,17 @@ public class ClassTest {
         final ObjectNode expected = new JsonBuilder()
                 .setType(JsonType.OBJECT)
                 .setAdditionalProps(false)
-                .addDependencies("value", new String[]{dependency})
+                .addDependencies("value", new String[] { dependency })
                 .addProperty("value", new JsonBuilder()
                         .setType(JsonType.STRING)
-                        .build()
-                )
+                        .build())
                 .addProperty(dependency, new JsonBuilder()
                         .setType(JsonType.STRING)
-                        .build()
-                )
+                        .build())
                 .build();
         AssertJson.assertEquals(
                 expected,
-                gen.generate(DependencyClass.class)
-        );
+                gen.generate(DependencyClass.class));
     }
 
     private ObjectNode getExpected() {
@@ -103,8 +96,7 @@ public class ClassTest {
                         .addField(JsonSchemaField.TITLE, fieldTitle)
                         .addField(JsonSchemaField.DESCRIPTION, fieldDesc)
                         .addField(JsonSchemaField.MIN_LENGTH, 1)
-                        .build()
-                )
+                        .build())
                 .build();
     }
 
@@ -113,37 +105,22 @@ public class ClassTest {
         try {
             gen.generate(CombiningFailClass.class);
             Assertions.fail("Expected runtime exception for combinings on class level");
-        }
-        catch (final RuntimeException ex) {
+        } catch (final RuntimeException ex) {
         }
     }
 
-    @JsonSchema(
-            title = classTitle,
-            description = classDesc
-    )
+    @JsonSchema(title = classTitle, description = classDesc)
     class MyClass {
 
-        @JsonSchema(
-                title = fieldTitle,
-                description = fieldDesc,
-                minLength = 1
-        )
+        @JsonSchema(title = fieldTitle, description = fieldDesc, minLength = 1)
         public String value;
 
     }
 
-    @JsonSchema(
-            title = classTitle,
-            description = classDesc
-    )
+    @JsonSchema(title = classTitle, description = classDesc)
     class MyClass2 {
 
-        @JsonSchema(
-                title = titleOuter,
-                description = descOuter,
-                required = true
-        )
+        @JsonSchema(title = titleOuter, description = descOuter, required = true)
         public MyClass valueOuter;
 
     }
@@ -167,18 +144,14 @@ public class ClassTest {
 
     class DependencyClass {
 
-        @JsonSchema(
-                dependencies = {dependency}
-        )
+        @JsonSchema(dependencies = { dependency })
         public String value;
 
         public String anoterValue;
 
     }
 
-    @JsonSchema(
-            combining = Combining.ANY_OF
-    )
+    @JsonSchema(combining = Combining.ANY_OF)
     class CombiningFailClass {
 
     }

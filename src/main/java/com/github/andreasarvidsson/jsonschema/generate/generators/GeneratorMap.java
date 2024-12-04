@@ -21,8 +21,7 @@ public class GeneratorMap extends GeneratorBase implements GeneratorCollectionIn
                 JsonSchemaField.TITLE,
                 JsonSchemaField.DESCRIPTION,
                 JsonSchemaField.MIN_PROPERTIES,
-                JsonSchemaField.MAX_PROPERTIES
-        ));
+                JsonSchemaField.MAX_PROPERTIES));
         this.generators = generators;
     }
 
@@ -40,8 +39,7 @@ public class GeneratorMap extends GeneratorBase implements GeneratorCollectionIn
         super.addFields(type, target, jsonSchema);
         JsonSchemaUtil.setIntegers(type, target,
                 JsonSchemaField.MIN_PROPERTIES, jsonSchema.minProperties(), 0, Integer.MAX_VALUE,
-                JsonSchemaField.MAX_PROPERTIES, jsonSchema.maxProperties(), 1, Integer.MAX_VALUE
-        );
+                JsonSchemaField.MAX_PROPERTIES, jsonSchema.maxProperties(), 1, Integer.MAX_VALUE);
     }
 
 }

@@ -11,7 +11,7 @@ public class ValidatorNumber extends ValidatorNumberBase {
 
     @Override
     protected int compareTo(final Number instance, final String value) {
-        //Float
+        // Float
         if (instance instanceof Float) {
             final float val = Float.parseFloat(value);
             if (equals(instance.floatValue(), val)) {
@@ -19,7 +19,7 @@ public class ValidatorNumber extends ValidatorNumberBase {
             }
             return Float.compare(instance.floatValue(), val);
         }
-        //Double
+        // Double
         final double val = Double.parseDouble(value);
         if (equals(instance.doubleValue(), val)) {
             return 0;
@@ -29,11 +29,11 @@ public class ValidatorNumber extends ValidatorNumberBase {
 
     @Override
     protected boolean multipleOf(final Number instance, final String value) {
-        //Float
+        // Float
         if (instance instanceof Float) {
             return equals(instance.floatValue() % Float.parseFloat(value), 0.0f);
         }
-        //Double
+        // Double
         return equals(instance.doubleValue() % Double.parseDouble(value), 0.0);
     }
 

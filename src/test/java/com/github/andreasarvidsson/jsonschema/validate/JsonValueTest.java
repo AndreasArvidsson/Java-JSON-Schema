@@ -48,8 +48,7 @@ public class JsonValueTest {
                 report,
                 report.propertyPath,
                 JsonSchemaField.PATTERN.toString(),
-                PatternClass.PATTERN
-        );
+                PatternClass.PATTERN);
     }
 
     class NormalClass {
@@ -69,9 +68,7 @@ public class JsonValueTest {
 
     }
 
-    @JsonSchema(
-            pattern = PatternClass.PATTERN
-    )
+    @JsonSchema(pattern = PatternClass.PATTERN)
     public static class PatternClass {
 
         private final static String PATTERN = "\\d+";

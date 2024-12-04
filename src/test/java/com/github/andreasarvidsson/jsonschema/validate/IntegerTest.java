@@ -26,8 +26,7 @@ public class IntegerTest {
                 report,
                 PropertyPath.append(report.propertyPath, "valueMin"),
                 JsonSchemaField.MINIMUM.toString(),
-                (long) value
-        );
+                (long) value);
     }
 
     @Test
@@ -39,8 +38,7 @@ public class IntegerTest {
                 report,
                 PropertyPath.append(report.propertyPath, "valueMax"),
                 JsonSchemaField.MAXIMUM.toString(),
-                (long) value
-        );
+                (long) value);
     }
 
     @Test
@@ -52,8 +50,7 @@ public class IntegerTest {
                 report,
                 PropertyPath.append(report.propertyPath, "valueExMin"),
                 JsonSchemaField.EXCLUSIVE_MINIMUM.toString(),
-                (long) value
-        );
+                (long) value);
     }
 
     @Test
@@ -65,8 +62,7 @@ public class IntegerTest {
                 report,
                 PropertyPath.append(report.propertyPath, "valueExMax"),
                 JsonSchemaField.EXCLUSIVE_MAXIMUM.toString(),
-                (long) value
-        );
+                (long) value);
     }
 
     @Test
@@ -79,8 +75,7 @@ public class IntegerTest {
                 report,
                 PropertyPath.append(report.propertyPath, "valueMultipleOf"),
                 JsonSchemaField.MULTIPLE_OF.toString(),
-                (long) value
-        );
+                (long) value);
     }
 
     @Test
@@ -93,40 +88,27 @@ public class IntegerTest {
                 report,
                 PropertyPath.append(report.propertyPath, "valueConstant"),
                 JsonSchemaField.CONST.toString(),
-                (long) value
-        );
+                (long) value);
     }
 
     class IntegerClass {
 
-        @JsonSchema(
-                minimum = valueStr
-        )
+        @JsonSchema(minimum = valueStr)
         public int valueMin = value;
 
-        @JsonSchema(
-                maximum = valueStr
-        )
+        @JsonSchema(maximum = valueStr)
         public int valueMax = value;
 
-        @JsonSchema(
-                exclusiveMinimum = valueStr
-        )
+        @JsonSchema(exclusiveMinimum = valueStr)
         public int valueExMin = value + 1;
 
-        @JsonSchema(
-                exclusiveMaximum = valueStr
-        )
+        @JsonSchema(exclusiveMaximum = valueStr)
         public int valueExMax = value - 1;
 
-        @JsonSchema(
-                multipleOf = valueStr
-        )
+        @JsonSchema(multipleOf = valueStr)
         public int valueMultipleOf = value;
 
-        @JsonSchema(
-                constant = valueStr
-        )
+        @JsonSchema(constant = valueStr)
         public int valueConstant = value;
 
     }

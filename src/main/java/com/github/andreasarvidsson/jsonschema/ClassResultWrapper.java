@@ -30,8 +30,7 @@ public class ClassResultWrapper {
             final JsonSchema jsonSchema, final Object instance) {
         addCombining(
                 getCombiningGroup(jsonSchema),
-                new ClassCombiningWrapper(path, propertyName, jsonSchema, instance)
-        );
+                new ClassCombiningWrapper(path, propertyName, jsonSchema, instance));
     }
 
     public void addCombining(
@@ -39,20 +38,19 @@ public class ClassResultWrapper {
             final JsonSchema jsonSchema, final ObjectNode propertyNode) {
         addCombining(
                 getCombiningGroup(jsonSchema),
-                new ClassCombiningWrapper(propertyName, jsonSchema, propertyNode)
-        );
+                new ClassCombiningWrapper(propertyName, jsonSchema, propertyNode));
     }
 
     private void addCombining(final long combiningGroup, final ClassCombiningWrapper wrapper) {
         if (combiningGroup == 0) {
             addOwnProperty(wrapper.jsonSchema.combining(), wrapper.propertyName, wrapper);
-        }
-        else {
+        } else {
             addCombination(wrapper.jsonSchema.combining(), combiningGroup, wrapper);
         }
     }
 
-    private void addOwnProperty(final Combining combining, final String propertyName, final ClassCombiningWrapper wrapper) {
+    private void addOwnProperty(final Combining combining, final String propertyName,
+            final ClassCombiningWrapper wrapper) {
         final Map<Combining, List<ClassCombiningWrapper>> map = getOwnPropertyMap(propertyName);
         if (!map.containsKey(combining)) {
             map.put(combining, new ArrayList<>());
@@ -69,19 +67,18 @@ public class ClassResultWrapper {
     }
 
     private long getCombiningGroup(final JsonSchema jsonSchema) {
-        //Calculate group ID for non given.
+        // Calculate group ID for non given.
         long combiningGroup = jsonSchema.combiningGroup();
 
-        //Default value. Generate value,
+        // Default value. Generate value,
         if (combiningGroup == Long.MIN_VALUE) {
             return -1 - size(jsonSchema.combining());
         }
-        //Given faulty value.
+        // Given faulty value.
         else if (combiningGroup < 0) {
             throw new RuntimeException(String.format(
                     "Invalid value '%s' for JsonSchema.combiningGroup. Please enter >= 0 values only",
-                    combiningGroup
-            ));
+                    combiningGroup));
         }
         return combiningGroup;
     }

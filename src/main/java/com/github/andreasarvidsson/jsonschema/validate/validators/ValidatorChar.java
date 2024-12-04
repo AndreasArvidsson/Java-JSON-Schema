@@ -15,11 +15,13 @@ public class ValidatorChar implements Validator {
     }
 
     @Override
-    public void validateSchema(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema) {
+    public void validateSchema(final List<Error> errors, final String path, final Object instance,
+            final JsonSchema jsonSchema) {
         validateConst(errors, path, instance, jsonSchema);
     }
 
-    private void validateConst(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema) {
+    private void validateConst(final List<Error> errors, final String path, final Object instance,
+            final JsonSchema jsonSchema) {
         if (!jsonSchema.constant().isEmpty()) {
             if (jsonSchema.constant().charAt(0) != (char) instance) {
                 errors.add(Error.constant(path, jsonSchema, jsonSchema.constant().charAt(0), instance));

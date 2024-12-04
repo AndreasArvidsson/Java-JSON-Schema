@@ -26,18 +26,21 @@ public class ValidatorMap implements Validator {
     }
 
     @Override
-    public void validateSchema(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema) {
+    public void validateSchema(final List<Error> errors, final String path, final Object instance,
+            final JsonSchema jsonSchema) {
         validateMinProperties(errors, path, instance, jsonSchema, ((Map) instance).size());
         validateMaxProperties(errors, path, instance, jsonSchema, ((Map) instance).size());
     }
 
-    private void validateMinProperties(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema, final int length) {
+    private void validateMinProperties(final List<Error> errors, final String path, final Object instance,
+            final JsonSchema jsonSchema, final int length) {
         if (jsonSchema.minProperties() != Long.MIN_VALUE && length < jsonSchema.minProperties()) {
             errors.add(Error.minProperties(path, jsonSchema, instance));
         }
     }
 
-    private void validateMaxProperties(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema, final int length) {
+    private void validateMaxProperties(final List<Error> errors, final String path, final Object instance,
+            final JsonSchema jsonSchema, final int length) {
         if (jsonSchema.maxProperties() != Long.MIN_VALUE && length > jsonSchema.maxProperties()) {
             errors.add(Error.maxProperties(path, jsonSchema, instance));
         }

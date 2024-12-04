@@ -21,11 +21,9 @@ public class JsonIgnoreTest {
                 .addProperty("value1",
                         new JsonBuilder()
                                 .setType(JsonType.STRING)
-                                .build()
-                )
+                                .build())
                 .build(),
-                gen.generate(JsonIgnoreClass.class)
-        );
+                gen.generate(JsonIgnoreClass.class));
     }
 
     class JsonIgnoreClass {

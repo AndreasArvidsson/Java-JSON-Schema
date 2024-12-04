@@ -27,16 +27,14 @@ public class StringTest {
     public void testString() {
         AssertJson.assertEquals(
                 getStringExpected(),
-                gen.generate(String.class)
-        );
+                gen.generate(String.class));
     }
 
     @Test
     public void testCharSeq() {
         AssertJson.assertEquals(
                 getStringExpected(),
-                gen.generate(CharSequence.class)
-        );
+                gen.generate(CharSequence.class));
     }
 
     @Test
@@ -53,21 +51,18 @@ public class StringTest {
                         .addField(JsonSchemaField.PATTERN, pattern)
                         .addField(JsonSchemaField.FORMAT, format)
                         .addField(JsonSchemaField.CONST, constant)
-                        .build()
-                )
+                        .build())
                 .build();
         AssertJson.assertEquals(
                 expected,
-                gen.generate(StringClass.class)
-        );
+                gen.generate(StringClass.class));
     }
 
     @Test
     public void testUUID() {
         AssertJson.assertEquals(
                 getStringExpected(),
-                gen.generate(UUID.class)
-        );
+                gen.generate(UUID.class));
     }
 
     private JsonNode getStringExpected() {
@@ -78,15 +73,7 @@ public class StringTest {
 
     class StringClass {
 
-        @JsonSchema(
-                title = title,
-                description = desc,
-                minLength = min,
-                maxLength = max,
-                pattern = pattern,
-                format = format,
-                constant = constant
-        )
+        @JsonSchema(title = title, description = desc, minLength = min, maxLength = max, pattern = pattern, format = format, constant = constant)
         public String value;
     }
 

@@ -26,7 +26,8 @@ public class ValidatorArray extends ValidatorArrayBase {
     }
 
     @Override
-    public void validateSchema(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema) {
+    public void validateSchema(final List<Error> errors, final String path, final Object instance,
+            final JsonSchema jsonSchema) {
         super.validateArray(errors, path, instance, jsonSchema, Array.getLength(instance));
     }
 

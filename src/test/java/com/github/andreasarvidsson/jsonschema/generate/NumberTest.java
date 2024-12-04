@@ -64,8 +64,7 @@ public class NumberTest {
                         .addField(JsonSchemaField.EXCLUSIVE_MAXIMUM, Double.parseDouble(maxEx))
                         .addField(JsonSchemaField.MULTIPLE_OF, Double.parseDouble(mult))
                         .addField(JsonSchemaField.CONST, Double.parseDouble(constant))
-                        .build()
-                )
+                        .build())
                 .build();
         final JsonNode actual = new JsonSchemaGenerator()
                 .hideSchemaField()
@@ -76,16 +75,7 @@ public class NumberTest {
 
     class NumberClass {
 
-        @JsonSchema(
-                title = title,
-                description = desc,
-                minimum = min,
-                maximum = max,
-                exclusiveMinimum = minEx,
-                exclusiveMaximum = maxEx,
-                multipleOf = mult,
-                constant = constant
-        )
+        @JsonSchema(title = title, description = desc, minimum = min, maximum = max, exclusiveMinimum = minEx, exclusiveMaximum = maxEx, multipleOf = mult, constant = constant)
         public Double value;
     }
 

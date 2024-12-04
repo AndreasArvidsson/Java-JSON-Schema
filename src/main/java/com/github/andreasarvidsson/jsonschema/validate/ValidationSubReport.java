@@ -26,8 +26,7 @@ public class ValidationSubReport {
         reports.entrySet().forEach(e -> {
             failedSchemas.add(new ValidationSubSchema(
                     PropertyPath.append(PropertyPath.append(path, combining.toString()), e.getKey()),
-                    e.getValue()
-            ));
+                    e.getValue()));
         });
     }
 

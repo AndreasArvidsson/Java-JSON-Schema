@@ -30,10 +30,9 @@ public class Generators {
     private final ClassDefinitions classDefinitions;
 
     public Generators(
-        final boolean autoRangeNumbers,
-        final Map<Class, Generator> customGenerators,
-        final ClassDefinitions classDefinitions
-    ) {
+            final boolean autoRangeNumbers,
+            final Map<Class, Generator> customGenerators,
+            final ClassDefinitions classDefinitions) {
         this.customGenerators = customGenerators;
         this.classDefinitions = classDefinitions;
         this.generatorClass = new GeneratorClass(this);
@@ -180,8 +179,7 @@ public class Generators {
 
         if (args != null && generator == generatorClass) {
             wrapper.classNode = generatorClass.parseClass(type, args);
-        }
-        else {
+        } else {
             wrapper.classNode = generator.parseClass(type);
         }
 

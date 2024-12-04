@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author Andreas Arvidsson
  */
-@JsonPropertyOrder({"success", "propertyPath", "errors"})
+@JsonPropertyOrder({ "success", "propertyPath", "errors" })
 public class ValidationReport {
 
     private final static ObjectMapper MAPPER = new ObjectMapper()
@@ -38,8 +38,7 @@ public class ValidationReport {
     public String toString() {
         try {
             return WRITER.writeValueAsString(this);
-        }
-        catch (JsonProcessingException ex) {
+        } catch (JsonProcessingException ex) {
             throw new RuntimeException(ex);
         }
     }

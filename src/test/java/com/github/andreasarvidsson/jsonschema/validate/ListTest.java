@@ -39,8 +39,7 @@ public class ListTest {
                 report,
                 PropertyPath.append(report.propertyPath, "values"),
                 JsonSchemaField.MIN_ITEMS.toString(),
-                (long) minItems
-        );
+                (long) minItems);
     }
 
     @Test
@@ -60,8 +59,7 @@ public class ListTest {
                 report,
                 PropertyPath.append(report.propertyPath, "values"),
                 JsonSchemaField.MAX_ITEMS.toString(),
-                (long) maxItems
-        );
+                (long) maxItems);
     }
 
     @Test
@@ -79,8 +77,7 @@ public class ListTest {
                 report,
                 PropertyPath.append(PropertyPath.append(report.propertyPath, 1), "value"),
                 JsonSchemaField.MINIMUM.toString(),
-                (long) minimum
-        );
+                (long) minimum);
     }
 
     private List<Integer> get(final int size) {
@@ -93,27 +90,21 @@ public class ListTest {
 
     class MinItemsClass {
 
-        @JsonSchema(
-                minItems = minItems
-        )
+        @JsonSchema(minItems = minItems)
         public List<Integer> values;
 
     }
 
     class MaxItemsClass {
 
-        @JsonSchema(
-                maxItems = maxItems
-        )
+        @JsonSchema(maxItems = maxItems)
         public List<Integer> values;
 
     }
 
     class IntegerClass {
 
-        @JsonSchema(
-                minimum = minimumStr
-        )
+        @JsonSchema(minimum = minimumStr)
         public final int value;
 
         public IntegerClass(final int value) {

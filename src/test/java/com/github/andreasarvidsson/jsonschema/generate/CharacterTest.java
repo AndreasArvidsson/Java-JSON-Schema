@@ -22,16 +22,14 @@ public class CharacterTest {
     public void testChar() {
         AssertJson.assertEquals(
                 getCharExpected(),
-                gen.generate(char.class)
-        );
+                gen.generate(char.class));
     }
 
     @Test
     public void testCharacter() {
         AssertJson.assertEquals(
                 getCharExpected(),
-                gen.generate(Character.class)
-        );
+                gen.generate(Character.class));
     }
 
     @Test
@@ -46,13 +44,11 @@ public class CharacterTest {
                         .addField(JsonSchemaField.CONST, constant)
                         .addField(JsonSchemaField.MIN_LENGTH, 1)
                         .addField(JsonSchemaField.MAX_LENGTH, 1)
-                        .build()
-                )
+                        .build())
                 .build();
         AssertJson.assertEquals(
                 expected,
-                gen.generate(CharClass.class)
-        );
+                gen.generate(CharClass.class));
     }
 
     private JsonNode getCharExpected() {
@@ -65,11 +61,7 @@ public class CharacterTest {
 
     class CharClass {
 
-        @JsonSchema(
-                title = title,
-                description = desc,
-                constant = constant
-        )
+        @JsonSchema(title = title, description = desc, constant = constant)
         public Character value;
     }
 

@@ -35,8 +35,7 @@ public class StringTest {
                 report,
                 PropertyPath.append(report.propertyPath, "valueMin"),
                 JsonSchemaField.MIN_LENGTH.toString(),
-                length
-        );
+                length);
     }
 
     @Test
@@ -56,8 +55,7 @@ public class StringTest {
                 report,
                 PropertyPath.append(report.propertyPath, "valueMax"),
                 JsonSchemaField.MAX_LENGTH.toString(),
-                length
-        );
+                length);
     }
 
     @Test
@@ -77,8 +75,7 @@ public class StringTest {
                 report,
                 PropertyPath.append(report.propertyPath, "valuePattern"),
                 JsonSchemaField.PATTERN.toString(),
-                pattern
-        );
+                pattern);
     }
 
     @Test
@@ -98,8 +95,7 @@ public class StringTest {
                 report,
                 PropertyPath.append(report.propertyPath, "valueConstant"),
                 JsonSchemaField.CONST.toString(),
-                constant
-        );
+                constant);
     }
 
     private String get(final long size) {
@@ -112,24 +108,16 @@ public class StringTest {
 
     class StringClass {
 
-        @JsonSchema(
-                minLength = length
-        )
+        @JsonSchema(minLength = length)
         public String valueMin;
 
-        @JsonSchema(
-                maxLength = length
-        )
+        @JsonSchema(maxLength = length)
         public String valueMax;
 
-        @JsonSchema(
-                pattern = pattern
-        )
+        @JsonSchema(pattern = pattern)
         public String valuePattern;
 
-        @JsonSchema(
-                constant = constant
-        )
+        @JsonSchema(constant = constant)
         public String valueConstant;
 
     }

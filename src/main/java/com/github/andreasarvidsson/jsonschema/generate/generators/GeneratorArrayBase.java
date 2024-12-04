@@ -21,8 +21,7 @@ public abstract class GeneratorArrayBase extends GeneratorBase {
                 JsonSchemaField.TITLE,
                 JsonSchemaField.DESCRIPTION,
                 JsonSchemaField.MIN_ITEMS,
-                JsonSchemaField.MAX_ITEMS
-        ));
+                JsonSchemaField.MAX_ITEMS));
         this.generators = generators;
     }
 
@@ -31,8 +30,7 @@ public abstract class GeneratorArrayBase extends GeneratorBase {
         super.addFields(type, target, jsonSchema);
         JsonSchemaUtil.setIntegers(type, target,
                 JsonSchemaField.MIN_ITEMS, jsonSchema.minItems(), 0, Integer.MAX_VALUE,
-                JsonSchemaField.MAX_ITEMS, jsonSchema.maxItems(), 1, Integer.MAX_VALUE
-        );
+                JsonSchemaField.MAX_ITEMS, jsonSchema.maxItems(), 1, Integer.MAX_VALUE);
     }
 
     private ObjectNode parseArrayClass(final Class type, final Type valueType, final boolean isUnique) {

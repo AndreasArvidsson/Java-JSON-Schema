@@ -34,8 +34,7 @@ public class CustomValidatorTest {
                 report,
                 report.propertyPath,
                 JsonSchemaField.MINIMUM.toString(),
-                1
-        );
+                1);
     }
 
     class MyValidator implements Validator {
@@ -50,13 +49,13 @@ public class CustomValidatorTest {
                         1,
                         String.format("Does not meet minimum of %d", 1),
                         null,
-                        instance
-                ));
+                        instance));
             }
         }
 
         @Override
-        public void validateSchema(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema) {
+        public void validateSchema(final List<Error> errors, final String path, final Object instance,
+                final JsonSchema jsonSchema) {
         }
 
     }

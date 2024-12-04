@@ -7,6 +7,7 @@ package com.github.andreasarvidsson.jsonschema;
 public interface JsonSchemaEnum {
 
     public String getTitle();
+
     public String getDescription();
 
 }

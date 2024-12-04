@@ -15,11 +15,13 @@ public class ValidatorBool implements Validator {
     }
 
     @Override
-    public void validateSchema(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema) {
+    public void validateSchema(final List<Error> errors, final String path, final Object instance,
+            final JsonSchema jsonSchema) {
         validateConst(errors, path, instance, jsonSchema);
     }
 
-    private void validateConst(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema) {
+    private void validateConst(final List<Error> errors, final String path, final Object instance,
+            final JsonSchema jsonSchema) {
         if (!jsonSchema.constant().isEmpty()) {
             if (Boolean.parseBoolean(jsonSchema.constant()) != (boolean) instance) {
                 errors.add(Error.constant(path, jsonSchema, Boolean.parseBoolean(jsonSchema.constant()), instance));

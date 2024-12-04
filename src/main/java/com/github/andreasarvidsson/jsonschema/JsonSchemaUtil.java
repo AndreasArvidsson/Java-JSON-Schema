@@ -24,8 +24,7 @@ public abstract class JsonSchemaUtil {
             try {
                 DEFAULT_VALUES.put(field, JsonSchema.class.getMethod(field.getFieldName()).getDefaultValue());
                 VALIDATE_FIELDS.add(field.toString());
-            }
-            catch (final NoSuchMethodException | SecurityException ex) {
+            } catch (final NoSuchMethodException | SecurityException ex) {
                 throw new RuntimeException(ex);
             }
         }
@@ -37,16 +36,14 @@ public abstract class JsonSchemaUtil {
                 if (!VALIDATE_FIELDS.contains(method.getName())) {
                     continue;
                 }
-                //Not defualt vlaue and not allowed
+                // Not defualt vlaue and not allowed
                 if (!Objects.equals(method.getDefaultValue(), method.invoke(jsonSchema))
                         && !allowed.contains(method.getName())) {
                     throw new RuntimeException(
                             String.format("Json schema field '%s' is not applicable for type '%s'",
-                                    method.getName(), type.getTypeName())
-                    );
+                                    method.getName(), type.getTypeName()));
                 }
-            }
-            catch (final IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+            } catch (final IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
                 throw new RuntimeException(ex);
             }
         }
@@ -60,8 +57,7 @@ public abstract class JsonSchemaUtil {
                 if (((Object[]) value).length > 0) {
                     res.put(method.getName(), value);
                 }
-            }
-            else {
+            } else {
                 if (!Objects.equals(value, method.getDefaultValue())) {
                     res.put(method.getName(), value);
                 }
@@ -95,8 +91,7 @@ public abstract class JsonSchemaUtil {
         if (b1 && b2) {
             validateMaxLargerThanMin(type, false,
                     field1, Double.parseDouble(value1),
-                    field2, Double.parseDouble(value2)
-            );
+                    field2, Double.parseDouble(value2));
         }
     }
 
@@ -115,8 +110,7 @@ public abstract class JsonSchemaUtil {
         if (b1 && b2) {
             validateMaxLargerThanMin(type, true,
                     field1, Long.parseLong(value1),
-                    field2, Long.parseLong(value2)
-            );
+                    field2, Long.parseLong(value2));
         }
     }
 
@@ -137,8 +131,9 @@ public abstract class JsonSchemaUtil {
         setIntegerIfNotDefault(type, target, field, value, min, max);
     }
 
-    private static boolean setNumberIfNotDefault(final ObjectNode target, final JsonSchemaField field, final String value) {
-        //If still default value. Just stop/return.
+    private static boolean setNumberIfNotDefault(final ObjectNode target, final JsonSchemaField field,
+            final String value) {
+        // If still default value. Just stop/return.
         if (value.isEmpty()) {
             return false;
         }
@@ -149,7 +144,7 @@ public abstract class JsonSchemaUtil {
     private static boolean setIntegerIfNotDefault(
             final Class type, final ObjectNode target,
             final JsonSchemaField field, final String value, final long min, final long max) {
-        //If still default value. Just stop/return.
+        // If still default value. Just stop/return.
         if (value.isEmpty()) {
             return false;
         }
@@ -159,7 +154,7 @@ public abstract class JsonSchemaUtil {
     private static boolean setIntegerIfNotDefault(
             final Class type, final ObjectNode target,
             final JsonSchemaField field, final long value, final long min, final long max) {
-        //If still default value. Just stop/return.
+        // If still default value. Just stop/return.
         if (value == Long.MIN_VALUE) {
             return false;
         }
@@ -168,12 +163,12 @@ public abstract class JsonSchemaUtil {
         return true;
     }
 
-    private static void validateRange(final Class type, final JsonSchemaField field, final long value, final long min, final long max) {
+    private static void validateRange(final Class type, final JsonSchemaField field, final long value, final long min,
+            final long max) {
         if (value < min || value > max) {
             throw new RuntimeException(String.format(
                     "Json schema field %s value %d is out of range [%d, %d] for type '%s'",
-                    field.toString(), value, min, max, type.getTypeName())
-            );
+                    field.toString(), value, min, max, type.getTypeName()));
         }
     }
 
@@ -184,15 +179,13 @@ public abstract class JsonSchemaUtil {
         boolean isInvalid;
         if (isInteger) {
             isInvalid = valueMin.longValue() >= valueMax.longValue();
-        }
-        else {
+        } else {
             isInvalid = valueMin.doubleValue() >= valueMax.doubleValue();
         }
         if (isInvalid) {
             throw new RuntimeException(String.format(
                     "Json schema field %s=%d is larger or equals to %s=%d for type '%s'",
-                    fieldMin.toString(), valueMin, fieldMax.toString(), valueMax, type.getTypeName())
-            );
+                    fieldMin.toString(), valueMin, fieldMax.toString(), valueMax, type.getTypeName()));
         }
     }
 
@@ -203,8 +196,7 @@ public abstract class JsonSchemaUtil {
     private static Object getValue(final Method method, final JsonSchema jsonSchema) {
         try {
             return method.invoke(jsonSchema);
-        }
-        catch (final IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+        } catch (final IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
             throw new RuntimeException(ex);
         }
     }

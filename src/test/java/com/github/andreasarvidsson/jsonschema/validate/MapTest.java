@@ -38,8 +38,7 @@ public class MapTest {
                 report,
                 PropertyPath.append(report.propertyPath, "values"),
                 JsonSchemaField.MIN_PROPERTIES.toString(),
-                (long) minProperties
-        );
+                (long) minProperties);
     }
 
     @Test
@@ -59,8 +58,7 @@ public class MapTest {
                 report,
                 PropertyPath.append(report.propertyPath, "values"),
                 JsonSchemaField.MAX_PROPERTIES.toString(),
-                (long) maxProperties
-        );
+                (long) maxProperties);
     }
 
     @Test
@@ -80,8 +78,7 @@ public class MapTest {
                 report,
                 PropertyPath.append(PropertyPath.append(report.propertyPath, "key"), "value"),
                 JsonSchemaField.MINIMUM.toString(),
-                (long) minimum
-        );
+                (long) minimum);
     }
 
     private void add(final Map<String, Integer> map, final int size) {
@@ -92,27 +89,21 @@ public class MapTest {
 
     class MinPropertiesClass {
 
-        @JsonSchema(
-                minProperties = minProperties
-        )
+        @JsonSchema(minProperties = minProperties)
         public Map<String, Integer> values = new HashMap<>();
 
     }
 
     class MaxPropertiesClass {
 
-        @JsonSchema(
-                maxProperties = maxProperties
-        )
+        @JsonSchema(maxProperties = maxProperties)
         public Map<String, Integer> values = new HashMap<>();
 
     }
 
     class IntegerClass {
 
-        @JsonSchema(
-                minimum = minimumStr
-        )
+        @JsonSchema(minimum = minimumStr)
         public final int value;
 
         public IntegerClass(final int value) {

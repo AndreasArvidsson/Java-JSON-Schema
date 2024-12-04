@@ -33,15 +33,12 @@ public class BoolTest {
                 report,
                 PropertyPath.append(report.propertyPath, "value"),
                 JsonSchemaField.CONST.toString(),
-                Boolean.parseBoolean(constant)
-        );
+                Boolean.parseBoolean(constant));
     }
 
     class BoolClass {
 
-        @JsonSchema(
-                constant = constant
-        )
+        @JsonSchema(constant = constant)
         public Boolean value;
 
     }

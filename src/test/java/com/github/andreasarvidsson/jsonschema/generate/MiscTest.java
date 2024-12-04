@@ -21,8 +21,7 @@ public class MiscTest {
                         .addField(JsonSchemaField.Disabled.SCHEMA, "http://json-schema.org/draft-06/schema#")
                         .setType(JsonType.STRING)
                         .build(),
-                new JsonSchemaGenerator().generate(String.class)
-        );
+                new JsonSchemaGenerator().generate(String.class));
     }
 
     @Test
@@ -34,10 +33,8 @@ public class MiscTest {
                             .addField(JsonSchemaField.Disabled.SCHEMA, newURI.toString())
                             .setType(JsonType.STRING)
                             .build(),
-                    new JsonSchemaGenerator().setSchemaField(newURI).generate(String.class)
-            );
-        }
-        catch (final URISyntaxException ex) {
+                    new JsonSchemaGenerator().setSchemaField(newURI).generate(String.class));
+        } catch (final URISyntaxException ex) {
             Assertions.fail(ex);
         }
     }
@@ -48,16 +45,14 @@ public class MiscTest {
                 new JsonBuilder()
                         .setType(JsonType.STRING)
                         .build(),
-                new JsonSchemaGenerator().hideSchemaField().generate(String.class)
-        );
+                new JsonSchemaGenerator().hideSchemaField().generate(String.class));
     }
 
     @Test
     public void testObjectRoot() {
         AssertJson.assertEquals(
                 new JsonBuilder().build(),
-                new JsonSchemaGenerator().hideSchemaField().generate(Object.class)
-        );
+                new JsonSchemaGenerator().hideSchemaField().generate(Object.class));
     }
 
 }

@@ -51,13 +51,13 @@ public class JsonSchemaGenerator {
             schemaNode.put(JsonSchemaField.Disabled.SCHEMA.toString(), schemaField.toString());
         }
 
-        //Generate root class
+        // Generate root class
         final ObjectNode classNode = generators.parseClass(type);
 
-        //Update node with definitions;
+        // Update node with definitions;
         classDefinitions.update(schemaNode);
 
-        //Add root class;
+        // Add root class;
         schemaNode.setAll(classNode);
 
         return schemaNode;

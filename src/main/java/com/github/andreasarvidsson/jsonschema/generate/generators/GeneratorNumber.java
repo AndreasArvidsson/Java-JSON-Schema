@@ -22,8 +22,7 @@ public class GeneratorNumber extends GeneratorBase {
             JsonSchemaField.EXCLUSIVE_MINIMUM,
             JsonSchemaField.EXCLUSIVE_MAXIMUM,
             JsonSchemaField.MULTIPLE_OF,
-            JsonSchemaField.CONST
-    );
+            JsonSchemaField.CONST);
 
     public GeneratorNumber() {
         super(JsonType.NUMBER, FIELDS);
@@ -34,12 +33,10 @@ public class GeneratorNumber extends GeneratorBase {
         super.addFields(type, target, jsonSchema);
         JsonSchemaUtil.setNumbers(type, target,
                 JsonSchemaField.MINIMUM, jsonSchema.minimum(),
-                JsonSchemaField.MAXIMUM, jsonSchema.maximum()
-        );
+                JsonSchemaField.MAXIMUM, jsonSchema.maximum());
         JsonSchemaUtil.setNumbers(type, target,
                 JsonSchemaField.EXCLUSIVE_MINIMUM, jsonSchema.exclusiveMinimum(),
-                JsonSchemaField.EXCLUSIVE_MAXIMUM, jsonSchema.exclusiveMaximum()
-        );
+                JsonSchemaField.EXCLUSIVE_MAXIMUM, jsonSchema.exclusiveMaximum());
         JsonSchemaUtil.setNumber(type, target, JsonSchemaField.MULTIPLE_OF, jsonSchema.multipleOf());
         JsonSchemaUtil.setNumber(type, target, JsonSchemaField.CONST, jsonSchema.constant());
     }

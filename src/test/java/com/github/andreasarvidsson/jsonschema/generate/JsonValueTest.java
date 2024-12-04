@@ -23,11 +23,9 @@ public class JsonValueTest {
                         .setAdditionalProps(false)
                         .addProperty("value", new JsonBuilder()
                                 .setType(JsonType.STRING)
-                                .build()
-                        )
+                                .build())
                         .build(),
-                gen.generate(NormalClass.class)
-        );
+                gen.generate(NormalClass.class));
     }
 
     @Test
@@ -36,8 +34,7 @@ public class JsonValueTest {
                 new JsonBuilder()
                         .setType(JsonType.STRING)
                         .build(),
-                gen.generate(JsonValueClass.class)
-        );
+                gen.generate(JsonValueClass.class));
     }
 
     @Test
@@ -47,8 +44,7 @@ public class JsonValueTest {
                         .setType(JsonType.STRING)
                         .addField(JsonSchemaField.PATTERN, "\\s")
                         .build(),
-                gen.generate(PatternClass.class)
-        );
+                gen.generate(PatternClass.class));
     }
 
     class NormalClass {
@@ -68,9 +64,7 @@ public class JsonValueTest {
 
     }
 
-    @JsonSchema(
-            pattern = PatternClass.PATTERN
-    )
+    @JsonSchema(pattern = PatternClass.PATTERN)
     class PatternClass {
 
         private final static String PATTERN = "\\s";

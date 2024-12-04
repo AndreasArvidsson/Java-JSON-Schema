@@ -46,7 +46,8 @@ public class Validators {
         }
     }
 
-    public void validateSchema(final List<Error> errors, final String path, final Object instance, final JsonSchema jsonSchema) {
+    public void validateSchema(final List<Error> errors, final String path, final Object instance,
+            final JsonSchema jsonSchema) {
         if (doNothing.contains(instance.getClass())) {
             return;
         }
