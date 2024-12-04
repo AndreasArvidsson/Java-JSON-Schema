@@ -83,6 +83,31 @@ public class ClassTest {
                 "value2");
     }
 
+    @Test
+    public void testGenericStringFail() {
+        final GenericClassString instance = new GenericClassString();
+        instance.value = "";
+        final ValidationReport report = validator.validate(instance);
+        AssertError.assertError(
+                report,
+                PropertyPath.append(report.propertyPath, "value"),
+                JsonSchemaField.MIN_LENGTH.toString(),
+                Long.valueOf(1));
+    }
+
+    @Test
+    public void testGenericStringFieldFail() {
+        final GenericClassStringField instance = new GenericClassStringField();
+        instance.field = new GenericClassString();
+        instance.field.value = "";
+        final ValidationReport report = validator.validate(instance);
+        AssertError.assertError(
+                report,
+                PropertyPath.append(report.propertyPath, PropertyPath.append("field", "value")),
+                JsonSchemaField.MIN_LENGTH.toString(),
+                Long.valueOf(1));
+    }
+
     class RequiredInt {
 
         @JsonSchema(required = true)
@@ -104,6 +129,19 @@ public class ClassTest {
 
         public Integer value2;
 
+    }
+
+    public class GenericClass<T extends Object> {
+        @JsonSchema(minLength = 1)
+        public T value;
+    }
+
+    public class GenericClassString extends GenericClass<String> {
+
+    }
+
+    public class GenericClassStringField {
+        public GenericClassString field;
     }
 
 }

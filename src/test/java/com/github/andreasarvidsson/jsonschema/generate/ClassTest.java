@@ -85,6 +85,38 @@ public class ClassTest {
                 gen.generate(DependencyClass.class));
     }
 
+    @Test
+    public void testGenericClassString() {
+        final ObjectNode expected = new JsonBuilder()
+                .setType(JsonType.OBJECT)
+                .setAdditionalProps(false)
+                .addProperty("value", new JsonBuilder()
+                        .setType(JsonType.STRING)
+                        .build())
+                .build();
+        AssertJson.assertEquals(
+                expected,
+                gen.generate(GenericClassString.class));
+    }
+
+    @Test
+    public void testGenericClassStringField() {
+        final ObjectNode expected = new JsonBuilder()
+                .setType(JsonType.OBJECT)
+                .setAdditionalProps(false)
+                .addProperty("field", new JsonBuilder()
+                        .setType(JsonType.OBJECT)
+                        .setAdditionalProps(false)
+                        .addProperty("value", new JsonBuilder()
+                                .setType(JsonType.STRING)
+                                .build())
+                        .build())
+                .build();
+        AssertJson.assertEquals(
+                expected,
+                gen.generate(GenericClassStringField.class));
+    }
+
     private ObjectNode getExpected() {
         return new JsonBuilder()
                 .setType(JsonType.OBJECT)
@@ -154,6 +186,18 @@ public class ClassTest {
     @JsonSchema(combining = Combining.ANY_OF)
     class CombiningFailClass {
 
+    }
+
+    public class GenericClass<T extends Object> {
+        public T value;
+    }
+
+    public class GenericClassString extends GenericClass<String> {
+
+    }
+
+    public class GenericClassStringField {
+        public GenericClassString field;
     }
 
 }
