@@ -43,6 +43,9 @@ public class ClassDefinitions {
     public ObjectNode getRef(final Class type, final Map<String, Type> args) {
         final ObjectNode refNode = MAPPER.createObjectNode();
         final ClassWrapper wrapper = classes.get(getKey(type, args));
+        if (wrapper == null) {
+            throw new RuntimeException("Class not found in definitions: " + getKey(type, args));
+        }
         wrapper.references.add(refNode);
         return refNode;
     }

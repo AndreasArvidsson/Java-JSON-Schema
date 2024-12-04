@@ -107,6 +107,10 @@ public class Generators {
             throw new RuntimeException(String.format("Mismatch between number of arguments and parameters"));
         }
 
+        if (args.length == 0) {
+            return null;
+        }
+
         final Map<String, Type> result = new HashMap<>();
 
         for (int i = 0; i < args.length; ++i) {
@@ -128,7 +132,7 @@ public class Generators {
         return getAdvancedGenerator(type);
     }
 
-    private ObjectNode parseClass(final Class type, final Field field, final Map<String, Type> args) {
+    private ObjectNode parseClass(final Class type, final Field field, Map<String, Type> args) {
         // First check if we already parsed this class;
         if (classDefinitions.has(type, args)) {
             return classDefinitions.getRef(type, args);
@@ -162,12 +166,17 @@ public class Generators {
             }
         }
 
+        final Generator generator = getAdvancedGenerator(type);
+
+        if (generator == generatorClass && type.getGenericSuperclass() instanceof ParameterizedType) {
+            final ParameterizedType paramType = (ParameterizedType) type.getGenericSuperclass();
+            args = getArgumentsMap(paramType);
+        }
+
         final ClassWrapper wrapper = new ClassWrapper(type);
         // Need to add wrapper to definitions before parsing members in case of circular
         // dependencies.
         classDefinitions.add(type, args, wrapper);
-
-        final Generator generator = getAdvancedGenerator(type);
 
         if (args != null && generator == generatorClass) {
             wrapper.classNode = generatorClass.parseClass(type, args);
