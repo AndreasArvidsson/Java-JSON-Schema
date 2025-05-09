@@ -21,7 +21,8 @@ public class GeneratorEnum extends GeneratorBase {
         super(
                 Arrays.asList(
                         JsonSchemaField.TITLE,
-                        JsonSchemaField.DESCRIPTION));
+                        JsonSchemaField.DESCRIPTION,
+                        JsonSchemaField.DEPRECATED));
     }
 
     @Override
@@ -48,7 +49,8 @@ public class GeneratorEnum extends GeneratorBase {
                     createDesc(
                             getEnumValue(e, jsonValueMethod),
                             ((JsonSchemaEnum) e).getTitle(),
-                            ((JsonSchemaEnum) e).getDescription()));
+                            ((JsonSchemaEnum) e).getDescription(),
+                            ((JsonSchemaEnum) e).isDeprecated()));
         }
         result.set("oneOf", oneOfNode);
     }
@@ -68,7 +70,11 @@ public class GeneratorEnum extends GeneratorBase {
         result.set(JsonSchemaField.Disabled.ENUM.toString(), enumNode);
     }
 
-    private JsonNode createDesc(final Object value, final String title, final String description) {
+    private JsonNode createDesc(
+            final Object value,
+            final String title,
+            final String description,
+            final Boolean deprecated) {
         final ObjectNode result = MAPPER.createObjectNode();
         if (value instanceof String) {
             result.put(JsonSchemaField.Disabled.CONST.toString(), (String) value);
@@ -80,6 +86,9 @@ public class GeneratorEnum extends GeneratorBase {
         }
         if (description != null) {
             result.put(JsonSchemaField.DESCRIPTION.toString(), description);
+        }
+        if (deprecated != null) {
+            result.put(JsonSchemaField.DEPRECATED.toString(), deprecated);
         }
         return result;
     }

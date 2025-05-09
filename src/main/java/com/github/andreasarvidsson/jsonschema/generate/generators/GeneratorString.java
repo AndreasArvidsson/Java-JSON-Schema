@@ -17,6 +17,7 @@ public class GeneratorString extends GeneratorBase {
         super(JsonType.STRING, Arrays.asList(
                 JsonSchemaField.TITLE,
                 JsonSchemaField.DESCRIPTION,
+                JsonSchemaField.DEPRECATED,
                 JsonSchemaField.MIN_LENGTH,
                 JsonSchemaField.MAX_LENGTH,
                 JsonSchemaField.PATTERN,

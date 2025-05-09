@@ -12,7 +12,8 @@ public class GeneratorObject extends GeneratorBase {
     public GeneratorObject() {
         super(Arrays.asList(
                 JsonSchemaField.TITLE,
-                JsonSchemaField.DESCRIPTION));
+                JsonSchemaField.DESCRIPTION,
+                JsonSchemaField.DEPRECATED));
     }
 
 }

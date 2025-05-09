@@ -21,6 +21,8 @@ public @interface JsonSchema {
 
     String description() default "";
 
+    boolean deprecated() default false;
+
     String constant() default "";
 
     // Object

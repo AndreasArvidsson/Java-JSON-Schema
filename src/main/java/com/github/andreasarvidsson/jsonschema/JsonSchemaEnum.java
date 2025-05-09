@@ -10,4 +10,6 @@ public interface JsonSchemaEnum {
 
     public String getDescription();
 
+    public Boolean isDeprecated();
+
 }

@@ -60,6 +60,9 @@ public abstract class GeneratorBase implements Generator {
         JsonSchemaUtil.validateAllowedFields(type, schemaFields, jsonSchema);
         JsonSchemaUtil.setString(type, target, JsonSchemaField.TITLE, jsonSchema.title());
         JsonSchemaUtil.setString(type, target, JsonSchemaField.DESCRIPTION, jsonSchema.description());
+        if (jsonSchema.deprecated()) {
+            target.put(JsonSchemaField.DEPRECATED.toString(), true);
+        }
     }
 
 }

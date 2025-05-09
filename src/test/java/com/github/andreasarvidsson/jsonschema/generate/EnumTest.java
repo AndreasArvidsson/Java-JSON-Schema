@@ -98,16 +98,19 @@ public class EnumTest {
                         .addField(JsonSchemaField.Disabled.CONST, "A")
                         .addField(JsonSchemaField.TITLE, "a")
                         .addField(JsonSchemaField.DESCRIPTION, "A_desc")
+                        .addField(JsonSchemaField.DEPRECATED, true)
                         .build())
                 .addOneOf(new JsonBuilder()
                         .addField(JsonSchemaField.Disabled.CONST, "B")
                         .addField(JsonSchemaField.TITLE, "b")
                         .addField(JsonSchemaField.DESCRIPTION, "B_desc")
+                        .addField(JsonSchemaField.DEPRECATED, true)
                         .build())
                 .addOneOf(new JsonBuilder()
                         .addField(JsonSchemaField.Disabled.CONST, "C")
                         .addField(JsonSchemaField.TITLE, "c")
                         .addField(JsonSchemaField.DESCRIPTION, "C_desc")
+                        .addField(JsonSchemaField.DEPRECATED, true)
                         .build())
                 .build();
     }
@@ -136,6 +139,11 @@ public class EnumTest {
         @Override
         public String getDescription() {
             return toString() + "_desc";
+        }
+
+        @Override
+        public Boolean isDeprecated() {
+            return true;
         }
     }
 

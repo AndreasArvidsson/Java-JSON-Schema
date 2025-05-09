@@ -20,6 +20,7 @@ public class GeneratorMap extends GeneratorBase implements GeneratorCollectionIn
         super(JsonType.OBJECT, Arrays.asList(
                 JsonSchemaField.TITLE,
                 JsonSchemaField.DESCRIPTION,
+                JsonSchemaField.DEPRECATED,
                 JsonSchemaField.MIN_PROPERTIES,
                 JsonSchemaField.MAX_PROPERTIES));
         this.generators = generators;

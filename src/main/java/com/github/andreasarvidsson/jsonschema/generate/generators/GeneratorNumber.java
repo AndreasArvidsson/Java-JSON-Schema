@@ -17,6 +17,7 @@ public class GeneratorNumber extends GeneratorBase {
     public final static List<JsonSchemaField> FIELDS = Arrays.asList(
             JsonSchemaField.TITLE,
             JsonSchemaField.DESCRIPTION,
+            JsonSchemaField.DEPRECATED,
             JsonSchemaField.MINIMUM,
             JsonSchemaField.MAXIMUM,
             JsonSchemaField.EXCLUSIVE_MINIMUM,

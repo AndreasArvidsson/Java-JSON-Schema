@@ -20,6 +20,7 @@ public abstract class GeneratorArrayBase extends GeneratorBase {
         super(JsonType.ARRAY, Arrays.asList(
                 JsonSchemaField.TITLE,
                 JsonSchemaField.DESCRIPTION,
+                JsonSchemaField.DEPRECATED,
                 JsonSchemaField.MIN_ITEMS,
                 JsonSchemaField.MAX_ITEMS));
         this.generators = generators;

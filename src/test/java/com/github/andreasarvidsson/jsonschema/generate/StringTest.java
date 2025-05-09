@@ -46,6 +46,7 @@ public class StringTest {
                         .setType(JsonType.STRING)
                         .addField(JsonSchemaField.TITLE, title)
                         .addField(JsonSchemaField.DESCRIPTION, desc)
+                        .addField(JsonSchemaField.DEPRECATED, true)
                         .addField(JsonSchemaField.MIN_LENGTH, min)
                         .addField(JsonSchemaField.MAX_LENGTH, max)
                         .addField(JsonSchemaField.PATTERN, pattern)
@@ -73,7 +74,7 @@ public class StringTest {
 
     class StringClass {
 
-        @JsonSchema(title = title, description = desc, minLength = min, maxLength = max, pattern = pattern, format = format, constant = constant)
+        @JsonSchema(title = title, description = desc, deprecated = true, minLength = min, maxLength = max, pattern = pattern, format = format, constant = constant)
         public String value;
     }
 

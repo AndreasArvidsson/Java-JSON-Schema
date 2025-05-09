@@ -10,6 +10,7 @@ public enum JsonSchemaField {
     // General
     TITLE,
     DESCRIPTION,
+    DEPRECATED,
     CONST("constant"),
 
     // Object

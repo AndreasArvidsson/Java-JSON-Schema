@@ -17,6 +17,7 @@ public class GeneratorBoolean extends GeneratorBase {
         super(JsonType.BOOLEAN, Arrays.asList(
                 JsonSchemaField.TITLE,
                 JsonSchemaField.DESCRIPTION,
+                JsonSchemaField.DEPRECATED,
                 JsonSchemaField.CONST));
     }
 

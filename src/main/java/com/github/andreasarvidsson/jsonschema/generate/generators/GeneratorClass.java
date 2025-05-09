@@ -30,7 +30,8 @@ public class GeneratorClass extends GeneratorBase {
         super(
                 JsonType.OBJECT, Arrays.asList(
                         JsonSchemaField.TITLE,
-                        JsonSchemaField.DESCRIPTION));
+                        JsonSchemaField.DESCRIPTION,
+                        JsonSchemaField.DEPRECATED));
         this.generators = generators;
     }
 
