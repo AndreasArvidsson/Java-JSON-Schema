@@ -9,10 +9,10 @@ import com.github.andreasarvidsson.jsonschema.JsonSchema;
  */
 public interface Generator {
 
-    public ObjectNode parseClass(final Class type);
+    public ObjectNode parseClass(final Class<?> type);
 
-    public void addFields(final Class type, final ObjectNode target);
+    public void addFields(final Class<?> type, final ObjectNode target);
 
-    public void addFields(final Class type, final ObjectNode target, final JsonSchema jsonSchema);
+    public void addFields(final Class<?> type, final ObjectNode target, final JsonSchema jsonSchema);
 
 }

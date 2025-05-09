@@ -14,10 +14,10 @@ import java.util.Map;
  */
 public class GeneratorInteger extends GeneratorBase {
 
-    private final static Map<Class, Long> MIN_VALUES = new HashMap<>();
-    private final static Map<Class, Long> MAX_VALUES = new HashMap<>();
+    private final static Map<Class<?>, Long> MIN_VALUES = new HashMap<>();
+    private final static Map<Class<?>, Long> MAX_VALUES = new HashMap<>();
 
-    private static void addRange(final Class type, final long min, final long max) {
+    private static void addRange(final Class<?> type, final long min, final long max) {
         MIN_VALUES.put(type, min);
         MAX_VALUES.put(type, max);
     }
@@ -41,7 +41,7 @@ public class GeneratorInteger extends GeneratorBase {
     }
 
     @Override
-    public ObjectNode parseClass(final Class type) {
+    public ObjectNode parseClass(final Class<?> type) {
         final ObjectNode result = super.parseClass(type);
         if (autoRangeNumbers && MIN_VALUES.containsKey(type)) {
             result.put(JsonSchemaField.MINIMUM.toString(), MIN_VALUES.get(type));
@@ -51,7 +51,7 @@ public class GeneratorInteger extends GeneratorBase {
     }
 
     @Override
-    public void addFields(final Class type, final ObjectNode target, final JsonSchema jsonSchema) {
+    public void addFields(final Class<?> type, final ObjectNode target, final JsonSchema jsonSchema) {
         super.addFields(type, target, jsonSchema);
         JsonSchemaUtil.setIntegers(type, target,
                 JsonSchemaField.MINIMUM, jsonSchema.minimum(), Long.MIN_VALUE, Long.MAX_VALUE,

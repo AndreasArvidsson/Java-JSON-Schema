@@ -27,7 +27,7 @@ public class GeneratorMap extends GeneratorBase implements GeneratorCollectionIn
     }
 
     @Override
-    public ObjectNode parseCollectionClass(final Class type, final Type valueType) {
+    public ObjectNode parseCollectionClass(final Class<?> type, final Type valueType) {
         final ObjectNode result = super.parseClass(type);
         final ObjectNode patternProperties = MAPPER.createObjectNode();
         patternProperties.set(JsonSchemaField.Disabled.ANY_MATCH.toString(), generators.parseClass(valueType));
@@ -36,7 +36,7 @@ public class GeneratorMap extends GeneratorBase implements GeneratorCollectionIn
     }
 
     @Override
-    public void addFields(final Class type, final ObjectNode target, final JsonSchema jsonSchema) {
+    public void addFields(final Class<?> type, final ObjectNode target, final JsonSchema jsonSchema) {
         super.addFields(type, target, jsonSchema);
         JsonSchemaUtil.setIntegers(type, target,
                 JsonSchemaField.MIN_PROPERTIES, jsonSchema.minProperties(), 0, Integer.MAX_VALUE,

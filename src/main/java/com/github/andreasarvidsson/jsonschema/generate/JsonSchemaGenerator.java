@@ -20,7 +20,7 @@ public class JsonSchemaGenerator {
 
     private URI schemaField = URI.create("http://json-schema.org/draft-06/schema#");
     private boolean autoRangeNumbes = true;
-    private final Map<Class, Generator> customGenerators = new HashMap<>();
+    private final Map<Class<?>, Generator> customGenerators = new HashMap<>();
 
     public JsonSchemaGenerator hideSchemaField() {
         schemaField = null;
@@ -37,12 +37,12 @@ public class JsonSchemaGenerator {
         return this;
     }
 
-    public JsonSchemaGenerator addCustomGenerator(final Class type, final Generator generator) {
+    public JsonSchemaGenerator addCustomGenerator(final Class<?> type, final Generator generator) {
         customGenerators.put(type, generator);
         return this;
     }
 
-    public JsonNode generate(final Class type) {
+    public JsonNode generate(final Class<?> type) {
         final ObjectNode schemaNode = MAPPER.createObjectNode();
         final ClassDefinitions classDefinitions = new ClassDefinitions();
         final Generators generators = new Generators(autoRangeNumbes, customGenerators, classDefinitions);

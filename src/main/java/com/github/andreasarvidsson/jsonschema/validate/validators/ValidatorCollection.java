@@ -21,7 +21,7 @@ public class ValidatorCollection extends ValidatorArrayBase {
     @Override
     public void validateClass(final List<Error> errors, final String path, final Object instance) {
         int i = 0;
-        for (final Object o : (Collection) instance) {
+        for (final Object o : (Collection<?>) instance) {
             validators.validateClass(errors, PropertyPath.append(path, i++), o);
         }
     }
@@ -29,7 +29,7 @@ public class ValidatorCollection extends ValidatorArrayBase {
     @Override
     public void validateSchema(final List<Error> errors, final String path, final Object instance,
             final JsonSchema jsonSchema) {
-        super.validateArray(errors, path, instance, jsonSchema, ((Collection) instance).size());
+        super.validateArray(errors, path, instance, jsonSchema, ((Collection<?>) instance).size());
     }
 
 }

@@ -26,7 +26,7 @@ public class GeneratorString extends GeneratorBase {
     }
 
     @Override
-    public void addFields(final Class type, final ObjectNode target, final JsonSchema jsonSchema) {
+    public void addFields(final Class<?> type, final ObjectNode target, final JsonSchema jsonSchema) {
         super.addFields(type, target, jsonSchema);
         JsonSchemaUtil.setIntegers(type, target,
                 JsonSchemaField.MIN_LENGTH, jsonSchema.minLength(), 0, Integer.MAX_VALUE,

@@ -33,7 +33,7 @@ public abstract class GeneratorBase implements Generator {
     }
 
     @Override
-    public ObjectNode parseClass(final Class type) {
+    public ObjectNode parseClass(final Class<?> type) {
         final ObjectNode result = MAPPER.createObjectNode();
         if (jsonType != null) {
             result.put(JsonSchemaField.Disabled.TYPE.toString(), jsonType.toString());
@@ -43,7 +43,7 @@ public abstract class GeneratorBase implements Generator {
     }
 
     @Override
-    public void addFields(final Class type, final ObjectNode target) {
+    public void addFields(final Class<?> type, final ObjectNode target) {
         final JsonSchema[] anotations = (JsonSchema[]) type.getAnnotationsByType(JsonSchema.class);
         for (final JsonSchema jsonSchema : anotations) {
             if (jsonSchema.combining() != JsonSchema.Combining.NONE) {
@@ -56,7 +56,7 @@ public abstract class GeneratorBase implements Generator {
     }
 
     @Override
-    public void addFields(final Class type, final ObjectNode target, final JsonSchema jsonSchema) {
+    public void addFields(final Class<?> type, final ObjectNode target, final JsonSchema jsonSchema) {
         JsonSchemaUtil.validateAllowedFields(type, schemaFields, jsonSchema);
         JsonSchemaUtil.setString(type, target, JsonSchemaField.TITLE, jsonSchema.title());
         JsonSchemaUtil.setString(type, target, JsonSchemaField.DESCRIPTION, jsonSchema.description());

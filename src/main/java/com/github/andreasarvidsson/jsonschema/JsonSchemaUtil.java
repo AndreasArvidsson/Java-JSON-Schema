@@ -30,7 +30,8 @@ public abstract class JsonSchemaUtil {
         }
     }
 
-    public static void validateAllowedFields(final Class type, final Set<String> allowed, final JsonSchema jsonSchema) {
+    public static void validateAllowedFields(final Class<?> type, final Set<String> allowed,
+            final JsonSchema jsonSchema) {
         for (final Method method : JsonSchema.class.getDeclaredMethods()) {
             try {
                 if (!VALIDATE_FIELDS.contains(method.getName())) {
@@ -67,25 +68,32 @@ public abstract class JsonSchemaUtil {
     }
 
     public static void setString(
-            final Class type, final ObjectNode target,
-            final JsonSchemaField field, final String value) {
+            final Class<?> type,
+            final ObjectNode target,
+            final JsonSchemaField field,
+            final String value) {
         if (!value.isEmpty()) {
             target.put(field.toString(), value);
         }
     }
 
     public static void setBool(
-            final Class type, final ObjectNode target,
-            final JsonSchemaField field, final String value) {
+            final Class<?> type,
+            final ObjectNode target,
+            final JsonSchemaField field,
+            final String value) {
         if (!value.isEmpty()) {
             target.put(field.toString(), Boolean.parseBoolean(value));
         }
     }
 
     public static void setNumbers(
-            final Class type, final ObjectNode target,
-            final JsonSchemaField field1, final String value1,
-            final JsonSchemaField field2, final String value2) {
+            final Class<?> type,
+            final ObjectNode target,
+            final JsonSchemaField field1,
+            final String value1,
+            final JsonSchemaField field2,
+            final String value2) {
         final boolean b1 = setNumberIfNotDefault(target, field1, value1);
         final boolean b2 = setNumberIfNotDefault(target, field2, value2);
         if (b1 && b2) {
@@ -96,15 +104,22 @@ public abstract class JsonSchemaUtil {
     }
 
     public static void setNumber(
-            final Class type, final ObjectNode target,
+            final Class<?> type, final ObjectNode target,
             final JsonSchemaField field, final String value) {
         setNumberIfNotDefault(target, field, value);
     }
 
     public static void setIntegers(
-            final Class type, final ObjectNode target,
-            final JsonSchemaField field1, final String value1, final long min1, final long max1,
-            final JsonSchemaField field2, final String value2, final long min2, final long max2) {
+            final Class<?> type,
+            final ObjectNode target,
+            final JsonSchemaField field1,
+            final String value1,
+            final long min1,
+            final long max1,
+            final JsonSchemaField field2,
+            final String value2,
+            final long min2,
+            final long max2) {
         final boolean b1 = setIntegerIfNotDefault(type, target, field1, value1, min1, max1);
         final boolean b2 = setIntegerIfNotDefault(type, target, field2, value2, min2, max2);
         if (b1 && b2) {
@@ -115,9 +130,16 @@ public abstract class JsonSchemaUtil {
     }
 
     public static void setIntegers(
-            final Class type, final ObjectNode target,
-            final JsonSchemaField field1, final long value1, final long min1, final long max1,
-            final JsonSchemaField field2, final long value2, final long min2, final long max2) {
+            final Class<?> type,
+            final ObjectNode target,
+            final JsonSchemaField field1,
+            final long value1,
+            final long min1,
+            final long max1,
+            final JsonSchemaField field2,
+            final long value2,
+            final long min2,
+            final long max2) {
         final boolean b1 = setIntegerIfNotDefault(type, target, field1, value1, min1, max1);
         final boolean b2 = setIntegerIfNotDefault(type, target, field2, value2, min2, max2);
         if (b1 && b2) {
@@ -126,8 +148,12 @@ public abstract class JsonSchemaUtil {
     }
 
     public static void setInteger(
-            final Class type, final ObjectNode target,
-            final JsonSchemaField field, final String value, final long min, final long max) {
+            final Class<?> type,
+            final ObjectNode target,
+            final JsonSchemaField field,
+            final String value,
+            final long min,
+            final long max) {
         setIntegerIfNotDefault(type, target, field, value, min, max);
     }
 
@@ -142,8 +168,12 @@ public abstract class JsonSchemaUtil {
     }
 
     private static boolean setIntegerIfNotDefault(
-            final Class type, final ObjectNode target,
-            final JsonSchemaField field, final String value, final long min, final long max) {
+            final Class<?> type,
+            final ObjectNode target,
+            final JsonSchemaField field,
+            final String value,
+            final long min,
+            final long max) {
         // If still default value. Just stop/return.
         if (value.isEmpty()) {
             return false;
@@ -152,8 +182,12 @@ public abstract class JsonSchemaUtil {
     }
 
     private static boolean setIntegerIfNotDefault(
-            final Class type, final ObjectNode target,
-            final JsonSchemaField field, final long value, final long min, final long max) {
+            final Class<?> type,
+            final ObjectNode target,
+            final JsonSchemaField field,
+            final long value,
+            final long min,
+            final long max) {
         // If still default value. Just stop/return.
         if (value == Long.MIN_VALUE) {
             return false;
@@ -163,7 +197,8 @@ public abstract class JsonSchemaUtil {
         return true;
     }
 
-    private static void validateRange(final Class type, final JsonSchemaField field, final long value, final long min,
+    private static void validateRange(final Class<?> type, final JsonSchemaField field, final long value,
+            final long min,
             final long max) {
         if (value < min || value > max) {
             throw new RuntimeException(String.format(
@@ -173,24 +208,20 @@ public abstract class JsonSchemaUtil {
     }
 
     private static void validateMaxLargerThanMin(
-            final Class type, final boolean isInteger,
-            final JsonSchemaField fieldMin, final Number valueMin,
-            final JsonSchemaField fieldMax, final Number valueMax) {
-        boolean isInvalid;
-        if (isInteger) {
-            isInvalid = valueMin.longValue() >= valueMax.longValue();
-        } else {
-            isInvalid = valueMin.doubleValue() >= valueMax.doubleValue();
-        }
+            final Class<?> type,
+            final boolean isInteger,
+            final JsonSchemaField fieldMin,
+            final Number valueMin,
+            final JsonSchemaField fieldMax,
+            final Number valueMax) {
+        final boolean isInvalid = isInteger
+                ? valueMin.longValue() >= valueMax.longValue()
+                : valueMin.doubleValue() >= valueMax.doubleValue();
         if (isInvalid) {
             throw new RuntimeException(String.format(
                     "Json schema field %s=%d is larger or equals to %s=%d for type '%s'",
                     fieldMin.toString(), valueMin, fieldMax.toString(), valueMax, type.getTypeName()));
         }
-    }
-
-    private static Number toNumber(final String value, final boolean isInteger) {
-        return isInteger ? Long.parseLong(value) : Double.parseDouble(value);
     }
 
     private static Object getValue(final Method method, final JsonSchema jsonSchema) {

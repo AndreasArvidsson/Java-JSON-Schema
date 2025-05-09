@@ -30,7 +30,7 @@ public class GeneratorNumber extends GeneratorBase {
     }
 
     @Override
-    public void addFields(final Class type, final ObjectNode target, final JsonSchema jsonSchema) {
+    public void addFields(final Class<?> type, final ObjectNode target, final JsonSchema jsonSchema) {
         super.addFields(type, target, jsonSchema);
         JsonSchemaUtil.setNumbers(type, target,
                 JsonSchemaField.MINIMUM, jsonSchema.minimum(),

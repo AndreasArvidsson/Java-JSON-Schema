@@ -75,6 +75,7 @@ public class SetTest {
 
     class SetDefault {
 
+        @SuppressWarnings("rawtypes")
         @JsonSchema(title = title, description = desc, minItems = min, maxItems = max)
         public Set value;
 

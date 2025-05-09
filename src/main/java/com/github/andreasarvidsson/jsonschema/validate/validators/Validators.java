@@ -19,12 +19,12 @@ import java.util.Set;
  */
 public class Validators {
 
-    private final Map<Class, Validator> defaultValidators = new IdentityHashMap<>();
-    private final Map<Class, Validator> customValidators;
-    private final Set<Class> doNothing = new HashSet<>();
+    private final Map<Class<?>, Validator> defaultValidators = new IdentityHashMap<>();
+    private final Map<Class<?>, Validator> customValidators;
+    private final Set<Class<?>> doNothing = new HashSet<>();
     private final Validator validatorClass, validatorArray, validatorCollection, validatorMap, validatorNothing;
 
-    public Validators(final Map<Class, Validator> customValidators) {
+    public Validators(final Map<Class<?>, Validator> customValidators) {
         this.customValidators = customValidators;
         this.validatorClass = new ValidatorClass(this);
         this.validatorArray = new ValidatorArray(this);
@@ -54,7 +54,7 @@ public class Validators {
         getValidator(instance.getClass()).validateSchema(errors, path, instance, jsonSchema);
     }
 
-    private Validator getValidator(final Class type) {
+    private Validator getValidator(final Class<?> type) {
         if (defaultValidators.containsKey(type)) {
             return defaultValidators.get(type);
         }
@@ -89,7 +89,7 @@ public class Validators {
         doNothing.add(Object.class);
     }
 
-    private void addDefaults(final Validator validator, final Collection<Class> types) {
+    private void addDefaults(final Validator validator, final Collection<Class<?>> types) {
         types.stream().forEach(type -> {
             defaultValidators.put(type, validator);
         });

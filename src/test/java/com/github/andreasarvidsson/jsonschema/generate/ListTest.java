@@ -111,6 +111,7 @@ public class ListTest {
 
     class ListDefault {
 
+        @SuppressWarnings("rawtypes")
         @JsonSchema(title = title, description = desc, minItems = min, maxItems = max)
         public List value;
 
@@ -132,6 +133,7 @@ public class ListTest {
 
     class ListOfLists {
 
+        @SuppressWarnings("rawtypes")
         public List<List> value;
 
     }

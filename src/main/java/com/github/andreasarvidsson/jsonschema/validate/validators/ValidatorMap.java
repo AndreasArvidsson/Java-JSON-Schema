@@ -20,16 +20,21 @@ public class ValidatorMap implements Validator {
 
     @Override
     public void validateClass(final List<Error> errors, final String path, final Object instance) {
-        for (final Map.Entry<Object, Object> e : ((Map<Object, Object>) instance).entrySet()) {
-            validators.validateClass(errors, PropertyPath.append(path, e.getKey().toString()), e.getValue());
+        if (instance instanceof Map) {
+            for (final Map.Entry<Object, Object> e : ((Map<Object, Object>) instance).entrySet()) {
+                validators.validateClass(errors, PropertyPath.append(path, e.getKey().toString()), e.getValue());
+            }
         }
     }
 
     @Override
-    public void validateSchema(final List<Error> errors, final String path, final Object instance,
+    public void validateSchema(
+            final List<Error> errors,
+            final String path,
+            final Object instance,
             final JsonSchema jsonSchema) {
-        validateMinProperties(errors, path, instance, jsonSchema, ((Map) instance).size());
-        validateMaxProperties(errors, path, instance, jsonSchema, ((Map) instance).size());
+        validateMinProperties(errors, path, instance, jsonSchema, ((Map<?, ?>) instance).size());
+        validateMaxProperties(errors, path, instance, jsonSchema, ((Map<?, ?>) instance).size());
     }
 
     private void validateMinProperties(final List<Error> errors, final String path, final Object instance,

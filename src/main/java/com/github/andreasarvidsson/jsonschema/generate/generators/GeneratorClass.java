@@ -36,11 +36,11 @@ public class GeneratorClass extends GeneratorBase {
     }
 
     @Override
-    public ObjectNode parseClass(final Class type) {
+    public ObjectNode parseClass(final Class<?> type) {
         return parseClass(type, null);
     }
 
-    public ObjectNode parseClass(final Class type, final Map<String, Type> args) {
+    public ObjectNode parseClass(final Class<?> type, final Map<String, Type> args) {
         final ClassResultWrapper wrapper = new ClassResultWrapper();
         wrapper.required = MAPPER.createArrayNode();
         wrapper.properties = MAPPER.createObjectNode();
@@ -69,7 +69,7 @@ public class GeneratorClass extends GeneratorBase {
         return classNode;
     }
 
-    private void parseClassFields(final Class type, final Map<String, Type> args, final ClassResultWrapper wrapper) {
+    private void parseClassFields(final Class<?> type, final Map<String, Type> args, final ClassResultWrapper wrapper) {
         final List<Field> fields = ReflectionUtil.getFieldsInOrder(type);
         for (final Field field : fields) {
             final String propertyName = ReflectionUtil.getPropertyName(field);
@@ -91,9 +91,12 @@ public class GeneratorClass extends GeneratorBase {
     }
 
     private void addSchemas(
-            final Generator generator, final ClassResultWrapper wrapper,
-            final ObjectNode propertyNode, final String propertyName, final Field field) {
-        final Class type = field.getType();
+            final Generator generator,
+            final ClassResultWrapper wrapper,
+            final ObjectNode propertyNode,
+            final String propertyName,
+            final Field field) {
+        final Class<?> type = field.getType();
         final JsonSchema[] jsonSchemas = field.getAnnotationsByType(JsonSchema.class);
         final int requiredSize = wrapper.required.size();
         for (final JsonSchema jsonSchema : jsonSchemas) {
@@ -106,9 +109,12 @@ public class GeneratorClass extends GeneratorBase {
     }
 
     private void addSchema(
-            final Generator generator, final ClassResultWrapper wrapper,
-            ObjectNode target, final Class type,
-            final String propertyName, final JsonSchema jsonSchema) {
+            final Generator generator,
+            final ClassResultWrapper wrapper,
+            ObjectNode target,
+            final Class<?> type,
+            final String propertyName,
+            final JsonSchema jsonSchema) {
         final boolean isCombining = jsonSchema.combining() != Combining.NONE;
         boolean addCombining = false;
 
@@ -144,7 +150,8 @@ public class GeneratorClass extends GeneratorBase {
     }
 
     private void addCombinations(
-            final ObjectNode classNode, final Set<String> propertyNames,
+            final ObjectNode classNode,
+            final Set<String> propertyNames,
             final Combining combining,
             final Collection<List<ClassCombiningWrapper>> groupCombinings) {
         final Set<String> uniqueNames = getUniqueNames(groupCombinings);

@@ -13,7 +13,7 @@ public class GeneratorArray extends GeneratorArrayBase {
     }
 
     @Override
-    public ObjectNode parseClass(final Class type) {
+    public ObjectNode parseClass(final Class<?> type) {
         return super.parseArrayClass(type, type.getComponentType());
     }
 

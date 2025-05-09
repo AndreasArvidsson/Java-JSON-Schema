@@ -42,10 +42,13 @@ public class ValidatorClass implements Validator {
     }
 
     private void parseClassFields(
-            final List<Error> errors, final String path, final Object instance,
-            final Class type, final ClassResultWrapper wrapper) {
+            final List<Error> errors,
+            final String path,
+            final Object instance,
+            final Class<?> type,
+            final ClassResultWrapper wrapper) {
         // Validate super classes first.
-        final Class superType = type.getSuperclass();
+        final Class<?> superType = type.getSuperclass();
         if (superType != null) {
             parseClassFields(errors, path, instance, superType, wrapper);
         }
@@ -70,9 +73,14 @@ public class ValidatorClass implements Validator {
     }
 
     private void addSchema(
-            final List<Error> errors, final String path, final Object instance,
-            final String propertyPath, final String propertyName, final Object propertyInstance,
-            final ClassResultWrapper wrapper, final JsonSchema jsonSchema) {
+            final List<Error> errors,
+            final String path,
+            final Object instance,
+            final String propertyPath,
+            final String propertyName,
+            final Object propertyInstance,
+            final ClassResultWrapper wrapper,
+            final JsonSchema jsonSchema) {
         if (jsonSchema.combining() == JsonSchema.Combining.NONE) {
             if (propertyInstance == null) {
                 validateIsRequired(errors, path, instance, propertyName, jsonSchema);
@@ -88,8 +96,10 @@ public class ValidatorClass implements Validator {
     }
 
     private void validateCombinations(
-            final List<Error> errors, final String path,
-            final Object instance, final ClassResultWrapper wrapper) {
+            final List<Error> errors,
+            final String path,
+            final Object instance,
+            final ClassResultWrapper wrapper) {
         wrapper.combinations.entrySet().forEach(e -> {
             final Map<Integer, List<Error>> errorMap = validateCombinations(
                     path, instance, wrapper, e.getValue().values(), e.getKey() == Combining.ANY_OF);
@@ -162,10 +172,17 @@ public class ValidatorClass implements Validator {
         }
     }
 
-    private void addCombinationErrors(final List<Error> errors, final String path,
-            final Combining combining, final int nrSchemas, final Map<Integer, List<Error>> errorMap) {
+    private void addCombinationErrors(
+            final List<Error> errors,
+            final String path,
+            final Combining combining,
+            final int nrSchemas,
+            final Map<Integer, List<Error>> errorMap) {
         final int matched = nrSchemas - errorMap.size();
         switch (combining) {
+            case NONE:
+                // Do nothing
+                break;
             case ANY_OF:
                 if (matched == 0) {
                     errors.add(

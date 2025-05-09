@@ -14,12 +14,12 @@ public class GeneratorSet extends GeneratorArrayBase implements GeneratorCollect
     }
 
     @Override
-    public ObjectNode parseCollectionClass(final Class type, final Type valueType) {
+    public ObjectNode parseCollectionClass(final Class<?> type, final Type valueType) {
         return super.parseUniqueArrayClass(type, valueType);
     }
 
     @Override
-    public ObjectNode parseClass(final Class type) {
+    public ObjectNode parseClass(final Class<?> type) {
         return parseCollectionClass(type, Object.class);
     }
 

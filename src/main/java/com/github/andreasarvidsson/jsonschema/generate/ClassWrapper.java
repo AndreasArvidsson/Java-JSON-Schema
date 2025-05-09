@@ -14,7 +14,7 @@ public class ClassWrapper {
     public ObjectNode classNode;
     public List<ObjectNode> references = new ArrayList<>();
 
-    public ClassWrapper(final Class type) {
+    public ClassWrapper(final Class<?> type) {
         this.name = type.getSimpleName();
     }
 

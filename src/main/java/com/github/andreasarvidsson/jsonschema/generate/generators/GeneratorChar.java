@@ -22,7 +22,7 @@ public class GeneratorChar extends GeneratorBase {
     }
 
     @Override
-    public ObjectNode parseClass(final Class type) {
+    public ObjectNode parseClass(final Class<?> type) {
         final ObjectNode result = super.parseClass(type);
         result.put(JsonSchemaField.MIN_LENGTH.toString(), 1);
         result.put(JsonSchemaField.MAX_LENGTH.toString(), 1);
@@ -30,7 +30,7 @@ public class GeneratorChar extends GeneratorBase {
     }
 
     @Override
-    public void addFields(final Class type, final ObjectNode target, final JsonSchema jsonSchema) {
+    public void addFields(final Class<?> type, final ObjectNode target, final JsonSchema jsonSchema) {
         super.addFields(type, target, jsonSchema);
         JsonSchemaUtil.setString(type, target, JsonSchemaField.CONST, jsonSchema.constant());
     }

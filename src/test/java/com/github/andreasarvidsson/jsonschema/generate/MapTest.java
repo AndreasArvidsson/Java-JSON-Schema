@@ -108,6 +108,7 @@ public class MapTest {
 
     class MapDefault {
 
+        @SuppressWarnings("rawtypes")
         @JsonSchema(title = title, description = desc, minProperties = min, maxProperties = max)
         public Map value;
 
@@ -129,6 +130,7 @@ public class MapTest {
 
     class MapOfMaps {
 
+        @SuppressWarnings("rawtypes")
         public Map<String, Map> value;
 
     }

@@ -27,14 +27,14 @@ public abstract class GeneratorArrayBase extends GeneratorBase {
     }
 
     @Override
-    public void addFields(final Class type, final ObjectNode target, final JsonSchema jsonSchema) {
+    public void addFields(final Class<?> type, final ObjectNode target, final JsonSchema jsonSchema) {
         super.addFields(type, target, jsonSchema);
         JsonSchemaUtil.setIntegers(type, target,
                 JsonSchemaField.MIN_ITEMS, jsonSchema.minItems(), 0, Integer.MAX_VALUE,
                 JsonSchemaField.MAX_ITEMS, jsonSchema.maxItems(), 1, Integer.MAX_VALUE);
     }
 
-    private ObjectNode parseArrayClass(final Class type, final Type valueType, final boolean isUnique) {
+    private ObjectNode parseArrayClass(final Class<?> type, final Type valueType, final boolean isUnique) {
         final ObjectNode result = super.parseClass(type);
         if (isUnique) {
             result.put(JsonSchemaField.Disabled.UNIQUE_ITEMS.toString(), true);
@@ -43,11 +43,11 @@ public abstract class GeneratorArrayBase extends GeneratorBase {
         return result;
     }
 
-    protected ObjectNode parseArrayClass(final Class type, final Type valueType) {
+    protected ObjectNode parseArrayClass(final Class<?> type, final Type valueType) {
         return parseArrayClass(type, valueType, false);
     }
 
-    protected ObjectNode parseUniqueArrayClass(final Class type, final Type valueType) {
+    protected ObjectNode parseUniqueArrayClass(final Class<?> type, final Type valueType) {
         return parseArrayClass(type, valueType, true);
     }
 

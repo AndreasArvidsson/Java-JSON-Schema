@@ -9,6 +9,6 @@ import java.lang.reflect.Type;
  */
 public interface GeneratorCollectionInterface extends Generator {
 
-    public ObjectNode parseCollectionClass(final Class type, final Type valueType);
+    public ObjectNode parseCollectionClass(final Class<?> type, final Type valueType);
 
 }

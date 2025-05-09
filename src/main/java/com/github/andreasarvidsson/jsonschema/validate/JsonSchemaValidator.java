@@ -18,9 +18,9 @@ import java.util.Map;
 public class JsonSchemaValidator {
 
     private final static ObjectMapper MAPPER = new ObjectMapper();
-    private final Map<Class, Validator> customValidators = new HashMap<>();
+    private final Map<Class<?>, Validator> customValidators = new HashMap<>();
 
-    public JsonSchemaValidator addCustomValidator(final Class type, final Validator validator) {
+    public JsonSchemaValidator addCustomValidator(final Class<?> type, final Validator validator) {
         customValidators.put(type, validator);
         return this;
     }
@@ -32,11 +32,11 @@ public class JsonSchemaValidator {
         return new ValidationReport(errors);
     }
 
-    public ValidationReport validate(final InputStream is, final Class type) throws IOException {
+    public ValidationReport validate(final InputStream is, final Class<?> type) throws IOException {
         return validate(MAPPER.readValue(is, type));
     }
 
-    public ValidationReport validate(final JsonNode node, final Class type) throws IOException {
+    public ValidationReport validate(final JsonNode node, final Class<?> type) throws IOException {
         return validate(MAPPER.treeToValue(node, type));
     }
 

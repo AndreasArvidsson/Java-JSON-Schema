@@ -5,7 +5,6 @@ package com.github.andreasarvidsson.jsonschema.generate;
  * @author Andreas Arvidsson
  */
 public enum JsonType {
-
     ARRAY,
     OBJECT,
     INTEGER,

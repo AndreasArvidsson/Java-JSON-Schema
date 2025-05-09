@@ -49,7 +49,7 @@ public abstract class ReflectionUtil {
         }
     }
 
-    public static Method getFirstMethod(final Class type, final Class<? extends Annotation> annotation) {
+    public static Method getFirstMethod(final Class<?> type, final Class<? extends Annotation> annotation) {
         for (final Method method : type.getDeclaredMethods()) {
             if (method.isAnnotationPresent(annotation)) {
                 return method;
@@ -58,8 +58,9 @@ public abstract class ReflectionUtil {
         return null;
     }
 
-    public static Constructor getFirstConstructor(final Class type, final Class<? extends Annotation> annotation) {
-        for (final Constructor constructor : type.getDeclaredConstructors()) {
+    public static Constructor<?> getFirstConstructor(final Class<?> type,
+            final Class<? extends Annotation> annotation) {
+        for (final Constructor<?> constructor : type.getDeclaredConstructors()) {
             if (constructor.isAnnotationPresent(annotation)) {
                 return constructor;
             }
@@ -67,16 +68,16 @@ public abstract class ReflectionUtil {
         return null;
     }
 
-    public static boolean hasMethod(final Class type, final Class<? extends Annotation> annotation) {
+    public static boolean hasMethod(final Class<?> type, final Class<? extends Annotation> annotation) {
         return getFirstMethod(type, annotation) != null;
     }
 
-    public static boolean hasAnyGetterAndAnySetter(final Class type) {
+    public static boolean hasAnyGetterAndAnySetter(final Class<?> type) {
         return hasMethod(type, JsonAnyGetter.class)
                 && hasMethod(type, JsonAnySetter.class);
     }
 
-    public static <T extends Annotation> T getFirstAnotation(Class classType, Class<T> anotType) {
+    public static <T extends Annotation> T getFirstAnotation(Class<?> classType, Class<T> anotType) {
         while (classType != null) {
             final T anot = (T) classType.getAnnotation(anotType);
             if (anot != null) {
@@ -87,7 +88,7 @@ public abstract class ReflectionUtil {
         return null;
     }
 
-    public static List<Field> getFieldsInOrder(final Class type) {
+    public static List<Field> getFieldsInOrder(final Class<?> type) {
         final List<Field> fields = new ArrayList<>();
         getFields(fields, type);
         final JsonPropertyOrder order = ReflectionUtil.getFirstAnotation(type, JsonPropertyOrder.class);
@@ -101,7 +102,7 @@ public abstract class ReflectionUtil {
         return field.toString().substring(field.toString().lastIndexOf(" ") + 1);
     }
 
-    private static void getFields(final List<Field> result, final Class type) {
+    private static void getFields(final List<Field> result, final Class<?> type) {
         // Parse super classes first.
         if (type.getSuperclass() != null) {
             getFields(result, type.getSuperclass());

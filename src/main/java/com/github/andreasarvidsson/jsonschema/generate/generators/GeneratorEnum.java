@@ -26,7 +26,7 @@ public class GeneratorEnum extends GeneratorBase {
     }
 
     @Override
-    public ObjectNode parseClass(final Class type) {
+    public ObjectNode parseClass(final Class<?> type) {
         final ObjectNode result = super.parseClass(type);
         final Method jsonValueMethod = ReflectionUtil.getFirstMethod(type, JsonValue.class);
         // Enum with description. Use oneOf array
@@ -42,9 +42,9 @@ public class GeneratorEnum extends GeneratorBase {
 
     private void addDescriptiveValues(
             final ObjectNode result, final Method jsonValueMethod,
-            final Enum[] enumValues) {
+            final Enum<?>[] enumValues) {
         final ArrayNode oneOfNode = MAPPER.createArrayNode();
-        for (final Enum e : enumValues) {
+        for (final Enum<?> e : enumValues) {
             oneOfNode.add(
                     createDesc(
                             getEnumValue(e, jsonValueMethod),
@@ -57,9 +57,9 @@ public class GeneratorEnum extends GeneratorBase {
 
     private void addSimpleValues(
             final ObjectNode result, final Method jsonValueMethod,
-            final Enum[] enumValues) {
+            final Enum<?>[] enumValues) {
         final ArrayNode enumNode = MAPPER.createArrayNode();
-        for (final Enum e : enumValues) {
+        for (final Enum<?> e : enumValues) {
             final Object enumValue = getEnumValue(e, jsonValueMethod);
             if (enumValue instanceof String) {
                 enumNode.add((String) enumValue);
@@ -93,7 +93,7 @@ public class GeneratorEnum extends GeneratorBase {
         return result;
     }
 
-    private Object getEnumValue(final Enum e, final Method jsonValueMethod) {
+    private Object getEnumValue(final Enum<?> e, final Method jsonValueMethod) {
         if (jsonValueMethod != null) {
             try {
                 return jsonValueMethod.invoke(e);

@@ -19,15 +19,15 @@ public class ClassDefinitions {
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private final Map<String, ClassWrapper> classes = new HashMap<>();
 
-    public boolean has(final Class type, final Map<String, Type> args) {
+    public boolean has(final Class<?> type, final Map<String, Type> args) {
         return classes.containsKey(getKey(type, args));
     }
 
-    public void add(final Class type, final Map<String, Type> args, final ClassWrapper wrapper) {
+    public void add(final Class<?> type, final Map<String, Type> args, final ClassWrapper wrapper) {
         classes.put(getKey(type, args), wrapper);
     }
 
-    private String getKey(final Class type, final Map<String, Type> args) {
+    private String getKey(final Class<?> type, final Map<String, Type> args) {
         final String classKey = type.getTypeName();
         if (args != null) {
             final String argsKey = args.keySet()
@@ -40,7 +40,7 @@ public class ClassDefinitions {
         return classKey;
     }
 
-    public ObjectNode getRef(final Class type, final Map<String, Type> args) {
+    public ObjectNode getRef(final Class<?> type, final Map<String, Type> args) {
         final ObjectNode refNode = MAPPER.createObjectNode();
         final ClassWrapper wrapper = classes.get(getKey(type, args));
         if (wrapper == null) {
