@@ -142,7 +142,7 @@ public class EnumTest {
         }
 
         @Override
-        public Boolean isDeprecated() {
+        public boolean isDeprecated() {
             return true;
         }
     }

@@ -74,7 +74,7 @@ public class GeneratorEnum extends GeneratorBase {
             final Object value,
             final String title,
             final String description,
-            final Boolean deprecated) {
+            final boolean deprecated) {
         final ObjectNode result = MAPPER.createObjectNode();
         if (value instanceof String) {
             result.put(JsonSchemaField.Disabled.CONST.toString(), (String) value);
@@ -87,8 +87,8 @@ public class GeneratorEnum extends GeneratorBase {
         if (description != null) {
             result.put(JsonSchemaField.DESCRIPTION.toString(), description);
         }
-        if (deprecated != null) {
-            result.put(JsonSchemaField.DEPRECATED.toString(), deprecated);
+        if (deprecated) {
+            result.put(JsonSchemaField.DEPRECATED.toString(), true);
         }
         return result;
     }
